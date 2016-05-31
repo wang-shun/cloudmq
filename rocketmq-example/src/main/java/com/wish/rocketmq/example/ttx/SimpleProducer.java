@@ -7,8 +7,6 @@ import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendCallback;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
-import com.alibaba.rocketmq.remoting.RPCHook;
-import com.alibaba.rocketmq.remoting.protocol.RemotingCommand;
 
 
 /**
@@ -76,6 +74,14 @@ public class SimpleProducer {
             msg = new Message("RPCHookTopic", // topic
                 "TagA", // tag
                 ("消息消费完成回调- --Time:" + new Date()).getBytes()// body
+            );
+            sendResult = producer.send(msg);
+            System.out.println(sendResult);
+            
+            // 测试SimplePullConsumer
+            msg = new Message("SimplePullConsumer", // topic
+                "TagA", // tag
+                ("SimplePullConsumer --Time:" + new Date()).getBytes()// body
             );
             sendResult = producer.send(msg);
             System.out.println(sendResult);

@@ -23,8 +23,8 @@ public class SimplePushConsumer {
          * 注意：ConsumerGroupName需要由应用来保证唯一
          */
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("SimplePushConsumer_001");
-        String namesrvAddr = "192.168.15.11:9876;192.168.15.12:9876";
-        consumer.setNamesrvAddr(namesrvAddr);
+        
+        consumer.setNamesrvAddr(MyUtil.getNamesrvAddr());
 
         /**
          * 订阅指定topic下tags分别等于TagA或TagB或TagD

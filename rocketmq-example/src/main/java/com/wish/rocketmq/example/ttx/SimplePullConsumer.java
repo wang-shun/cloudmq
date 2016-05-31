@@ -20,10 +20,12 @@ public class SimplePullConsumer {
 
     public static void main(String[] args) throws MQClientException {
         DefaultMQPullConsumer consumer = new DefaultMQPullConsumer("please_rename_unique_group_name_5");
-
+        String namesrvAddr = "192.168.15.11:9876;192.168.15.12:9876";
+        consumer.setNamesrvAddr(namesrvAddr);
+        
         consumer.start();
 
-        Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues("TopicTest1-1");
+        Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues("SimplePullConsumer");
         for (MessageQueue mq : mqs) {
             System.out.println("Consume from the queue: " + mq);
             SINGLE_MQ: while (true) {

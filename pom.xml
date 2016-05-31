@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <inceptionYear>2012</inceptionYear>
     <groupId>com.alibaba.rocketmq</groupId>
-    <artifactId>rocketmq-all</artifactId>
+    <artifactId>myrocketmq-all</artifactId>
     <version>3.2.6</version>
     <packaging>pom</packaging>
     <name>rocketmq-all ${project.version}</name>
