@@ -30,6 +30,7 @@
     </prerequisites>
 
     <modules>
+		<module>rocketmq-web</module>
         <module>rocketmq-client</module>
         <module>rocketmq-common</module>
         <module>rocketmq-broker</module>

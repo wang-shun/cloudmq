@@ -44,6 +44,10 @@ rocketmq-tools/.classpath
 rocketmq-tools/.project
 rocketmq-tools/.settings/org.eclipse.jdt.core.prefs
 rocketmq-tools/target/.gitignore
+rocketmq-web/.classpath
+rocketmq-web/.project
+rocketmq-web/.settings/org.eclipse.jdt.core.prefs
+rocketmq-web/target/.gitignore
 target/mvn-eclipse-cache.properties
 *.class
 target/
