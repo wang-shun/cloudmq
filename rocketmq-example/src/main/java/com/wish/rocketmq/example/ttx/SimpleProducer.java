@@ -1,12 +1,17 @@
 package com.wish.rocketmq.example.ttx;
 
 import java.util.Date;
+import java.util.List;
 
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendCallback;
 import com.alibaba.rocketmq.client.producer.SendResult;
+import com.alibaba.rocketmq.common.MixAll;
 import com.alibaba.rocketmq.common.message.Message;
+import com.alibaba.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
+import com.alibaba.rocketmq.tools.admin.api.MessageTrack;
 
 
 /**
@@ -79,12 +84,28 @@ public class SimpleProducer {
             System.out.println(sendResult);
             
             // 测试SimplePullConsumer
-            msg = new Message("SimplePullConsumer", // topic
+            msg = new Message("SimplePullConsumerTopic", // topic
                 "TagA", // tag
                 ("SimplePullConsumer --Time:" + new Date()).getBytes()// body
             );
             sendResult = producer.send(msg);
+            
             System.out.println(sendResult);
+            
+            
+
+           /* System.setProperty(MixAll.NAMESRV_ADDR_PROPERTY, namesrvAddr);
+            
+            DefaultMQAdminExt defaultMQAdminExt = new DefaultMQAdminExt();
+            defaultMQAdminExt.setInstanceName(Long.toString(System.currentTimeMillis()));
+            
+            defaultMQAdminExt.start();
+            MessageExt msgExt = defaultMQAdminExt.viewMessage(sendResult.getMsgId());
+            // 增加消息消费轨迹跟踪 add by tantexian 2016-6-2 08:53:03
+            List<MessageTrack> messageTrackList = defaultMQAdminExt.messageTrackDetail(msgExt);
+            System.out.println("messageTrackList == " + messageTrackList);*/
+            
+            
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -93,5 +114,7 @@ public class SimpleProducer {
 
         System.out.println("消息发送完毕！！！");
         producer.shutdown();
+        
+        
     }
 }
