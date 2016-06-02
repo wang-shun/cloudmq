@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.cli.Option;
@@ -24,6 +25,7 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.remoting.common.RemotingHelper;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
+import com.alibaba.rocketmq.tools.admin.api.MessageTrack;
 import com.alibaba.rocketmq.tools.command.message.QueryMsgByIdSubCommand;
 import com.alibaba.rocketmq.tools.command.message.QueryMsgByKeySubCommand;
 import com.alibaba.rocketmq.tools.command.message.QueryMsgByOffsetSubCommand;
@@ -48,6 +50,16 @@ public class MessageService extends AbstractService {
     }
 
 
+    /**
+     * @param msgId
+     * @return
+     * @throws Throwable
+     */
+    /**
+     * @param msgId
+     * @return
+     * @throws Throwable
+     */
     @CmdTrace(cmdClazz = QueryMsgByIdSubCommand.class)
     public Table queryMsgById(String msgId) throws Throwable {
         Throwable t = null;
@@ -135,6 +147,11 @@ public class MessageService extends AbstractService {
             // bodyTmpFilePath//
             // );
             map.put("Message Body Path:", bodyTmpFilePath);
+            
+            // 增加消息消费轨迹跟踪 add by tantexian 2016-6-2 08:53:03
+            List<MessageTrack> messageTrackList = defaultMQAdminExt.messageTrackDetail(msg);
+            map.put("messageTrack", messageTrackList.toString());
+            
             return Table.Map2VTable(map);
         }
         catch (Throwable e) {
