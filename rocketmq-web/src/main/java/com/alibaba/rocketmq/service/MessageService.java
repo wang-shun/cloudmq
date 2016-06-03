@@ -50,16 +50,6 @@ public class MessageService extends AbstractService {
     }
 
 
-    /**
-     * @param msgId
-     * @return
-     * @throws Throwable
-     */
-    /**
-     * @param msgId
-     * @return
-     * @throws Throwable
-     */
     @CmdTrace(cmdClazz = QueryMsgByIdSubCommand.class)
     public Table queryMsgById(String msgId) throws Throwable {
         Throwable t = null;
