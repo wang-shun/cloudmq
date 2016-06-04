@@ -30,6 +30,10 @@ public class MessageLossProducer {
          * @author GaoYanLei
          * @since 2016/6/4
          */
+        /**
+         * @author GaoYanLei
+         * @since 2016/6/4
+         */
 
         final DefaultMQProducer producer = new DefaultMQProducer("messageLoss");
         String namesrvAddr = "192.168.146.131:9876";
