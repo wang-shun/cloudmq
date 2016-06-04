@@ -18,6 +18,11 @@ import java.util.List;
 public class MessageLossConsumer {
     public static void main(String[] args) throws InterruptedException, MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("messageLoss");
+        /**
+         * @author GaoYanLei
+         * @since 2016/6/4
+         */
+
         consumer.subscribe("TmessageLosspsTopic", MessageFilterImpl.class.getCanonicalName());
         consumer.registerMessageListener(new MessageListenerConcurrently() {
             @Override
