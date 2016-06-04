@@ -22,19 +22,24 @@ public class MessageLossProducer {
     final static int nThreads = 10;
     final static int sendNumOnceTime = 1000;
     final static int topicNums = 1000;
-     
+
+
     public static void main(String[] args) throws MQClientException {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
-/**
- * @author GaoYanLei
- * @since 2016/6/4
- */
+        /**
+         * @author GaoYanLei
+         * @since 2016/6/4
+         */
 
         final DefaultMQProducer producer = new DefaultMQProducer("messageLoss");
         String namesrvAddr = "192.168.146.131:9876";
         producer.setNamesrvAddr(namesrvAddr);
 
         // producer.setSendMsgTimeout(5000);
+        /**
+         * @author GaoYanLei
+         * @since 2016/6/4
+         */
 
         producer.start();
 
