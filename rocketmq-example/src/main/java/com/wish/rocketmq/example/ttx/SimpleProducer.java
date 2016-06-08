@@ -23,8 +23,7 @@ public class SimpleProducer {
         
         DefaultMQProducer producer = new DefaultMQProducer("SimpleProducer");
         
-        String namesrvAddr = "192.168.15.11:9876;192.168.15.12:9876";
-        producer.setNamesrvAddr(namesrvAddr);
+        producer.setNamesrvAddr(MyUtil.getNamesrvAddr());
 
         producer.start();
 

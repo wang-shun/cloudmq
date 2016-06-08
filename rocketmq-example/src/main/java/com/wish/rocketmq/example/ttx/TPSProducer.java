@@ -21,14 +21,15 @@ public class TPSProducer {
     final static int sendNumOnceTime = 1000;
     final static int topicNums = 1000;
 
+
     public static void main(String[] args) throws MQClientException {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
-        
+
         final DefaultMQProducer producer = new DefaultMQProducer("TPSProducer");
         String namesrvAddr = "192.168.15.11:9876;192.168.15.12:9876";
         producer.setNamesrvAddr(namesrvAddr);
-        
-       // producer.setSendMsgTimeout(5000);
+
+        // producer.setSendMsgTimeout(5000);
 
         producer.start();
 
@@ -37,7 +38,7 @@ public class TPSProducer {
 
         for (int i = 0; i < nThreads; i++) {
             String topicRandom = "TpsTopic" + new Random().nextInt(topicNums);
-            //System.out.println("TpsTopic name is :" + topicRandom);
+            // System.out.println("TpsTopic name is :" + topicRandom);
             final Message message = new Message(topicRandom, "tagA", ("I,m test tps topic " + i).getBytes());
 
             for (int j = 0; j < sendNumOnceTime; j++) {
@@ -47,9 +48,10 @@ public class TPSProducer {
                     public void run() {
                         try {
                             SendResult sendResult = producer.send(message);
-                            if(sendResult.getSendStatus() == SendStatus.SEND_OK){
+                            if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
                                 System.out.println(atomicSuccessNums.incrementAndGet());
-                            }else{
+                            }
+                            else {
                                 System.out.println("#### ERROR Message :" + sendResult);
                             }
                         }
@@ -81,16 +83,12 @@ public class TPSProducer {
             while (true) {
                 if (newFixedThreadPool.isTerminated()) {
                     long endCurrentTimeMillis = System.currentTimeMillis();
-                    long sendNums = nThreads*sendNumOnceTime;
+                    long sendNums = nThreads * sendNumOnceTime;
                     long escapedTimeMillis = endCurrentTimeMillis - startCurrentTimeMillis;
-                    System.out.printf("All message has send, the random topicNums is : %d, "
-                                                                + "the message nums is : %d , "
-                                                                + "Success nums is : %d, "
-                                                                + "TPS : %d !!!", 
-                                                                topicNums,
-                                                                sendNums, 
-                                                                atomicSuccessNums.get(), 
-                                                                sendNums*1000/escapedTimeMillis);
+                    System.out.printf(
+                        "All message has send, the random topicNums is : %d, " + "the message nums is : %d , "
+                                + "Success nums is : %d, " + "TPS : %d !!!",
+                        topicNums, sendNums, atomicSuccessNums.get(), sendNums * 1000 / escapedTimeMillis);
                     System.exit(0);
                 }
             }
