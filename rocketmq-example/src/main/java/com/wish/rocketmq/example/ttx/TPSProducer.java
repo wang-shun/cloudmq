@@ -26,8 +26,7 @@ public class TPSProducer {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
 
         final DefaultMQProducer producer = new DefaultMQProducer("TPSProducer");
-        String namesrvAddr = "192.168.15.11:9876;192.168.15.12:9876";
-        producer.setNamesrvAddr(namesrvAddr);
+        producer.setNamesrvAddr(MyUtil.getNamesrvAddr());
 
         // producer.setSendMsgTimeout(5000);
 
