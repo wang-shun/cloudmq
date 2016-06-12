@@ -53,7 +53,6 @@ target/mvn-eclipse-cache.properties
 target/
 *.iml
 .idea/
-target/
 logs/
 .classpath
 .project
