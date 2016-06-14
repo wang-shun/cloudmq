@@ -10,6 +10,7 @@ import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.client.producer.SendStatus;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
+import com.gome.rocketmq.common.MyUtil;
 
 
 /**
@@ -25,8 +26,8 @@ public class MessageLossProducer {
     public static void main(String[] args) throws MQClientException {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
         final DefaultMQProducer producer = new DefaultMQProducer("messageLoss");
-        String namesrvAddr = "192.168.146.131:9876";
-        producer.setNamesrvAddr(namesrvAddr);
+//        String namesrvAddr = "192.168.146.131:9876";
+        producer.setNamesrvAddr(MyUtil.getNamesrvAddr());
         producer.start();
         ExecutorService exec = Executors.newCachedThreadPool();
         final long startCurrentTimeMillis = System.currentTimeMillis();

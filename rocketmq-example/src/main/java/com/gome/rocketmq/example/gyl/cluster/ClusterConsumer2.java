@@ -14,6 +14,7 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageConst;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
+import com.gome.rocketmq.common.MyUtil;
 
 
 /**
@@ -25,7 +26,7 @@ public class ClusterConsumer2 {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
         try {
             DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("cluster");
-            consumer.setNamesrvAddr("192.168.146.131:9876");
+            consumer.setNamesrvAddr(MyUtil.getNamesrvAddr());
             consumer.subscribe("clusterTopic", "*");
             consumer.setMessageModel(MessageModel.CLUSTERING);
 //            consumer.setMessageModel(MessageModel.BROADCASTING);
