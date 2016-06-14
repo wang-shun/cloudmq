@@ -1,4 +1,4 @@
-package com.gome.rocketmq.example.ttx;
+package com.gome.rocketmq.common;
 
 public class MyUtil {
 

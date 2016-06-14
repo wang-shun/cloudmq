@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    		http://www.springframework.org/schema/beans/spring-beans.xsd
+       		http://www.springframework.org/schema/context 
+     		http://www.springframework.org/schema/context/spring-context.xsd"
+       default-autowire="byName">
+	
+	<context:component-scan base-package="com.gome.rocketmq.dao"/>
+	
+	<!-- BoneCP configuration -->
+	<bean id="abstractDataSource" abstract="true" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
+		<property name="driverClass" value="${jdbc.driverClass}" />
+		<property name="idleConnectionTestPeriodInMinutes" value="${jdbc.idleConnectionTestPeriod}" />
+		<property name="idleMaxAgeInMinutes" value="${jdbc.idleMaxAge}" />
+		<property name="maxConnectionsPerPartition" value="${jdbc.maxConnectionsPerPartition}" />
+		<property name="minConnectionsPerPartition" value="${jdbc.minConnectionsPerPartition}" />
+		<property name="partitionCount" value="${jdbc.partitionCount}" />
+		<property name="acquireIncrement" value="${jdbc.acquireIncrement}" />
+		<property name="statementsCacheSize" value="${jdbc.statementsCacheSize}" />
+		<property name="releaseHelperThreads" value="${jdbc.releaseHelperThreads}" />
+	</bean>
+	<bean id="masterDataSource" parent="abstractDataSource">
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="masterDataSource" />
+	</bean>
+	
+	<!-- 集成Mybatis -->
+	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="masterDataSource" />
+		<property name="configLocation" value="classpath:sqlmap-config.xml" />
+	</bean>
+
+	<bean id="sqlTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sessionFactory" />
+	</bean>
+	<bean id="batchSqlTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sessionFactory" />
+		<constructor-arg index="1" value="BATCH" />
+	</bean>
+	
+	<!-- Automatically configure the package basePackage all path marked with 
+		the @Mapper interface to generate the proxy Dao layer to replace the original implementation of our Dao. 
+		集成Mybatis自动映射dao层接口到xml(例如：UserDemo.xml)映射-->
+	<!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="annotationClass" value="org.springframework.stereotype.Repository" />
+		<property name="basePackage" value="com.wish.wishstack.dao" />
+	</bean> -->
+</beans>
