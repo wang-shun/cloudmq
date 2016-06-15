@@ -1,7 +1,4 @@
-package com.gome.rocketmq.example.ttx;
-
-import java.util.List;
-import java.util.Random;
+package com.gome.rocketmq.example.ttx.order;
 
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
@@ -12,6 +9,9 @@ import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
+
+import java.util.List;
+import java.util.Random;
 
 
 /**

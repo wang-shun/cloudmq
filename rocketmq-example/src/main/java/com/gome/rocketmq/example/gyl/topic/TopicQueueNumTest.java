@@ -5,7 +5,7 @@ import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.client.producer.SendStatus;
 import com.alibaba.rocketmq.common.message.Message;
-import com.gome.rocketmq.common.MyUtil;
+import com.gome.rocketmq.common.MyUtils;
 
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
@@ -29,7 +29,7 @@ public class TopicQueueNumTest {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
         final DefaultMQProducer producer = new DefaultMQProducer("topic444");
 //        String namesrvAddr = "192.168.146.131:9876";
-        producer.setNamesrvAddr(MyUtil.getNamesrvAddr());
+        producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         producer.setDefaultTopicQueueNums(10);// 设置queue数目
 //        producer.setCreateTopicKey("TBW102");
         producer.start();

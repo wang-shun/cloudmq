@@ -1,13 +1,13 @@
-package com.gome.rocketmq.example.ttx;
-
-import java.util.Date;
-import java.util.Random;
+package com.gome.rocketmq.example.ttx.cluster;
 
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
-import com.gome.rocketmq.common.MyUtil;
+import com.gome.rocketmq.common.MyUtils;
+
+import java.util.Date;
+import java.util.Random;
 
 
 /**
@@ -19,9 +19,8 @@ public class ClusterProducer {
 
         DefaultMQProducer producer = new DefaultMQProducer("ClusterProducergroup");
 
-        producer.setNamesrvAddr(MyUtil.getNamesrvAddr());
+        producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         producer.start();
-        producer.setNamesrvAddr(MyUtil.getNamesrvAddr());
 
         try {
             for (int i = 0; i < 30; i++) {

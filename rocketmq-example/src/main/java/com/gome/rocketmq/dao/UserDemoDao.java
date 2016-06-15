@@ -6,7 +6,7 @@ package com.gome.rocketmq.dao;
 
 import com.gome.rocketmq.dao.base.BaseDaoImpl;
 import com.gome.rocketmq.domain.UserDemo;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -15,10 +15,9 @@ import org.springframework.stereotype.Repository;
  * @author ttx
  * @since 2015-06-16
  */
-@Repository("userDemoDao")
+@Component
 public class UserDemoDao extends BaseDaoImpl<UserDemo, Integer> {
-    private final static String NAMESPACE = "com.gome.rocketmq.dao.userDemoDao.";
-
+    private final static String NAMESPACE = "com.gome.rocketmq.dao.UserDemoDao.";
 
     // 返回本DAO命名空间,并添加statement
     public String getNameSpace(String statement) {

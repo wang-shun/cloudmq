@@ -1,6 +1,4 @@
-package com.gome.rocketmq.example.ttx;
-
-import java.util.List;
+package com.gome.rocketmq.example.ttx.cluster;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -10,7 +8,9 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
-import com.gome.rocketmq.common.MyUtil;
+import com.gome.rocketmq.common.MyUtils;
+
+import java.util.List;
 
 
 /**
@@ -31,7 +31,7 @@ public class ClusterConsumer {
 
     public static void clusterPush(int flag) throws InterruptedException, MQClientException {
 
-        consumer.setNamesrvAddr(MyUtil.getNamesrvAddr());
+        consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
 
         final int nums = flag;
 
