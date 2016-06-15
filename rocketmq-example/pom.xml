@@ -17,6 +17,7 @@
         <org.mybatis.spring.version>1.2.0</org.mybatis.spring.version>
         <mysql.connector.java>5.1.25</mysql.connector.java>
         <com.jolbox.version>0.7.1.RELEASE</com.jolbox.version>
+        <aspectj.version>1.6.11</aspectj.version>
     </properties>
 
     <dependencies>
@@ -70,7 +71,6 @@
             <groupId>com.jolbox</groupId>
             <artifactId>bonecp</artifactId>
             <version>${com.jolbox.version}</version>
-
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -87,6 +87,41 @@
             <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
         </dependency>
+
+        <!-- MyBatis&JDBC  2016/6/14 Add by tantexixan-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
+        <!-- if you enable @AspectJ style AOP in spring. -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.6.11</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.rocketmq</groupId>
+            <artifactId>rocketmq-example</artifactId>
+            <version>3.2.6</version>
+        </dependency>
+
 
     </dependencies>
 </project>

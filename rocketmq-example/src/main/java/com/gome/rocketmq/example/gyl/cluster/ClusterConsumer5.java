@@ -1,8 +1,5 @@
 package com.gome.rocketmq.example.gyl.cluster;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -10,7 +7,10 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
-import com.gome.rocketmq.common.MyUtil;
+import com.gome.rocketmq.common.MyUtils;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -22,7 +22,7 @@ public class ClusterConsumer5 {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
         try {
             DefaultMQPushConsumer consumer = new DefaultMQPushConsumer();
-            consumer.setNamesrvAddr(MyUtil.getNamesrvAddr());
+            consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
             consumer.subscribe("clusterTopic", "*");
             consumer.setMessageModel(MessageModel.CLUSTERING);
             consumer.setConsumerGroup("cluster");

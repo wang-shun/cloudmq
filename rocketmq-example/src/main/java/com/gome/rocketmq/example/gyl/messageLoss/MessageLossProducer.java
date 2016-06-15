@@ -1,16 +1,17 @@
 package com.gome.rocketmq.example.gyl.messageLoss;
 
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicLong;
-
-import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.client.producer.SendStatus;
 import com.alibaba.rocketmq.common.message.Message;
-import com.alibaba.rocketmq.remoting.exception.RemotingException;
-import com.gome.rocketmq.common.MyUtil;
+import com.gome.rocketmq.common.MyUtils;
+
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -27,7 +28,7 @@ public class MessageLossProducer {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
         final DefaultMQProducer producer = new DefaultMQProducer("messageLoss");
 //        String namesrvAddr = "192.168.146.131:9876";
-        producer.setNamesrvAddr(MyUtil.getNamesrvAddr());
+        producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         producer.start();
         ExecutorService exec = Executors.newCachedThreadPool();
         final long startCurrentTimeMillis = System.currentTimeMillis();
