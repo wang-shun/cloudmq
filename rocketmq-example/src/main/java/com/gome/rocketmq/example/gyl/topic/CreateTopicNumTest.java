@@ -1,9 +1,6 @@
 package com.gome.rocketmq.example.gyl.topic;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.alibaba.rocketmq.client.exception.MQClientException;
@@ -20,9 +17,8 @@ import com.gome.rocketmq.common.MyUtil;
  */
 
 public class CreateTopicNumTest {
-    final static int nThreads = 2;
-    final static int topicNums = 10;
-
+    final static int nThreads = 10;
+    final static int topicNums = 1000;
 
     public static void main(String[] args) throws MQClientException {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
@@ -54,7 +50,10 @@ public class CreateTopicNumTest {
                                 // + atomicSuccessNums.incrementAndGet() +
                                 // "========"
                                 // + sendResult.getMessageQueue().getQueueId());
-                                System.out.println(atomicSuccessNums.incrementAndGet());
+//                                Thread.sleep(100);
+                                System.out.println("sendResult:" + sendResult + "============"
+                                        + atomicSuccessNums.incrementAndGet());
+                                // System.out.println(atomicSuccessNums.incrementAndGet());
                             }
                             else {
                                 System.out.println("#### ERROR Message :" + sendResult);
