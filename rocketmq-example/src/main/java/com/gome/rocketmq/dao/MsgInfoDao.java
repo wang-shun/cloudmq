@@ -5,22 +5,21 @@
 package com.gome.rocketmq.dao;
 
 import com.gome.rocketmq.dao.base.BaseDaoImpl;
-import com.gome.rocketmq.domain.UserDemo;
+import com.gome.rocketmq.domain.MsgInfo;
 import org.springframework.stereotype.Component;
 
 
 /**
- * UserDemoDao 实现类
+ * MsgInfoDao 实现类
  * 
  * @author ttx
- * @since 2015-06-16
+ * @since 2016-6-16
  */
 @Component
-public class UserDemoDao extends BaseDaoImpl<UserDemo, Integer> {
+public class MsgInfoDao extends BaseDaoImpl<MsgInfo, Integer> {
 
     // 返回本DAO命名空间,并添加statement
     public String getNameSpace(String statement) {
-        // 此处使用反射获取类名，与对应mybatis的xml的namespace保持一致 2016/6/16 Add by tantexixan
         return this.getClass().getName() + "." + statement;
     }
 

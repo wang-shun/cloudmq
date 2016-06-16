@@ -32,7 +32,23 @@ CREATE  TABLE IF NOT EXISTS `rocketmq`.`user_demo` (
   `deleted` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
-COMMENT = '用户表';
+COMMENT = '用户表DEMO';
 
-
+-- ------------------------------------------------
+-- Table structure for `msg_info`， add by ttx 2016-6-15
+-- ------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `rocketmq`.`msg_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic` varchar(255) DEFAULT NULL,
+  `key` varchar(255) DEFAULT NULL,
+  `body_hashcode` int(11) DEFAULT NULL,
+  `body` varchar(255) DEFAULT NULL,
+  `repeat_num` int(11) DEFAULT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `updated_time` datetime DEFAULT NULL,
+  `deleted_time` datetime DEFAULT NULL,
+  `deleted` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+COMMENT = 'msg信息表';
 
