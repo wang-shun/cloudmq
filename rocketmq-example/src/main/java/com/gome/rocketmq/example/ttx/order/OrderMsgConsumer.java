@@ -1,7 +1,4 @@
-package com.gome.rocketmq.example.ttx;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+package com.gome.rocketmq.example.ttx.order;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
@@ -10,6 +7,9 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**

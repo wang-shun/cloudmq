@@ -1,58 +1,42 @@
-package com.gome.rocketmq.example.ttx;
+package com.gome.rocketmq.example.ttx.simple;
 
-import java.util.List;
-
-import com.alibaba.rocketmq.client.consumer.AllocateMessageQueueStrategy;
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import com.alibaba.rocketmq.client.consumer.rebalance.AllocateMessageQueueAveragely;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
-import com.alibaba.rocketmq.remoting.RPCHook;
-import com.alibaba.rocketmq.remoting.protocol.RemotingCommand;
+import com.gome.rocketmq.common.MyUtils;
+
+import java.util.List;
 
 
-public class SimplePushConsumerRPCHook {
+public class SimplePushConsumer {
 
     /**
      * 当前例子是PushConsumer用法，使用方式给用户感觉是消息从RocketMQ服务器推到了应用客户端。<br>
      * 但是实际PushConsumer内部是使用长轮询Pull方式从Broker拉消息，然后再回调用户Listener方法<br>
      */
     public static void main(String[] args) throws InterruptedException, MQClientException {
-
-        RPCHook rpcHook = new RPCHook() {
-
-            @Override
-            public void doBeforeRequest(String remoteAddr, RemotingCommand request) {
-                System.out.println("doBeforeRequest");
-            }
-
-
-            @Override
-            public void doAfterResponse(String remoteAddr, RemotingCommand request,
-                    RemotingCommand response) {
-                System.out.println("doAfterResponse");
-            }
-        };
-
-        AllocateMessageQueueStrategy allocateMessageQueueStrategy = new AllocateMessageQueueAveragely();
-
         /**
          * 一个应用创建一个Consumer，由应用来维护此对象，可以设置为全局对象或者单例<br>
          * 注意：ConsumerGroupName需要由应用来保证唯一
          */
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("SimpleRPCHookPushConsumer_001", rpcHook,
-            allocateMessageQueueStrategy);
-        String namesrvAddr = "192.168.15.11:9876;192.168.15.12:9876";
-        consumer.setNamesrvAddr(namesrvAddr);
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("SimplePushConsumer_001");
+        
+        consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
 
         /**
          * 订阅指定topic下tags分别等于TagA或TagB或TagD
          */
-        consumer.subscribe("RPCHookTopic", "*");
+        consumer.subscribe("SimpleOrderTopic", "TagA || TagC || TagD");
+        
+        /**
+         * 订阅指定topic下所有消息<br>
+         * 注意：一个consumer对象可以订阅多个topic
+         */
+        consumer.subscribe("SimplePayTopic", "*");
 
         /**
          * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费<br>
@@ -75,18 +59,15 @@ public class SimplePushConsumerRPCHook {
                     // 执行TopicTest1的消费逻辑
                     if (msg.getTags() != null && msg.getTags().equals("TagA")) {
                         // 执行TagA的消费
-                        System.out
-                            .println("####----获取订单消息TagA：" + new String(msg.getBody()) + ", 业务逻辑处理ing...\n");
+                        System.out.println("####----获取订单消息TagA：" + new String(msg.getBody()) + ", 业务逻辑处理ing...\n");
                     }
                     else if (msg.getTags() != null && msg.getTags().equals("TagC")) {
                         // 执行TagC的消费
-                        System.out
-                            .println("####----获取订单消息TagC：" + new String(msg.getBody()) + ", 业务逻辑处理ing...\n");
+                        System.out.println("####----获取订单消息TagC：" + new String(msg.getBody()) + ", 业务逻辑处理ing...\n");
                     }
                     else if (msg.getTags() != null && msg.getTags().equals("TagD")) {
                         // 执行TagD的消费
-                        System.out
-                            .println("####----获取订单消息TagD：" + new String(msg.getBody()) + ", 业务逻辑处理ing...\n");
+                        System.out.println("####----获取订单消息TagD：" + new String(msg.getBody()) + ", 业务逻辑处理ing...\n");
                     }
                 }
                 else if (msg.getTopic().equals("SimplePayTopic")) {

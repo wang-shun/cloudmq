@@ -1,10 +1,4 @@
-package com.gome.rocketmq.example.ttx;
-
-import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
+package com.gome.rocketmq.example.ttx.tps;
 
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
@@ -13,7 +7,13 @@ import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.client.producer.SendStatus;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
-import com.gome.rocketmq.common.MyUtil;
+import com.gome.rocketmq.common.MyUtils;
+
+import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 public class TPSProducer {
@@ -27,7 +27,7 @@ public class TPSProducer {
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
 
         final DefaultMQProducer producer = new DefaultMQProducer("TPSProducer");
-        producer.setNamesrvAddr(MyUtil.getNamesrvAddr());
+        producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
 
         // producer.setSendMsgTimeout(5000);
 

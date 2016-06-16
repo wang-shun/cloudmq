@@ -1,15 +1,15 @@
-package com.gome.rocketmq.example.ttx;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+package com.gome.rocketmq.example.ttx.simple;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
 import com.alibaba.rocketmq.client.consumer.PullCallback;
 import com.alibaba.rocketmq.client.consumer.PullResult;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageQueue;
-import com.gome.rocketmq.common.MyUtil;
+import com.gome.rocketmq.common.MyUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -21,7 +21,7 @@ public class SimplePullConsumer {
 
     public static void main(String[] args) throws MQClientException {
         DefaultMQPullConsumer consumer = new DefaultMQPullConsumer("please_rename_unique_group_name_5");
-        consumer.setNamesrvAddr(MyUtil.getNamesrvAddr());
+        consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         
         consumer.start();
 
