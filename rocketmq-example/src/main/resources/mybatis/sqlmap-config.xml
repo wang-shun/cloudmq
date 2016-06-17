@@ -16,10 +16,12 @@
 	<!-- 全局别名设置，在映射文件中只需写别名，而不必写出整个类路径 -->
 	<typeAliases>
 		<typeAlias type="com.gome.rocketmq.domain.UserDemo" alias="userDemo"/>
+		<typeAlias type="com.gome.rocketmq.domain.MsgInfo" alias="msgInfo"/>
 	</typeAliases>
 
 	<!-- 映射文件路径 -->
 	<mappers>
 		<mapper resource="mybatis/sqlmap/UserDemo.xml" />
+		<mapper resource="mybatis/sqlmap/MsgInfo.xml" />
 	</mappers>
 </configuration>
