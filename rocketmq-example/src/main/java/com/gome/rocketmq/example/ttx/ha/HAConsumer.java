@@ -60,7 +60,18 @@ public class HAConsumer {
                     msgInfo.setBodyHashcode(bodyHashcode);
                     List<MsgInfo> msgInfos = msgInfoDao.selectEntryList(msgInfo);
                     if(msgInfos.size() == 0){
-                        System.out.println("[bodyHashcode]==msgInfos===============================:" + body + "/" + bodyHashcode + "/" + msgInfos);
+                        // 如果根据deleted = null条件没有找到，则判断是否为重复消息
+                        msgInfo.setDeleted(1);
+                        List<MsgInfo> msgInfosRepeat = msgInfoDao.selectEntryList(msgInfo);
+                        if(msgInfosRepeat.size() > 0){
+                            MsgInfo msgInfoRepeat = msgInfosRepeat.get(0);
+                            msgInfoRepeat.setRepeatNum(msgInfosRepeat.size());
+                            msgInfoDao.updateByKey(msgInfoRepeat);
+                        }else {
+                            // 如果deleted =null 或者 deleted =1都找不到消息那么，则该消息为异常消息，置deleted =44
+                            msgInfo.setDeleted(44);
+                            msgInfoDao.insertEntry(msgInfo);
+                        }
                     }
                     for (MsgInfo info : msgInfos) {
                         MsgNums++;
@@ -76,7 +87,7 @@ public class HAConsumer {
         });
 
         /**
-         * Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
+         * Consumer对象在使用之前必须要调用start初始化，初始化一次即可
          */
         consumer.start();
 

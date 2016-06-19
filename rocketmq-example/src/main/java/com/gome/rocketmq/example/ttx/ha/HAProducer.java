@@ -13,12 +13,21 @@ import com.gome.rocketmq.domain.MsgInfo;
 
 import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class HAProducer {
 
+    private static int threadCount;
+    private static int messageSize;
+    private static int onceTimeNum;
+    private static int sleepTime;
+    private static boolean ischeck;
+
     private static MsgInfoDao msgInfoDao = (MsgInfoDao) MyUtils.getSpringBean("msgInfoDao");
     private static DefaultMQProducer producer = new DefaultMQProducer("HAProducer");
+
     static {
         producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
 
@@ -29,11 +38,35 @@ public class HAProducer {
         }
     }
 
-    public static void main(String[] args) throws MQClientException, RemotingException, InterruptedException, MQBrokerException {
-        for (int i = 0; i < 100000; i++) {
-            testMsgHA();
+    public static void main(String[] args) {
+
+        final int W = 10000;
+        final int K = 1000;
+        threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 1*W;
+        messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 1024*2;
+        onceTimeNum = args.length >= 3 ? Integer.parseInt(args[2]) : 1*W;
+        sleepTime = args.length >= 4 ? Integer.parseInt(args[3]) : 1;
+
+        final Message msg = buildMessage(messageSize);
+
+        final ExecutorService sendThreadPool = Executors.newFixedThreadPool(threadCount);
+        for (int i = 0; i < threadCount; i++) {
+            sendThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            Thread.sleep(sleepTime);
+                            for (int i = 0; i < onceTimeNum; i++) {
+                                testMsgHA();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
         }
-        System.exit(0);
     }
 
     private static void testMsgHA() throws MQClientException, RemotingException, InterruptedException, MQBrokerException {
@@ -54,19 +87,33 @@ public class HAProducer {
         int bodyHashcode = body.hashCode();
         msgInfo.setBodyHashcode(bodyHashcode);
         msgInfo.setKey(key);
-        System.out.println("body==============bodyHashcode" +  body + "/" + bodyHashcode);
+        System.out.println("body==============bodyHashcode" + body + "/" + bodyHashcode);
         saveMsgInfo2DB(msgInfo);
 
         SendResult sendResult = producer.send(message);
-        if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
-
+        if (sendResult.getSendStatus() != SendStatus.SEND_OK) {
+            // 如果发送消息不成功，则置deleted =444 ，表示发送异常消息
+            msgInfo.setDeleted(444);
+            saveMsgInfo2DB(msgInfo);
         }
         System.out.println(sendResult);
-        System.out.println("I,m the last!!!");
-
     }
 
     private static void saveMsgInfo2DB(MsgInfo msgInfo) {
         msgInfoDao.insertEntry(msgInfo);
+    }
+
+    private static Message buildMessage(final int messageSize) {
+        Message msg = new Message();
+        msg.setTopic("BenchmarkTest");
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < messageSize; i += 10) {
+            sb.append("hello baby");
+        }
+
+        msg.setBody(sb.toString().getBytes());
+
+        return msg;
     }
 }
