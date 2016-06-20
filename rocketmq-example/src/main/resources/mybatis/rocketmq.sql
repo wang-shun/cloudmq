@@ -51,4 +51,6 @@ CREATE  TABLE IF NOT EXISTS `rocketmq`.`msg_info` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 COMMENT = 'msg信息表';
+/*由于body_hashcode高频率查询，因此创建索引提高查询效率*/
+CREATE INDEX body_hashcode_index ON msg_info(body_hashcode);
 
