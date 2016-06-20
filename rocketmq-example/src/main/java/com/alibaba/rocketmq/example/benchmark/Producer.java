@@ -15,6 +15,13 @@
  */
 package com.alibaba.rocketmq.example.benchmark;
 
+import com.alibaba.rocketmq.client.exception.MQBrokerException;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
+import com.alibaba.rocketmq.common.message.Message;
+import com.alibaba.rocketmq.remoting.exception.RemotingException;
+import com.gome.rocketmq.common.MyUtils;
+
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,19 +29,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
-import com.alibaba.rocketmq.client.exception.MQBrokerException;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
-import com.alibaba.rocketmq.common.message.Message;
-import com.alibaba.rocketmq.remoting.exception.RemotingException;
-
 
 /**
  * 性能测试，多线程同步发送消息
  */
 public class Producer {
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 64;
+        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 6400;
         final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
         final boolean keyEnable = args.length >= 3 ? Boolean.parseBoolean(args[2]) : false;
 
@@ -67,6 +68,7 @@ public class Producer {
                     Long[] begin = snapshotList.getFirst();
                     Long[] end = snapshotList.getLast();
 
+                    // index含义：0-代表当前时间，1-发送成功数量 2-发送失败数量 3-接收成功数量 4-接收失败数量 5-发送消息成功总耗时
                     final long sendTps =
                             (long) (((end[3] - begin[3]) / (double) (end[0] - begin[0])) * 1000L);
                     final double averageRT = ((end[5] - begin[5]) / (double) (end[3] - begin[3]));
@@ -95,6 +97,7 @@ public class Producer {
         }, 10000, 10000);
 
         final DefaultMQProducer producer = new DefaultMQProducer("benchmark_producer");
+        producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         producer.setInstanceName(Long.toString(System.currentTimeMillis()));
 
         producer.setCompressMsgBodyOverHowmuch(Integer.MAX_VALUE);

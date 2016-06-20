@@ -9,7 +9,6 @@ import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.gome.rocketmq.common.MyUtils;
 
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -18,12 +17,19 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class TPSProducer {
 
-    final static int nThreads = 10;
-    final static int sendNumOnceTime = 1000;
-    final static int topicNums = 1000;
+    private static int nThreads;
+    private static int sendNumOnceTime;
+    private static int topicNums;
 
 
     public static void main(String[] args) throws MQClientException {
+        final int B = 100;
+        final int K = 1000;
+        final int W = 10000;
+        nThreads = args.length >= 1 ? Integer.parseInt(args[0]) : 1*B;
+        sendNumOnceTime = args.length >= 2 ? Integer.parseInt(args[1]) : 1*B;
+        topicNums = args.length >= 3 ? Integer.parseInt(args[2]) : 1024*2;
+
         final AtomicLong atomicSuccessNums = new AtomicLong(0l);
 
         final DefaultMQProducer producer = new DefaultMQProducer("TPSProducer");
@@ -37,7 +43,8 @@ public class TPSProducer {
         long startCurrentTimeMillis = System.currentTimeMillis();
 
         for (int i = 0; i < nThreads; i++) {
-            String topicRandom = "TpsTopic" + new Random().nextInt(topicNums);
+            //String topicRandom = "TpsTopic" + new Random().nextInt(topicNums);
+            String topicRandom = "TpsTopic";
             // System.out.println("TpsTopic name is :" + topicRandom);
             final Message message = new Message(topicRandom, "tagA", ("I,m test tps topic " + i).getBytes());
 
