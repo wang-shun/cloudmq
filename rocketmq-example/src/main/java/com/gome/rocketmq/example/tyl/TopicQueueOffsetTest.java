@@ -7,6 +7,10 @@ import com.alibaba.rocketmq.client.producer.SendStatus;
 import com.alibaba.rocketmq.common.message.Message;
 import com.gome.rocketmq.common.MyUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -18,16 +22,15 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class TopicQueueOffsetTest {
 
-    final static int nThread = 4;
-    final static int sendOneTime = 1000;
-    final static int topicNums = 8;
-    final static String topicName = "topicQueueOffsetTest";
+    final static int nThread = 5;
+    final static int sendOneTime = 50;
+    final static String topicName = "topicQueueOffsetCheck";
 
     public static void main(String[] args) throws MQClientException {
         final AtomicLong success = new AtomicLong(0);
         final DefaultMQProducer producer = new DefaultMQProducer("DefaultCluster");
         producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
-        producer.setDefaultTopicQueueNums(topicNums);
+        final Map<Integer, Long> offsetMap = new HashMap<Integer, Long>();
         producer.start();
 
         ExecutorService excutor = Executors.newFixedThreadPool(nThread);
@@ -39,8 +42,13 @@ public class TopicQueueOffsetTest {
                 long totalNums = nThread * sendOneTime;
                 long escaped = end - begin;
                 long realCount = success.get();
-                String msg = String.format("发送%s个queue的数据完毕. 总次数:%s，已发次数:%s，总耗时:%s ms，QPS:%s", topicNums, totalNums, realCount, escaped, (realCount * 1000 / escaped));
+                //String msg = String.format("发送%s个queue的数据完毕. 总次数:%s，已发次数:%s，总耗时:%s ms，QPS:%s", topicNums, totalNums, realCount, escaped, (realCount * 1000 / escaped));
+                String msg = String.format("send message end. queueNum=%s，success=%s", producer.getDefaultTopicQueueNums(), totalNums, realCount);
                 System.out.println(msg);
+
+                for (int i = 0; i < offsetMap.size(); i++) {
+                    System.out.println("topic=" + topicName + ", queueId=" + i + ", offset=" + offsetMap.get(i));
+                }
                 producer.shutdown();
             }
         });
@@ -49,30 +57,32 @@ public class TopicQueueOffsetTest {
             excutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    sendMessage(producer, barrier, success);
+                    sendMessage(producer, barrier, success, offsetMap);
                 }
             });
         }
     }
 
-    private static void sendMessage(DefaultMQProducer producer, CyclicBarrier barrier, AtomicLong success) {
+    private static void sendMessage(DefaultMQProducer producer, CyclicBarrier barrier, AtomicLong success, Map<Integer, Long> offsetMap) {
         try {
             for (int j = 0; j < sendOneTime; j++) {
                 Message message = new Message(topicName, "tagOffsetA", ("test bodyData " + j).getBytes());
                 SendResult result = producer.send(message);
                 if (result.getSendStatus() == SendStatus.SEND_OK) {
-                    System.out.println(Thread.currentThread().getName() + "===" + success.incrementAndGet() + "===" + result.getMessageQueue().getQueueId() + "===" + result.getQueueOffset());
+                    offsetMap.put(result.getMessageQueue().getQueueId(), result.getQueueOffset());
+                    String data = String.format("threadID=%s, success=%s, queueID=%s, offset=%s", Thread.currentThread().getName(), success.incrementAndGet(), result.getMessageQueue().getQueueId(), result.getQueueOffset());
+                    System.out.println(data);
                 } else {
                     System.out.println("error: " + Thread.currentThread().getName() + "===" + success.get() + "===" + result.toString());
                 }
             }
 
-            System.out.println(Thread.currentThread().getName() + " 发送数据完毕.总成功数===" + success.get());
+            // System.out.println(Thread.currentThread().getName() + " send all data. success===" + success.get());
             barrier.await();
         } catch (Exception e) {
             try {
                 barrier.await();
-                System.out.println(Thread.currentThread().getName() + " 未完成发送,已发总数===" + success.get());
+                System.out.println(Thread.currentThread().getName() + " send not ok, success===" + success.get());
                 e.printStackTrace();
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
