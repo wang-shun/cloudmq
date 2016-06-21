@@ -18,9 +18,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class TopicQueueOffsetTest {
 
-    final static int nThread = 3;
-    final static int sendOneTime = 6000;
-    final static int topicNums = 16;
+    final static int nThread = 4;
+    final static int sendOneTime = 1000;
+    final static int topicNums = 8;
     final static String topicName = "topicQueueOffsetTest";
 
     public static void main(String[] args) throws MQClientException {
@@ -60,7 +60,7 @@ public class TopicQueueOffsetTest {
             for (int j = 0; j < sendOneTime; j++) {
                 Message message = new Message(topicName, "tagOffsetA", ("test bodyData " + j).getBytes());
                 SendResult result = producer.send(message);
-                if (result.getSendStatus() == SendStatus.SLAVE_NOT_AVAILABLE || result.getSendStatus() == SendStatus.SEND_OK) {
+                if (result.getSendStatus() == SendStatus.SEND_OK) {
                     System.out.println(Thread.currentThread().getName() + "===" + success.incrementAndGet() + "===" + result.getMessageQueue().getQueueId() + "===" + result.getQueueOffset());
                 } else {
                     System.out.println("error: " + Thread.currentThread().getName() + "===" + success.get() + "===" + result.toString());
