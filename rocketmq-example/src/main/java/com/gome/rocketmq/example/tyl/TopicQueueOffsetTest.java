@@ -22,15 +22,18 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class TopicQueueOffsetTest {
 
-    final static int nThread = 5;
-    final static int sendOneTime = 50;
+    final static int nThread = 6;
+    final static int sendOneTime = 4000;
     final static String topicName = "topicQueueOffsetCheck";
+    final static int topicNumbers = 12;
 
     public static void main(String[] args) throws MQClientException {
         final AtomicLong success = new AtomicLong(0);
+        final Map<Integer, Long> offsetMap = new HashMap<Integer, Long>();
         final DefaultMQProducer producer = new DefaultMQProducer("DefaultCluster");
         producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
-        final Map<Integer, Long> offsetMap = new HashMap<Integer, Long>();
+        producer.setDefaultTopicQueueNums(topicNumbers);
+
         producer.start();
 
         ExecutorService excutor = Executors.newFixedThreadPool(nThread);
@@ -43,9 +46,9 @@ public class TopicQueueOffsetTest {
                 long escaped = end - begin;
                 long realCount = success.get();
                 //String msg = String.format("发送%s个queue的数据完毕. 总次数:%s，已发次数:%s，总耗时:%s ms，QPS:%s", topicNums, totalNums, realCount, escaped, (realCount * 1000 / escaped));
+
                 String msg = String.format("send message end. queueNum=%s，success=%s", producer.getDefaultTopicQueueNums(), totalNums, realCount);
                 System.out.println(msg);
-
                 for (int i = 0; i < offsetMap.size(); i++) {
                     System.out.println("topic=" + topicName + ", queueId=" + i + ", offset=" + offsetMap.get(i));
                 }
@@ -70,7 +73,7 @@ public class TopicQueueOffsetTest {
                 SendResult result = producer.send(message);
                 if (result.getSendStatus() == SendStatus.SEND_OK) {
                     offsetMap.put(result.getMessageQueue().getQueueId(), result.getQueueOffset());
-                    String data = String.format("threadID=%s, success=%s, queueID=%s, offset=%s", Thread.currentThread().getName(), success.incrementAndGet(), result.getMessageQueue().getQueueId(), result.getQueueOffset());
+                    String data = String.format("threadID=%s, success=%s, offset=%s, result=%s", Thread.currentThread().getName(), success.incrementAndGet(), result.getQueueOffset(), result.getMessageQueue().toString());
                     System.out.println(data);
                 } else {
                     System.out.println("error: " + Thread.currentThread().getName() + "===" + success.get() + "===" + result.toString());
