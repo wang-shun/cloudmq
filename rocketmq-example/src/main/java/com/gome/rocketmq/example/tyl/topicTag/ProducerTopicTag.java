@@ -21,7 +21,7 @@ public class ProducerTopicTag {
             DefaultMQProducer producer = new DefaultMQProducer(MyUtils.getDefaultCluster());
             producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
             producer.start();
-            int sendOneTime = 100000;
+            int sendOneTime = 5;
             String tags = null;
             SendResult sendResult = null;
 

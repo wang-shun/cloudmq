@@ -1,4 +1,4 @@
-package com.gome.rocketmq.example.tyl.cluster;
+package com.gome.rocketmq.example.tyl.broadcast;
 
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
@@ -9,35 +9,27 @@ import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.gome.rocketmq.common.MyUtils;
 
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicLong;
-
 
 /**
  * @author: tianyuliang
  * @since: 2016/6/22
  */
-public class ClusterProducer {
+public class BroadCastProducer {
     public static void main(String[] args) {
         try {
             DefaultMQProducer producer = new DefaultMQProducer(MyUtils.getDefaultCluster());
             producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
             producer.start();
-            int sendOneTime = 20;
-            SendResult result = null;
+            int sendOneTime = 10;
+            SendResult sendResult = null;
             Message message = null;
             for (int i = 0; i < sendOneTime; i++) {
-                message = new Message("clusterTopicTest", "tagA", ("data" + i).getBytes());
-                result = producer.send(message);
-                if (result.getSendStatus() == SendStatus.SEND_OK) {
-                    System.out.println("send ok. index=" + i + ",msgId=" + result.getMsgId() + ",queueId=" + result.getMessageQueue().getQueueId()
-                            + ",offset=" + result.getQueueOffset() + ",brokerName=" + result.getMessageQueue().getBrokerName());
+                message = new Message("broadcastTopicTest", "tagA", ("data" + i).getBytes());
+                sendResult = producer.send(message);
+                if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
+                    System.out.println("send msg. topic=" + message.getTopic() + ",msgId=" + sendResult.getMsgId() + ",queueId=" + sendResult.getMessageQueue().getQueueId() + ",offset=" + sendResult.getQueueOffset());
                 }
             }
-            System.out.println("send all message ok. total=" + sendOneTime);
             producer.shutdown();
         } catch (MQClientException e) {
             e.printStackTrace();

@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * @author: tianyuliang
- * @since: 2016/6/22
+ * xxx
+ *
+ * @author tianyuliang
+ * @date 2016/6/23
  */
-public class ClusterConsumer4 {
+public class ClusterConsumer9 {
     public static void main(String[] args) throws InterruptedException, MQClientException {
         try {
             final AtomicLong success = new AtomicLong(0);
@@ -38,13 +40,13 @@ public class ClusterConsumer4 {
                 }
             });
             consumer.start();
-            System.out.println(consumer.getInstanceName() + " consumer started ...");
+            System.out.println(consumer.getInstanceName() +" consumer started ...");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void sleepTime(int second) {
+    private static void sleepTime(int second){
         try {
             Thread.sleep(second * 1000);
         } catch (InterruptedException e) {
