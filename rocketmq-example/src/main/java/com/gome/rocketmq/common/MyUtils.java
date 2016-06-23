@@ -51,4 +51,15 @@ public class MyUtils {
         return applicationContext.getBean(name);
 
     }
+
+    /**
+     * 获取默认的集群名称
+     *
+     * @author tianyuliang
+     * @since 2016/6/20
+     */
+    public static String getDefaultCluster(){
+        return "DefaultCluster";
+    }
+
 }
