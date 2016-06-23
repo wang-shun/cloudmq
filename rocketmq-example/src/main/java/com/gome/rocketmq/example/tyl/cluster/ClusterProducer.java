@@ -17,8 +17,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
- * @author: GaoYanLei
- * @since: 2016/6/3
+ * @author: tianyuliang
+ * @since: 2016/6/22
  */
 public class ClusterProducer {
     public static void main(String[] args) {
@@ -30,7 +30,7 @@ public class ClusterProducer {
             SendResult sendResult = null;
             Message message = null;
             for (int i = 0; i < sendOneTime; i++) {
-                message = new Message("orderTopicTest", "tagA", ("data" + i).getBytes());
+                message = new Message("broadcastTopicTest", "tagA", ("data" + i).getBytes());
                 sendResult = producer.send(message);
                 if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
                     System.out.println("send msg. topic=" + message.getTopic() + ",msgId=" + sendResult.getMsgId() + ",queueId=" + sendResult.getMessageQueue().getQueueId() + ",offset=" + sendResult.getQueueOffset());

@@ -12,15 +12,15 @@ import com.gome.rocketmq.common.MyUtils;
 import java.util.List;
 
 /**
- * @author: GaoYanLei
- * @since: 2016/6/3
+ * @author: tianyuliang
+ * @since: 2016/6/22
  */
 public class ClusterConsumer4 {
     public static void main(String[] args) throws InterruptedException, MQClientException {
         try {
             final DefaultMQPushConsumer consumer = new DefaultMQPushConsumer();
             consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
-            consumer.subscribe("orderTopicTest", "*");
+            consumer.subscribe("broadcastTopicTest", "*");
             consumer.setMessageModel(MessageModel.BROADCASTING);
             consumer.setConsumerGroup("DefaultCluster2");
             consumer.registerMessageListener(new MessageListenerConcurrently() {
