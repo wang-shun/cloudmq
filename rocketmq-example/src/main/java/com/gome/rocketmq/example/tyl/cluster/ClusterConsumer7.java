@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2016/6/23
  */
 public class ClusterConsumer7 {
-
     public static void main(String[] args) throws InterruptedException, MQClientException {
         try {
             final AtomicLong success = new AtomicLong(0);
@@ -35,7 +34,8 @@ public class ClusterConsumer7 {
                     for (MessageExt msg : msgs) {
                         sleepTime(1);
                         System.out.println("instanceName=" + consumer.getInstanceName() + ",queueId=" + msg.getQueueId()
-                                + ",msgId=" + msg.getMsgId() + ", success=" + success.incrementAndGet() + ", body=" + new String(msg.getBody()));
+                                + ",msgId=" + msg.getMsgId() + ", success=" + success.incrementAndGet()
+                                + ", body=" + new String(msg.getBody()) + ",storeHost=" + msg.getStoreHost());
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
@@ -54,5 +54,4 @@ public class ClusterConsumer7 {
             e.printStackTrace();
         }
     }
-
 }

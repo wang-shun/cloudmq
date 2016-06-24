@@ -33,7 +33,8 @@ public class ClusterConsumer3 {
                     for (MessageExt msg : msgs) {
                         sleepTime(1);
                         System.out.println("instanceName=" + consumer.getInstanceName() + ",queueId=" + msg.getQueueId()
-                                + ",msgId=" + msg.getMsgId() + ", success=" + success.incrementAndGet() + ", body=" + new String(msg.getBody()));
+                                + ",msgId=" + msg.getMsgId() + ", success=" + success.incrementAndGet()
+                                + ", body=" + new String(msg.getBody()) + ",storeHost=" + msg.getStoreHost());
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
