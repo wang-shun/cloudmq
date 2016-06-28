@@ -7,6 +7,7 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.gome.rocketmq.common.MyUtils;
+import com.gome.rocketmq.example.tyl.Benchmark.StatsBenchmarkConsumer;
 
 import java.text.DecimalFormat;
 import java.util.LinkedList;
@@ -16,14 +17,14 @@ import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 性能测试，消费消息
+ * 单线程，顺序消费，测试TPS
  *
  * @author tianyuliang
  * @date 2016/6/28
  */
-public class BenchmarkConsumer {
+public class SimpleConsumer {
 
-    static final String topic = "BenchmarkTopicTest";
+    static final String topic = "BenchmarkSimpleTopicTest";
 
     public static void main(String[] args) throws MQClientException {
         final DecimalFormat df = new DecimalFormat("####.000");
@@ -52,7 +53,7 @@ public class BenchmarkConsumer {
                     final double averageS2CRT = ((end[3] - begin[3]) / (double) (end[1] - begin[1]));
 
                     System.out.printf(
-                            "consumer success=%d, TPS=%d, average(B2C) runTime=%sms, average(S2C) runTime=%sms, MAX(B2C) runTime=%dms, MAX(S2C) runTime=%dms\n"
+                            "consumer success=%d, TPS=%d, average(B2C) runTime=%s ms, average(S2C) runTime=%s ms, MAX(B2C) runTime=%d ms, MAX(S2C) runTime=%d ms\n"
                             , end[1]//
                             , consumeTps//
                             , df.format(averageB2CRT)//
@@ -109,7 +110,6 @@ public class BenchmarkConsumer {
         System.out.println("consumerGroup=" + consumer.getConsumerGroup() + ", instanceName=" + consumer.getInstanceName() + ", consumer started.");
     }
 
-
     public static void compareAndSetMax(final AtomicLong target, final long value) {
         long prev = target.get();
         while (value > prev) {
@@ -123,4 +123,3 @@ public class BenchmarkConsumer {
 
 
 }
-

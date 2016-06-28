@@ -6,31 +6,29 @@ import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.common.message.Message;
 import com.alibaba.rocketmq.remoting.exception.RemotingException;
 import com.gome.rocketmq.common.MyUtils;
+import com.gome.rocketmq.example.tyl.Benchmark.StatsBenchmarkProducer;
 
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
- * 多线程发送消息，性能测试
+ * 单线程，顺序发送，测试TPS
  *
  * @author tianyuliang
  * @date 2016/6/28
  */
-public class BenchmarkProducer {
+public class SimpleProducer {
 
-    static final String topic = "BenchmarkTopicTest";
+    static final String topic = "BenchmarkSimpleTopicTest";
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 6400;
-        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
-        final boolean keyEnable = args.length >= 3 ? Boolean.parseBoolean(args[2]) : false;
+        final int threadCount = 1;
+        final int messageSize = args.length >= 1 ? Integer.parseInt(args[0]) : 128;
+        final boolean keyEnable = args.length >= 2 ? Boolean.parseBoolean(args[1]) : false;
 
         final Message msg = buildMessage(messageSize);
-        final ExecutorService sendThreadPool = Executors.newFixedThreadPool(threadCount);
         final StatsBenchmarkProducer statsBenchmark = new StatsBenchmarkProducer();
         final Timer timer = new Timer("BenchmarkTimerThread", true);
         final LinkedList<Long[]> snapshotList = new LinkedList<Long[]>();
@@ -57,7 +55,7 @@ public class BenchmarkProducer {
                     final double averageRT = ((end[5] - begin[5]) / (double) (end[3] - begin[3]));
 
                     System.out.printf(
-                            "send message success=%d, TPS=%d, max runTime=%d ms, average runTime=%s ms, send failed=%d, response failed=%d\n"
+                            "send simple message success=%d, TPS=%d, max runTime=%d ms, average runTime=%s ms, send failed=%d, response failed=%d\n"
                             , end[1]
                             , sendTps//
                             , statsBenchmark.getSendMessageMaxRT().get()//
@@ -82,62 +80,56 @@ public class BenchmarkProducer {
         producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         producer.setCompressMsgBodyOverHowmuch(Integer.MAX_VALUE);
         producer.start();
-
         System.out.printf("threadCount=%d, messageSize=%d, keyEnable=%s\n", threadCount, messageSize, keyEnable);
         System.out.println("producerGroup=" + producer.getProducerGroup() + ", instanceName=" + producer.getInstanceName() + ", consumer started.");
 
         for (int i = 0; i < threadCount; i++) {
-            sendThreadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        try {
-                            final long beginTimestamp = System.currentTimeMillis();
-                            if (keyEnable) {
-                                msg.setKeys(String.valueOf(beginTimestamp / 1000));
-                            }
-                            producer.send(msg);
-                            statsBenchmark.getSendRequestSuccessCount().incrementAndGet();
-                            statsBenchmark.getReceiveResponseSuccessCount().incrementAndGet();
+            while (true) {
+                try {
+                    final long beginTimestamp = System.currentTimeMillis();
+                    if (keyEnable) {
+                        msg.setKeys(String.valueOf(beginTimestamp / 1000));
+                    }
+                    producer.send(msg);
+                    statsBenchmark.getSendRequestSuccessCount().incrementAndGet();
+                    statsBenchmark.getReceiveResponseSuccessCount().incrementAndGet();
 
-                            final long currentRT = System.currentTimeMillis() - beginTimestamp;
-                            statsBenchmark.getSendMessageSuccessTimeTotal().addAndGet(currentRT);
+                    final long currentRT = System.currentTimeMillis() - beginTimestamp;
+                    statsBenchmark.getSendMessageSuccessTimeTotal().addAndGet(currentRT);
 
-                            long prevMaxRT = statsBenchmark.getSendMessageMaxRT().get();
-                            while (currentRT > prevMaxRT) {
-                                boolean updated = statsBenchmark.getSendMessageMaxRT().compareAndSet(prevMaxRT, currentRT);
-                                if (updated) {
-                                    break;
-                                }
-                                prevMaxRT = statsBenchmark.getSendMessageMaxRT().get();
-                            }
-                        } catch (RemotingException e) {
-                            statsBenchmark.getSendRequestFailedCount().incrementAndGet();
-                            e.printStackTrace();
-
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e1) {
-                            }
-                        } catch (InterruptedException e) {
-                            statsBenchmark.getSendRequestFailedCount().incrementAndGet();
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e1) {
-                            }
-                        } catch (MQClientException e) {
-                            statsBenchmark.getSendRequestFailedCount().incrementAndGet();
-                            e.printStackTrace();
-                        } catch (MQBrokerException e) {
-                            statsBenchmark.getReceiveResponseFailedCount().incrementAndGet();
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e1) {
-                            }
+                    long prevMaxRT = statsBenchmark.getSendMessageMaxRT().get();
+                    while (currentRT > prevMaxRT) {
+                        boolean updated = statsBenchmark.getSendMessageMaxRT().compareAndSet(prevMaxRT, currentRT);
+                        if (updated) {
+                            break;
                         }
+                        prevMaxRT = statsBenchmark.getSendMessageMaxRT().get();
+                    }
+                } catch (RemotingException e) {
+                    statsBenchmark.getSendRequestFailedCount().incrementAndGet();
+                    e.printStackTrace();
+
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e1) {
+                    }
+                } catch (InterruptedException e) {
+                    statsBenchmark.getSendRequestFailedCount().incrementAndGet();
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e1) {
+                    }
+                } catch (MQClientException e) {
+                    statsBenchmark.getSendRequestFailedCount().incrementAndGet();
+                    e.printStackTrace();
+                } catch (MQBrokerException e) {
+                    statsBenchmark.getReceiveResponseFailedCount().incrementAndGet();
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e1) {
                     }
                 }
-            });
+            }
         }
     }
 
@@ -153,7 +145,5 @@ public class BenchmarkProducer {
         return msg;
     }
 
+
 }
-
-
-

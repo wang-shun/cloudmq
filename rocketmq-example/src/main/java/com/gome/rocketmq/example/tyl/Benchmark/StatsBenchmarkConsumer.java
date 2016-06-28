@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2016/6/28
  */
 public class StatsBenchmarkConsumer {
-    // 1 接收消息总次数
+    // 1 接收消息总数
     private final AtomicLong receiveMessageTotalCount = new AtomicLong(0L);
     // 2 消费总耗时
     private final AtomicLong born2ConsumerTotalRT = new AtomicLong(0L);
