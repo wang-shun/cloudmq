@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="producer" class="com.gome.api.open.bean.ProducerBean" init-method="start" destroy-method="shutdown">
+        <property name="properties" > <!--生产者配置信息-->
+            <props>
+                <prop key="ProducerId">ProducerId-test</prop>
+                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+            </props>
+        </property>
+    </bean>
+</beans>
