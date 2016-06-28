@@ -1,5 +1,10 @@
 package com.gome.api.impl.producer;
 
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.slf4j.Logger;
+
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.log.ClientLogger;
@@ -7,16 +12,12 @@ import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.remoting.exception.RemotingConnectException;
 import com.alibaba.rocketmq.remoting.exception.RemotingTimeoutException;
 import com.gome.api.impl.base.MQClientAbstract;
-import com.gome.api.open.exception.GomeClientException;
 import com.gome.api.open.base.Message;
 import com.gome.api.open.base.Producer;
-import com.gome.common.FAQ;
-import com.gome.common.PropertyKeyConst;
 import com.gome.api.open.base.SendResult;
-import org.slf4j.Logger;
-
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.gome.api.open.exception.GomeClientException;
+import com.gome.common.FAQ;
+import com.gome.common.PropertiesConst;
 
 ;
 
@@ -53,10 +54,10 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
             e.put("AsyncBufferSize", "2048");
             e.put("MaxBatchNum", "1");
             e.put("WakeUpNum", "1");
-            e.put(PropertyKeyConst.NAMESRV_ADDR, this.getNameServerAddr());
+            e.put(PropertiesConst.Keys.NAMESRV_ADDR, this.getNameServerAddr());
             e.put("InstanceName", this.buildIntanceName());
         }
-        catch (Throwable var6) {
+        catch (Throwable throwable) {
             log.error("system mqtrace hook init failed ,maybe can\'t send msg trace data");
         }
 
