@@ -44,7 +44,7 @@ public class MQFactory {
     }
 
     /**
-     * 顺序消息
+     * 顺序消息（建议尽量使用常规模式，顺序类型会降低性能及可靠性）
      *
      * @author tantexian
      * @since 2016/6/28

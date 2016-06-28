@@ -1,12 +1,12 @@
 package com.gome.mq.simple;
 
+import java.util.Properties;
+
 import com.gome.api.open.base.Message;
 import com.gome.api.open.base.Producer;
 import com.gome.api.open.base.SendResult;
 import com.gome.api.open.factory.MQFactory;
-import com.gome.common.PropertyKeyConst;
-
-import java.util.Properties;
+import com.gome.common.PropertiesConst;
 
 
 /**
@@ -16,8 +16,10 @@ import java.util.Properties;
 public class ProducerTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
-        properties.put(PropertyKeyConst.ProducerId, "ProducerId-test");// 您在控制台创建的Producer
-        /*properties.put(PropertyKeyConst.NAMESRV_ADDR, "127.0.0.1:9876"); 不设置则默认为127.0.0.1:9876*/
+        // 您在控制台创建的ProducerId
+        properties.put(PropertiesConst.Keys.ProducerId, "ProducerId-test");
+        // 不设置则默认为127.0.0.1:9876
+        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 
         Producer producer = MQFactory.createProducer(properties);
         // 在发送消息前，必须调用start方法来启动Producer，只需调用一次即可。
@@ -32,11 +34,12 @@ public class ProducerTest {
                 // Message Body 可以是任何二进制形式的数据， MQ不做任何干预，
                 // 需要Producer与Consumer协商好一致的序列化和反序列化方式
                 "Hello MQ".getBytes());
-            // 设置代表消息的业务关键属性，请尽可能全局唯一。
+            // 设置代表消息的业务关键属性，请尽可能全局唯一。（例如订单ID）。
             // 以方便您在无法正常收到消息情况下，可通过MQ控制台查询消息并补发。
             // 注意：不设置也不会影响消息正常收发
             msg.setKey("ORDERID_" + i);
             // 发送消息，只要不抛异常就是成功
+            // 建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
             SendResult sendResult = producer.send(msg);
             System.out.println(sendResult);
         }
