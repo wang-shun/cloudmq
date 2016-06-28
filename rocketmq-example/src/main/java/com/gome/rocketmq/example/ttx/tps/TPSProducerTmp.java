@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-public class TPSProducer {
+public class TPSProducerTmp {
 
     private static int nThreads;
     private static int sendNumOnceTime;

@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-public class TPSProducer {
+public class TPSProducerOut {
 
     private static int nThreads;
     private static int sendNumOnceTime;
@@ -56,7 +56,7 @@ public class TPSProducer {
                         try {
                             SendResult sendResult = producer.send(message);
                             if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
-                                //System.out.println(atomicSuccessNums.incrementAndGet());
+                                System.out.println(atomicSuccessNums.incrementAndGet() + "    message == " + message);
                             }
                             else {
                                 System.out.println("#### ERROR Message :" + sendResult);

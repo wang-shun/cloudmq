@@ -19,6 +19,7 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.SendResult;
 import com.alibaba.rocketmq.common.message.Message;
+import com.gome.rocketmq.common.MyUtils;
 
 
 public class Producer {
@@ -30,6 +31,7 @@ public class Producer {
          * 因为服务器会回查这个Group下的任意一个Producer
          */
         DefaultMQProducer producer = new DefaultMQProducer("ProducerGroupName");
+        producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
 
         /**
          * Producer对象在使用之前必须要调用start初始化，初始化一次即可<br>

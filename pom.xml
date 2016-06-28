@@ -41,6 +41,7 @@
         <module>rocketmq-example</module>
         <module>rocketmq-filtersrv</module>
         <module>rocketmq-srvutil</module>
+        <module>gomemq-client</module>
     </modules>
 
     <developers>
