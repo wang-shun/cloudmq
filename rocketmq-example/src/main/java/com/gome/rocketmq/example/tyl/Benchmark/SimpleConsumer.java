@@ -76,7 +76,7 @@ public class SimpleConsumer {
         }, 10000, 10000);
 
 
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("benchmark_test_consumer_" + Long.toString(System.currentTimeMillis() % 100)); // MyUtils.getDefaultCluster()
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("benchmark_test_consumer"); // MyUtils.getDefaultCluster()
         consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         consumer.subscribe(topic, "*");
         consumer.registerMessageListener(new MessageListenerConcurrently() {
