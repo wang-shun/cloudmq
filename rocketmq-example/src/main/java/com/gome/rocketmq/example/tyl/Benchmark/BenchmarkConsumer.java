@@ -26,7 +26,7 @@ public class BenchmarkConsumer {
     static final String topic = "BenchmarkTopicTest";
 
     public static void main(String[] args) throws MQClientException {
-        final DecimalFormat df = new DecimalFormat("####.000");
+        final DecimalFormat df = new DecimalFormat("0000.000");
         final StatsBenchmarkConsumer statsBenchmarkConsumer = new StatsBenchmarkConsumer();
         final Timer timer = new Timer("BenchmarkTimerThread", true);
         final LinkedList<Long[]> snapshotList = new LinkedList<Long[]>();
