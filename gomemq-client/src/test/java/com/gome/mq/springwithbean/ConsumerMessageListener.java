@@ -13,7 +13,7 @@ import com.gome.api.open.base.MessageListener;
 public class ConsumerMessageListener implements MessageListener {
     // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
     public Action consume(Message message, ConsumeContext context) {
-        System.out.println("Receive: " + message);
+        System.out.println("Receive: " + new String(message.getBody()));
         try {
             // do something..
             return Action.CommitMessage;

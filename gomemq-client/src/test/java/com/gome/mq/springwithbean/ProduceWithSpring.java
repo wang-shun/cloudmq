@@ -29,7 +29,7 @@ public class ProduceWithSpring {
                     "TagA",
                     // Message Body 可以是任何二进制形式的数据， MQ不做任何干预，
                     // 需要Producer与Consumer协商好一致的序列化和反序列化方式
-                    "Hello MQ".getBytes());
+                    ("Hello MQ " + i).getBytes());
             // 设置代表消息的业务关键属性，请尽可能全局唯一。（例如订单ID）。
             // 以方便您在无法正常收到消息情况下，可通过MQ 控制台查询消息并补发。
             // 注意：不设置也不会影响消息正常收发

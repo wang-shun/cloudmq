@@ -8,7 +8,7 @@ import com.gome.common.PropertiesConst;
 
 
 /**
- * 广播方式订阅消息
+ * 广播方式订阅消息(所有消费订阅者都能收到消息)
  *
  * @author tantexian
  * @since 2016/6/27

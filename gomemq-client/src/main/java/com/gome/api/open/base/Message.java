@@ -1,5 +1,8 @@
 package com.gome.api.open.base;
 
+import com.gome.api.open.exception.GomeClientException;
+import com.gome.common.DelayLevelConst;
+
 import java.io.Serializable;
 import java.util.Properties;
 
@@ -124,13 +127,22 @@ public class Message extends com.alibaba.rocketmq.common.message.Message impleme
         this.putSystemProperties("__RECONSUMETIMES", String.valueOf(value));
     }
 
-    public long getStartDeliverTime() {
+    // 当前版本目前只支持固定等级的消息延时Level 2016/6/28 Add by tantexixan
+    /*public long getStartDeliverTime() {
         String pro = this.getSystemProperties("__STARTDELIVERTIME");
         return pro != null?Long.parseLong(pro):0L;
     }
 
     public void setStartDeliverTime(long value) {
         this.putSystemProperties("__STARTDELIVERTIME", String.valueOf(value));
+    }*/
+
+    public void setDelayTimeLevel(int level) {
+        //level 必须为DelayLevelConst中的值
+        if(level < DelayLevelConst.OneSecond.val() || level > DelayLevelConst.TwoHour.val()){
+            throw new GomeClientException("消息延迟Level值设置错误，请重新设置!!!");
+        }
+        super.setDelayTimeLevel(level);
     }
 
     public String toString() {

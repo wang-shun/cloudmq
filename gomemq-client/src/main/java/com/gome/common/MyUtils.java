@@ -49,9 +49,9 @@ public class MyUtils {
                 msgRMQ.setTags(message.getTag());
             }
 
-            if(message.getStartDeliverTime() > 0L) {
+            /*if(message.getStartDeliverTime() > 0L) {
                 msgRMQ.putUserProperty("__STARTDELIVERTIME", String.valueOf(message.getStartDeliverTime()));
-            }
+            }*/
 
             if(message.getBody() != null) {
                 msgRMQ.setBody(message.getBody());

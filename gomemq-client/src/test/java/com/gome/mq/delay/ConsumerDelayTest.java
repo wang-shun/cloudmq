@@ -1,20 +1,18 @@
-package com.gome.mq.simple;
+package com.gome.mq.delay;
 
+import java.util.Date;
 import java.util.Properties;
 
 import com.gome.api.open.base.*;
 import com.gome.api.open.factory.MQFactory;
-import com.gome.api.open.order.OrderAction;
 import com.gome.common.PropertiesConst;
 
 
 /**
- * 集群方式订阅消息(所有消费订阅者共同消费消息(分摊)，消息队列默认为集群消费)
- *
  * @author tantexian
  * @since 2016/6/27
  */
-public class ConsumerTest {
+public class ConsumerDelayTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
         // 您在控制台创建的 ConsumerId
@@ -27,7 +25,8 @@ public class ConsumerTest {
         // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
         consumer.subscribe("TopicTestMQ", "*", new MessageListener() {
             public Action consume(Message message, ConsumeContext context) {
-                System.out.println("Receive Message : " + new String(message.getBody()));
+                System.out.println(
+                    "[NowTime:" + new Date() + "] Receive Message : " + new String(message.getBody()));
                 try {
                     // do something..
                     return Action.CommitMessage;
