@@ -24,7 +24,7 @@ public class BenchmarkProducer {
     static final String topic = "BenchmarkTopicTest";
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 2; // 6400
+        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 6400;
         final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
         final boolean keyEnable = args.length >= 3 ? Boolean.parseBoolean(args[2]) : false;
 
