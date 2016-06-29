@@ -6,6 +6,7 @@ import com.gome.api.open.base.*;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.api.open.order.OrderAction;
 import com.gome.common.PropertiesConst;
+import com.gome.mq.MyProperties;
 
 
 /**
@@ -21,7 +22,7 @@ public class ConsumerTest {
         // 您在控制台创建的 ConsumerId（集群模式下消费，则该ConsumerId必须相同）
         properties.put(PropertiesConst.Keys.ConsumerId, "ConsumerId-test");
         // 不设置则默认为127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
+        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, MyProperties.getNameServerAddr());
 
         // 创建普通类型消费者
         Consumer consumer = MQFactory.createConsumer(properties);

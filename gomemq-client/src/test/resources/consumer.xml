@@ -8,10 +8,9 @@
         <property name="properties" > <!--消费者配置信息-->
             <props>
                 <prop key="ConsumerId">ConsumerId-test</prop>
-                <!--将消费者线程数固定为50个.
-                <prop key="ConsumeThreadNums">50</prop>
+                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
                 <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
-                -->
+
             </props>
         </property>
         <property name="subscriptionTable">

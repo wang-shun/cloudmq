@@ -7,6 +7,7 @@ import com.gome.api.open.base.Producer;
 import com.gome.api.open.base.SendResult;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.PropertiesConst;
+import com.gome.mq.MyProperties;
 
 
 /**
@@ -19,7 +20,7 @@ public class ProducerTest {
         // 您在控制台创建的ProducerId
         properties.put(PropertiesConst.Keys.ProducerId, "ProducerId-test");
         // 不设置则默认为127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
+        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, MyProperties.getNameServerAddr());
 
         Producer producer = MQFactory.createProducer(properties);
         // 在发送消息前，必须调用start方法来启动Producer，只需调用一次即可。

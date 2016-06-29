@@ -6,9 +6,12 @@ import java.util.Properties;
 import com.gome.api.open.base.*;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.PropertiesConst;
+import com.gome.mq.MyProperties;
 
 
 /**
+ * 延时消费类型消费者(延时消费的消费者与普通消费者一致)
+ *
  * @author tantexian
  * @since 2016/6/27
  */
@@ -18,7 +21,7 @@ public class ConsumerDelayTest {
         // 您在控制台创建的 ConsumerId
         properties.put(PropertiesConst.Keys.ConsumerId, "ConsumerDelayTestId");
         // 不设置则默认为127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
+        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, MyProperties.getNameServerAddr());
 
         // 创建普通类型消费者
         Consumer consumer = MQFactory.createConsumer(properties);

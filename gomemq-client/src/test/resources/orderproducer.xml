@@ -6,6 +6,7 @@
         <property name="properties" > <!--生产者配置信息-->
             <props>
                 <prop key="ProducerId">OrderProducerId</prop>
+                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
                 <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
             </props>
         </property>
