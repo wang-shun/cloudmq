@@ -1,4 +1,4 @@
-package com.gome.mq.springwithbean;
+package com.gome.demo.springwithbean;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;

@@ -1,4 +1,4 @@
-package com.gome.mq.springwithbean;
+package com.gome.demo.springwithbean;
 
 import com.gome.api.open.base.Action;
 import com.gome.api.open.base.ConsumeContext;

@@ -21,7 +21,7 @@
     <artifactId>myrocketmq-all</artifactId>
     <version>3.2.6</version>
     <packaging>pom</packaging>
-    <name>rocketmq-all ${project.version}</name>
+    <name>myrocketmq-all ${project.version}</name>
     <url>https://github.com/alibaba/rocketmq</url>
     <description>https://github.com/alibaba/RocketMQ/blob/develop/README.md</description>
 
@@ -193,7 +193,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
-                    <finalName>alibaba-rocketmq-${project.version}</finalName>
+                    <finalName>gomemq-${project.version}</finalName>
                     <descriptors>
                         <descriptor>release.xml</descriptor>
                     </descriptors>

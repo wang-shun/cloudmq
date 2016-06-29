@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.alibaba.rocketmq</groupId>
-        <artifactId>rocketmq-all</artifactId>
+        <artifactId>myrocketmq-all</artifactId>
         <version>3.2.6</version>
     </parent>
 

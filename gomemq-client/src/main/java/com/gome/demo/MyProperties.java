@@ -1,7 +1,7 @@
-package com.gome.mq;
+package com.gome.demo;
 
 /**
- * 此处为临时的测试属性类，用于动态获取及设置nameServerAddr
+ * 此处为临时的测试Demo属性类，用于动态获取及设置nameServerAddr
  *
  * @author tantexian
  * @since 2016/6/28
@@ -11,10 +11,6 @@ public class MyProperties {
 
     public static String getNameServerAddr() {
         return nameServerAddr;
-    }
-
-    public static void setNameServerAddr(String nameServerAddr) {
-        nameServerAddr = nameServerAddr;
     }
 }
 

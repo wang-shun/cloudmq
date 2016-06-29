@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly>
-	<id>alibaba-rocketmq</id>
-	<baseDirectory>alibaba-rocketmq</baseDirectory>
+	<id>gomemq</id>
+	<baseDirectory>gomemq</baseDirectory>
 	<formats>
 		<format>dir</format>
 		<format>tar.gz</format>
@@ -31,6 +31,7 @@
 				<include>com.alibaba.rocketmq:rocketmq-namesrv</include>
 				<include>com.alibaba.rocketmq:rocketmq-filtersrv</include>
 				<include>com.alibaba.rocketmq:rocketmq-example</include>
+				<include>com.gome.gomemq:gomemq-client</include>
 			</includes>
 			<binaries>
 				<outputDirectory>lib/</outputDirectory>

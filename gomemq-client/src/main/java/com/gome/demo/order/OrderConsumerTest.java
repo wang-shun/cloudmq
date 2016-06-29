@@ -1,4 +1,4 @@
-package com.gome.mq.order;
+package com.gome.demo.order;
 
 import java.util.Properties;
 
@@ -9,11 +9,13 @@ import com.gome.api.open.order.MessageOrderListener;
 import com.gome.api.open.order.OrderAction;
 import com.gome.api.open.order.OrderConsumer;
 import com.gome.common.PropertiesConst;
-import com.gome.mq.MyProperties;
+import com.gome.demo.MyProperties;
 
 
 /**
  * 顺序消息的消费者者（顺序消息的消费者与普通消费者使用方法一致）
+ * 注意：为了保证消息队列性能，消息队列自身并不保证消息不会重复消费(在某些异常情况下偶尔会出现极少数重复消息)，
+ * 若业务系统使用在非常严格的不允许消息重复的业务场景，则需要业务系统自身处理重复消息幂等
  *
  * @author tantexian
  * @since 2016/6/27

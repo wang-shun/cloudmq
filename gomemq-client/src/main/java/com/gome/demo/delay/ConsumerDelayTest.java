@@ -1,4 +1,4 @@
-package com.gome.mq.delay;
+package com.gome.demo.delay;
 
 import java.util.Date;
 import java.util.Properties;
@@ -6,11 +6,13 @@ import java.util.Properties;
 import com.gome.api.open.base.*;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.PropertiesConst;
-import com.gome.mq.MyProperties;
+import com.gome.demo.MyProperties;
 
 
 /**
  * 延时消费类型消费者(延时消费的消费者与普通消费者一致)
+ * 注意：为了保证消息队列性能，消息队列自身并不保证消息不会重复消费(在某些异常情况下偶尔会出现极少数重复消息)，
+ * 若业务系统使用在非常严格的不允许消息重复的业务场景，则需要业务系统自身处理重复消息幂等
  *
  * @author tantexian
  * @since 2016/6/27
