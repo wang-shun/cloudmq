@@ -11,7 +11,7 @@ import com.gome.api.open.transaction.TransactionProducer;
 import java.util.Properties;
 
 /**
- * 当前版本目前不支持事务
+ * 当前版本目前不支持事务，请勿使用
  *
  * @author tantexian
  * @since 2016/6/27

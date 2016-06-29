@@ -13,6 +13,8 @@ import com.gome.mq.MyProperties;
 
 
 /**
+ * 顺序消息的消费者者（顺序消息的消费者与普通消费者使用方法一致）
+ *
  * @author tantexian
  * @since 2016/6/27
  */
