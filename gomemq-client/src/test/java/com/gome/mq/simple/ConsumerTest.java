@@ -10,6 +10,7 @@ import com.gome.common.PropertiesConst;
 
 /**
  * 集群方式订阅消息(所有消费订阅者共同消费消息(分摊)，消息队列默认为集群消费)
+ * 注意：集群模式消费则ConsumerId必须相同
  *
  * @author tantexian
  * @since 2016/6/27
@@ -17,7 +18,7 @@ import com.gome.common.PropertiesConst;
 public class ConsumerTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
-        // 您在控制台创建的 ConsumerId
+        // 您在控制台创建的 ConsumerId（集群模式下消费，则该ConsumerId必须相同）
         properties.put(PropertiesConst.Keys.ConsumerId, "ConsumerId-test");
         // 不设置则默认为127.0.0.1:9876
         properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");

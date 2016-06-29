@@ -16,7 +16,7 @@ public class ConsumerDelayTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
         // 您在控制台创建的 ConsumerId
-        properties.put(PropertiesConst.Keys.ConsumerId, "ConsumerId-test");
+        properties.put(PropertiesConst.Keys.ConsumerId, "ConsumerDelayTestId");
         // 不设置则默认为127.0.0.1:9876
         properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 
