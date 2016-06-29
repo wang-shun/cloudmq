@@ -23,6 +23,7 @@ public class ConsumerDelayTest {
         // 创建普通类型消费者
         Consumer consumer = MQFactory.createConsumer(properties);
         // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
+        // 延时模式（建议尽量使用常规模式，延时模式会降低性能及可靠性）
         consumer.subscribe("TopicTestMQ", "*", new MessageListener() {
             public Action consume(Message message, ConsumeContext context) {
                 System.out.println(
