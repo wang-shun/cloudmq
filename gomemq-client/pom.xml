@@ -3,9 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.alibaba.rocketmq</groupId>
-        <artifactId>myrocketmq-all</artifactId>
-        <version>3.2.6</version>
+        <groupId>com.gome.gmq</groupId>
+        <artifactId>gmq-all</artifactId>
+        <version>1.0.0</version>
     </parent>
 
 
@@ -14,7 +14,7 @@
     <groupId>com.gome.gomemq</groupId>
     <artifactId>gomemq-client</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>gomemq-client</name>
+    <name>gomemq-client ${project.version}</name>
 
     <properties>
         <spring.version>3.2.2.RELEASE</spring.version>
@@ -28,9 +28,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
-            <version>3.2.6</version>
+            <groupId>com.gome.gmq</groupId>
+            <artifactId>gmq-client</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
         <dependency>

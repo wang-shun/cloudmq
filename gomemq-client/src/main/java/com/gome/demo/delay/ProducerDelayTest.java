@@ -10,7 +10,7 @@ import com.gome.api.open.base.SendResult;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.DelayLevelConst;
 import com.gome.common.PropertiesConst;
-import com.gome.demo.MyProperties;
+import com.gome.demo.simple.MyProperties;
 
 
 /**

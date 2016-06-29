@@ -17,11 +17,11 @@
 
     <modelVersion>4.0.0</modelVersion>
     <inceptionYear>2012</inceptionYear>
-    <groupId>com.alibaba.rocketmq</groupId>
-    <artifactId>myrocketmq-all</artifactId>
-    <version>3.2.6</version>
+    <groupId>com.gome.gmq</groupId>
+    <artifactId>gmq-all</artifactId>
+    <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>myrocketmq-all ${project.version}</name>
+    <name>gmq-all ${project.version}</name>
     <url>https://github.com/alibaba/rocketmq</url>
     <description>https://github.com/alibaba/RocketMQ/blob/develop/README.md</description>
 
@@ -30,17 +30,17 @@
     </prerequisites>
 
     <modules>
-		<module>rocketmq-web</module>
-        <module>rocketmq-client</module>
-        <module>rocketmq-common</module>
-        <module>rocketmq-broker</module>
-        <module>rocketmq-tools</module>
-        <module>rocketmq-store</module>
-        <module>rocketmq-namesrv</module>
-        <module>rocketmq-remoting</module>
-        <module>rocketmq-example</module>
-        <module>rocketmq-filtersrv</module>
-        <module>rocketmq-srvutil</module>
+		<module>gmq-web</module>
+        <module>gmq-client</module>
+        <module>gmq-common</module>
+        <module>gmq-broker</module>
+        <module>gmq-tools</module>
+        <module>gmq-store</module>
+        <module>gmq-namesrv</module>
+        <module>gmq-remoting</module>
+        <module>gmq-example</module>
+        <module>gmq-filtersrv</module>
+        <module>gmq-srvutil</module>
         <module>gomemq-client</module>
     </modules>
 
@@ -301,52 +301,52 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-client</artifactId>
+                <artifactId>gmq-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-broker</artifactId>
+                <artifactId>gmq-broker</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-common</artifactId>
+                <artifactId>gmq-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-store</artifactId>
+                <artifactId>gmq-store</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-namesrv</artifactId>
+                <artifactId>gmq-namesrv</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-tools</artifactId>
+                <artifactId>gmq-tools</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-remoting</artifactId>
+                <artifactId>gmq-remoting</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-qatest</artifactId>
+                <artifactId>gmq-qatest</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-filtersrv</artifactId>
+                <artifactId>gmq-filtersrv</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>rocketmq-srvutil</artifactId>
+                <artifactId>gmq-srvutil</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

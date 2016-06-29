@@ -5,7 +5,6 @@ import java.util.Properties;
 import com.gome.api.open.base.*;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.PropertiesConst;
-import com.gome.demo.MyProperties;
 
 
 /**

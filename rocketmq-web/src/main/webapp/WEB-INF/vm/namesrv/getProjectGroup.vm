@@ -1,3 +1,0 @@
-#form($options $action)
-<p>$!resultText</p>
- 

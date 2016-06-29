@@ -9,7 +9,7 @@ import com.gome.api.open.order.MessageOrderListener;
 import com.gome.api.open.order.OrderAction;
 import com.gome.api.open.order.OrderConsumer;
 import com.gome.common.PropertiesConst;
-import com.gome.demo.MyProperties;
+import com.gome.demo.simple.MyProperties;
 
 
 /**

@@ -6,7 +6,6 @@ import com.gome.api.open.base.Message;
 import com.gome.api.open.base.Producer;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.PropertiesConst;
-import com.gome.demo.MyProperties;
 
 
 /**
