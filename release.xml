@@ -27,11 +27,11 @@
 			<includes>
 				<include>com.gome.gmq:gmq-broker</include>
 				<include>com.gome.gmq:gmq-tools</include>
-				<include>com.gome.gmq:gmq-client</include>
+				<include>com.gome.gmq:gmq-api</include>
 				<include>com.gome.gmq:gmq-namesrv</include>
 				<include>com.gome.gmq:gmq-filtersrv</include>
 				<include>com.gome.gmq:gmq-example</include>
-				<include>com.gome.gomemq:gomemq-client</include>
+				<include>com.gome.gmq:gmq-client</include>
 			</includes>
 			<binaries>
 				<outputDirectory>lib/</outputDirectory>
