@@ -7,11 +7,11 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2016/6/29
  */
 public class OneWayStats {
-    // 1 ·¢ËÍ³É¹¦´ÎÊı
+    // 1 å‘é€æˆåŠŸæ¬¡æ•°
     private final AtomicLong sendRequestSuccessCount = new AtomicLong(0L);
-    // 2 ·¢ËÍÊ§°Ü´ÎÊı
+    // 2 å‘é€å¤±è´¥æ¬¡æ•°
     private final AtomicLong sendRequestFailedCount = new AtomicLong(0L);
-    // 3 ·¢ËÍ³É¹¦×ÜºÄÊ±
+    // 3 å‘é€æˆåŠŸæ€»è€—æ—¶
     private final AtomicLong sendMessageSuccessTimeTotal = new AtomicLong(0L);
 
     public Long[] createSnapshot() {
