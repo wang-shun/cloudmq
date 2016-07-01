@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <assembly>
-	<id>gomemq</id>
-	<baseDirectory>gomemq</baseDirectory>
+	<id>gmq</id>
+	<baseDirectory>gmq</baseDirectory>
 	<formats>
 		<format>dir</format>
 		<format>tar.gz</format>
@@ -25,13 +25,13 @@
 	<moduleSets>
 		<moduleSet>
 			<includes>
-				<include>com.gome.gmq:gmq-broker</include>
-				<include>com.gome.gmq:gmq-tools</include>
+				<include>com.gome.coremq:gmq-broker</include>
+				<include>com.gome.coremq:gmq-tools</include>
+				<include>com.gome.coremq:gmq-api</include>
+				<include>com.gome.coremq:gmq-namesrv</include>
+				<include>com.gome.coremq:gmq-filtersrv</include>
+				<include>com.gome.coremq:gmq-example</include>
 				<include>com.gome.gmq:gmq-client</include>
-				<include>com.gome.gmq:gmq-namesrv</include>
-				<include>com.gome.gmq:gmq-filtersrv</include>
-				<include>com.gome.gmq:gmq-example</include>
-				<include>com.gome.gomemq:gomemq-client</include>
 			</includes>
 			<binaries>
 				<outputDirectory>lib/</outputDirectory>

@@ -3,13 +3,13 @@
 [![GitHub release](https://img.shields.io/badge/release-download-orange.svg)](https://github.com/alibaba/RocketMQ/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-**RocketMQ is a fast, reliable, scalable, easy to use message oriented middleware breeding from alibaba massive messaging business.**
+**RocketMQ is a fast, reliable, scalable, easy to use msg oriented middleware breeding from alibaba massive messaging business.**
 
 It offers a variety of features as follows:
 
 * Reliable FIFO and strict sequential messaging
 * Pub/Sub and P2P messaging model
-* Million message accumulation ability in single queue
+* Million msg accumulation ability in single queue
 * Pull queues and push queues
 * Over a variety of messaging protocols.such as JMS,MQTT etc.
 * Distributed clustering, support fault-tolerance

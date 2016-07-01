@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-<!--
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
-    <parent>
-        <groupId>com.taobao</groupId>
-        <artifactId>parent</artifactId>
-        <version>1.0.2</version>
-    </parent>
--->
 
     <modelVersion>4.0.0</modelVersion>
     <inceptionYear>2012</inceptionYear>
-    <groupId>com.gome.gmq</groupId>
-    <artifactId>gmq-all</artifactId>
+    <groupId>com.gome.coremq</groupId>
+    <artifactId>Gmq-all</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>gmq-all ${project.version}</name>
@@ -31,7 +18,7 @@
 
     <modules>
 		<module>gmq-web</module>
-        <module>gmq-client</module>
+        <module>gmq-api</module>
         <module>gmq-common</module>
         <module>gmq-broker</module>
         <module>gmq-tools</module>
@@ -41,7 +28,7 @@
         <module>gmq-example</module>
         <module>gmq-filtersrv</module>
         <module>gmq-srvutil</module>
-        <module>gomemq-client</module>
+        <module>gmq-client</module>
     </modules>
 
     <developers>
@@ -92,10 +79,32 @@
         <maven.jdoc.skip>true</maven.jdoc.skip>
         <downloadSources>true</downloadSources>
         <!-- compiler settings properties -->
-        <java_source_version>1.6</java_source_version>
-        <java_target_version>1.6</java_target_version>
+        <java_source_version>1.7</java_source_version>
+        <java_target_version>1.7</java_target_version>
         <file_encoding>UTF-8</file_encoding>
+
+        <!-- maven私服配置 2016/6/29 Add by tantexixan -->
+        <repo-id>gome</repo-id>
+        <release-repo-name>gome release repository</release-repo-name>
+        <release-repo-url>http://10.128.11.68:8081/nexus/content/repositories/releases/</release-repo-url>
+        <snapshot-repo-name>gome snapshot repository</snapshot-repo-name>
+        <snapshot-repo-url>http://10.128.11.68:8081/nexus/content/repositories/snapshots/</snapshot-repo-url>
     </properties>
+
+    <!-- maven私服配置 2016/6/29 Add by tantexixan -->
+    <distributionManagement>
+        <repository>
+            <id>${repo-id}</id>
+            <name>${release-repo-name}</name>
+            <url>${release-repo-url}</url>
+        </repository>
+        <snapshotRepository>
+            <id>${repo-id}</id>
+            <name>${snapshot-repo-name}</name>
+            <url>${snapshot-repo-url}</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
     <build>
         <plugins>
@@ -193,7 +202,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
-                    <finalName>gomemq-${project.version}</finalName>
+                    <finalName>gmq-${project.version}</finalName>
                     <descriptors>
                         <descriptor>release.xml</descriptor>
                     </descriptors>
@@ -241,6 +250,7 @@
                     <keywords>true</keywords>
                 </configuration>
             </plugin>
+            <!--默认不打包source到私服
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
@@ -252,7 +262,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>clirr-maven-plugin</artifactId>
@@ -301,7 +311,7 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-client</artifactId>
+                <artifactId>gmq-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

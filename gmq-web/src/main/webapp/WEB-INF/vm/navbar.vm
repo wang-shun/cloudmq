@@ -30,9 +30,9 @@
                 			<li class="dropdown $!message_flag" >
         							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Message<b class="caret"></b></a>
         							<ul class="dropdown-menu">
-        								<li><a href="$root/message/queryMsgById.do">QueryMsgById</a></li>
-                                        <li><a href="$root/message/queryMsgByKey.do">QueryMsgByKey</a></li>
-        								<li><a href="$root/message/queryMsgByOffset.do">QueryMsgByOffset</a></li>
+        								<li><a href="$root/msg/queryMsgById.do">QueryMsgById</a></li>
+                                        <li><a href="$root/msg/queryMsgByKey.do">QueryMsgByKey</a></li>
+        								<li><a href="$root/msg/queryMsgByOffset.do">QueryMsgByOffset</a></li>
         							 </ul>
         					</li>
         					<li class="dropdown $!broker_flag">

@@ -29,7 +29,7 @@ import com.alibaba.rocketmq.remoting.exception.RemotingException;
 
 
 /**
- * Producer，发送顺序消息
+ * producer，发送顺序消息
  */
 public class Producer {
     public static void main(String[] args) {
