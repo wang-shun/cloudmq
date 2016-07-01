@@ -491,7 +491,7 @@ public class MQClientInstance {
             }
         }
 
-        // Producer
+        // producer
         for (String group : this.producerTable.keySet()) {
             MQProducerInner impl = this.producerTable.get(group);
             if (impl != null) {
@@ -526,7 +526,7 @@ public class MQClientInstance {
             }
         }
 
-        // Producer
+        // producer
         {
             Iterator<Entry<String, MQProducerInner>> it = this.producerTable.entrySet().iterator();
             while (it.hasNext()) {
@@ -767,7 +767,7 @@ public class MQClientInstance {
         if (!this.adminExtTable.isEmpty())
             return;
 
-        // Producer
+        // producer
         if (this.producerTable.size() > 1)
             return;
 
@@ -855,7 +855,7 @@ public class MQClientInstance {
                             this.mQClientAPIImpl.unregisterClient(addr, this.clientId, producerGroup,
                                     consumerGroup, 3000);
                             log.info(
-                                    "unregister client[Producer: {} Consumer: {}] from broker[{} {} {}] success",
+                                    "unregister client[producer: {} Consumer: {}] from broker[{} {} {}] success",
                                     producerGroup, consumerGroup, brokerName, id, addr);
                         } catch (RemotingException e) {
                             log.error("unregister client exception from broker: " + addr, e);

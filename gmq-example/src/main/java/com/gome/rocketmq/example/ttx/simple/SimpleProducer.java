@@ -11,7 +11,7 @@ import java.util.Date;
 
 
 /**
- * Producer，发送消息
+ * producer，发送消息
  * 
  */
 public class SimpleProducer {

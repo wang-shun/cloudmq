@@ -29,7 +29,7 @@ public class DelayProduceWithSpring {
         Producer producer = (Producer) context.getBean("producer");
         // 循环发送消息
         for (int i = 0; i < 10; i++) {
-            Msg msg = new Msg( //
+            Msg msg = new Msg(
                 // Msg Topic
                 "TopicTestMQ",
                 // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤

@@ -25,8 +25,8 @@ public class OrderConsumerTest {
         Properties properties = new Properties();
         // 您在控制台创建的ConsumerId
         properties.put(PropertiesConst.Keys.ConsumerId, "OrderConsumerTest-Id");
-        // 不设置则默认为127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, MyProperties.getNameServerAddr());
+        // 设置nameserver地址，不设置则默认为127.0.0.1:9876
+        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 
         // 创建顺序类型消费者（建议尽量使用常规模式，顺序类型会降低性能及可靠性）
         OrderConsumer orderedConsumer = MQFactory.createOrderedConsumer(properties);

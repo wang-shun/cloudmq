@@ -24,11 +24,11 @@ public class MyUtils {
      * @params
      */
     public static String getNamesrvAddr() {
-        return System.getProperty("gomemq.namesrv.addr", System.getenv("NAMESRV_ADDR"));
+        return System.getProperty("gmq.namesrv.addr", System.getenv("NAMESRV_ADDR"));
     }
 
     /**
-     * 将gomemq-client的message转换为原生RMQ格式message
+     * 将gmq-client的message转换为原生RMQ格式message
      * @author tantexian
      * @since 2016/6/27
      * @params
@@ -87,7 +87,7 @@ public class MyUtils {
     }
 
     /**
-     * 将RMQ格式message转换为gomemq-client的message
+     * 将RMQ格式message转换为gmq-client的message
      * @author tantexian
      * @since 2016/6/27
      * @params

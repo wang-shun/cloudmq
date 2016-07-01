@@ -15,7 +15,7 @@ import java.util.Random;
 
 
 /**
- * Producer，发送顺序消息
+ * producer，发送顺序消息
  */
 public class OrderMsgProducer {
     public static void main(String[] args) {

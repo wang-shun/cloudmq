@@ -22,7 +22,7 @@ import com.alibaba.rocketmq.common.message.Message;
 
 
 /**
- * Producer，发送消息
+ * producer，发送消息
  * 
  */
 public class Producer {

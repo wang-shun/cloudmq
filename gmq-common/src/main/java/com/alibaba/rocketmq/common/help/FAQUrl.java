@@ -41,7 +41,7 @@ public class FAQUrl {
     public static final String SUBSCRIPTION_GROUP_NOT_EXIST = //
             "https://github.com/alibaba/RocketMQ/issues/42";
 
-    // FAQ: Producer、Consumer服务状态不正确
+    // FAQ: producer、Consumer服务状态不正确
     public static final String CLIENT_SERVICE_NOT_OK = //
             "https://github.com/alibaba/RocketMQ/issues/43";
 

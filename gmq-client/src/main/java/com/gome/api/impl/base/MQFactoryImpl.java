@@ -1,5 +1,7 @@
 package com.gome.api.impl.base;
 
+import java.util.Properties;
+
 import com.alibaba.rocketmq.client.producer.LocalTransactionState;
 import com.alibaba.rocketmq.client.producer.TransactionCheckListener;
 import com.alibaba.rocketmq.common.message.MessageExt;
@@ -18,8 +20,6 @@ import com.gome.api.open.transaction.LocalTransactionChecker;
 import com.gome.api.open.transaction.TransactionProducer;
 import com.gome.api.open.transaction.TransactionStatus;
 import com.gome.common.MyUtils;
-
-import java.util.Properties;
 
 /**
  * @author tantexian

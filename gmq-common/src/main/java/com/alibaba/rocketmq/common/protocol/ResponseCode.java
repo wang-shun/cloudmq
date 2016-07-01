@@ -38,13 +38,13 @@ public class ResponseCode extends RemotingSysResponseCode {
     public static final int SUBSCRIPTION_NOT_LATEST = 25;
     // Broker 订阅组不存在
     public static final int SUBSCRIPTION_GROUP_NOT_EXIST = 26;
-    // Producer 事务应该被提交
+    // producer 事务应该被提交
     public static final int TRANSACTION_SHOULD_COMMIT = 200;
-    // Producer 事务应该被回滚
+    // producer 事务应该被回滚
     public static final int TRANSACTION_SHOULD_ROLLBACK = 201;
-    // Producer 事务状态未知
+    // producer 事务状态未知
     public static final int TRANSACTION_STATE_UNKNOW = 202;
-	// Producer ProducerGroup错误
+	// producer ProducerGroup错误
     public static final int TRANSACTION_STATE_GROUP_WRONG = 203;
 	// 单元化消息，需要设置 buyerId
 	public static final int NO_BUYER_ID = 204;
