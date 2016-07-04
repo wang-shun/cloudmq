@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <inceptionYear>2012</inceptionYear>
     <groupId>com.gome.coremq</groupId>
-    <artifactId>Gmq-all</artifactId>
+    <artifactId>gmq-all</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>gmq-all ${project.version}</name>
+    <name>Gmq-all ${project.version}</name>
     <url>https://github.com/alibaba/rocketmq</url>
     <description>https://github.com/alibaba/RocketMQ/blob/develop/README.md</description>
 
