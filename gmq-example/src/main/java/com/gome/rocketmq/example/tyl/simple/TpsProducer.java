@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
+ * 测试单线程的TPS
  * @author tianyuliang
  * @date 2016/7/1
  */
@@ -22,7 +23,7 @@ public class TpsProducer {
     static final String topic = "simpleTpsTopic";
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = 10;
+        final int threadCount = 1;
         final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
 
         final Message msg = buildMessage(messageSize);
@@ -47,10 +48,13 @@ public class TpsProducer {
                 if (snapshotList.size() >= 5) {
                     Long[] begin = snapshotList.getFirst();
                     Long[] end = snapshotList.getLast();
-
-                    // index 0-当前时间  1-发送成功次数  2-发送失败次数  3-发送成功总耗时
+                    // index含义：0-代表当前时间，1-发送成功次数 2-发送失败次数 3-接收成功次数 4-接收失败次数  5-发送消息成功总耗时
                     final long sendTps = (long) (((end[3] - begin[3]) / (double) (end[0] - begin[0])) * 1000L);
-                    System.out.printf("send message success=%d, TPS=%d, send failed=%d\n", end[1], sendTps, end[2]);
+                    final double averageRT = ((end[5] - begin[5]) / (double) (end[3] - begin[3]));
+                    System.out.printf(
+                            "send message success=%d, TPS=%d, max runTime=%d ms, average runTime=%s ms, send failed=%d, response failed=%d\n"
+                            , end[1], sendTps, tpsStats.getSendMessageMaxRT().get(), df.format(averageRT), end[2], end[4]
+                    );
                 }
             }
 
@@ -81,9 +85,19 @@ public class TpsProducer {
                             final long beginTimestamp = System.currentTimeMillis();
                             producer.send(msg);
                             tpsStats.getSendRequestSuccessCount().incrementAndGet();
+                            tpsStats.getReceiveResponseSuccessCount().incrementAndGet();
 
                             final long currentRT = System.currentTimeMillis() - beginTimestamp;
                             tpsStats.getSendMessageSuccessTimeTotal().addAndGet(currentRT);
+
+                            long prevMaxRT = tpsStats.getSendMessageMaxRT().get();
+                            while (currentRT > prevMaxRT) {
+                                boolean updated = tpsStats.getSendMessageMaxRT().compareAndSet(prevMaxRT, currentRT);
+                                if (updated) {
+                                    break;
+                                }
+                                prevMaxRT = tpsStats.getSendMessageMaxRT().get();
+                            }
                         } catch (RemotingException e) {
                             tpsStats.getSendRequestFailedCount().incrementAndGet();
                             e.printStackTrace();
