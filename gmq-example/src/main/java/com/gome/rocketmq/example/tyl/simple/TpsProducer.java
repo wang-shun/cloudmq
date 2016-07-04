@@ -23,7 +23,7 @@ public class TpsProducer {
     static final String topic = "simpleTpsTopic";
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = 1;
+        final int threadCount = args.length >= 1 ? Integer.parseInt(args[1]) : 1;
         final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
 
         final Message msg = buildMessage(messageSize);
@@ -37,7 +37,7 @@ public class TpsProducer {
             @Override
             public void run() {
                 snapshotList.addLast(tpsStats.createSnapshot());
-                if (snapshotList.size() > 5) {
+                if (snapshotList.size() > 10) {
                     snapshotList.removeFirst();
                 }
             }
@@ -45,7 +45,7 @@ public class TpsProducer {
 
         timer.scheduleAtFixedRate(new TimerTask() {
             private void printStats() {
-                if (snapshotList.size() >= 5) {
+                if (snapshotList.size() >= 10) {
                     Long[] begin = snapshotList.getFirst();
                     Long[] end = snapshotList.getLast();
                     // index含义：0-代表当前时间，1-发送成功次数 2-发送失败次数 3-接收成功次数 4-接收失败次数  5-发送消息成功总耗时
@@ -66,7 +66,7 @@ public class TpsProducer {
                     e.printStackTrace();
                 }
             }
-        }, 5000, 5000);
+        }, 10000, 10000);
 
         final DefaultMQProducer producer = new DefaultMQProducer("DefaultCluster");
         producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
