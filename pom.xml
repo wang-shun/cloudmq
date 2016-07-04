@@ -8,7 +8,7 @@
     <artifactId>gmq-all</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>Gmq-all ${project.version}</name>
+    <name>gmq-all ${project.version}</name>
     <url>https://github.com/alibaba/rocketmq</url>
     <description>https://github.com/alibaba/RocketMQ/blob/develop/README.md</description>
 
