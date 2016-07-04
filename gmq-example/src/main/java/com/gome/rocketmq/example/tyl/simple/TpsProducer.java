@@ -23,7 +23,7 @@ public class TpsProducer {
     static final String topic = "simpleTpsTopic";
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = args.length >= 1 ? Integer.parseInt(args[1]) : 1;
+        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 1;
         final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
 
         final Message msg = buildMessage(messageSize);
