@@ -1,5 +1,10 @@
 package com.gome.rocketmq.example.tyl.backtracking;
 
+import com.alibaba.rocketmq.client.consumer.DefaultMQPullConsumer;
+import com.alibaba.rocketmq.client.consumer.PullResult;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.common.message.MessageExt;
+import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.gome.rocketmq.common.MyUtils;
 
 import java.text.SimpleDateFormat;

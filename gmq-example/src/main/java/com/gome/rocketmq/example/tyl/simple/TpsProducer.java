@@ -22,7 +22,7 @@ public class TpsProducer {
     static final String topic = "simpleTpsTopic";
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = 1;
+        final int threadCount = 10;
         final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
 
         final Message msg = buildMessage(messageSize);
@@ -36,7 +36,7 @@ public class TpsProducer {
             @Override
             public void run() {
                 snapshotList.addLast(tpsStats.createSnapshot());
-                if (snapshotList.size() > 10) {
+                if (snapshotList.size() > 5) {
                     snapshotList.removeFirst();
                 }
             }
@@ -44,7 +44,7 @@ public class TpsProducer {
 
         timer.scheduleAtFixedRate(new TimerTask() {
             private void printStats() {
-                if (snapshotList.size() >= 10) {
+                if (snapshotList.size() >= 5) {
                     Long[] begin = snapshotList.getFirst();
                     Long[] end = snapshotList.getLast();
 
