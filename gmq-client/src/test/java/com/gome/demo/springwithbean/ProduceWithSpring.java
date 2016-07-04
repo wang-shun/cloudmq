@@ -16,6 +16,7 @@ public class ProduceWithSpring {
     public static void main(String[] args) {
         /**
          * 生产者Bean配置在producer.xml中,可通过ApplicationContext获取或者直接注入到其他类(比如具体的Controller)中.
+         * 如果项目本身已经集成spring、则直接使用项目已有的spring配置bean、获取bean方式，不需要使用下述ClassPathXmlApplicationContext类方法来获取bean
          */
         ApplicationContext context = new ClassPathXmlApplicationContext("producer.xml");
         // 获取普通消费者Bean
