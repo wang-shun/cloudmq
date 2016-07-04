@@ -1,4 +1,4 @@
-package com.gome.rocketmq.example.tyl.order;
+package com.gome.rocketmq.example.tyl.order.simple;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;

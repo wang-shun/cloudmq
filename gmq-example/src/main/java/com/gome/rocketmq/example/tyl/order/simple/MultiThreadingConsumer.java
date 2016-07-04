@@ -1,4 +1,4 @@
-package com.gome.rocketmq.example.tyl.order;
+package com.gome.rocketmq.example.tyl.order.simple;
 
 /**
  * 测试多线程消费的QPS

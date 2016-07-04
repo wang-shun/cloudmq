@@ -35,7 +35,7 @@ public class BroadCastConsumer4 {
                 }
             });
             consumer.start();
-            System.out.println("Consumer Started.");
+            System.out.println("PullConsumer Started.");
         }
         catch (Exception e) {
             e.printStackTrace();
