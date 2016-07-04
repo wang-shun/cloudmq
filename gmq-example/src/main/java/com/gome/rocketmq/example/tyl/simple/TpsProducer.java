@@ -74,7 +74,7 @@ public class TpsProducer {
         producer.start();
 
         System.out.println("threadCount=" + threadCount + ", messageSize=" + messageSize);
-        System.out.println("producerGroup=" + producer.getProducerGroup() + ", instanceName=" + producer.getInstanceName() + ", consumer started.");
+        System.out.println("producerGroup=" + producer.getProducerGroup() + ", instanceName=" + producer.getInstanceName() + ", producer started.");
 
         for (int i = 0; i < threadCount; i++) {
             sendThreadPool.execute(new Runnable() {
