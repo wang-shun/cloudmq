@@ -31,4 +31,7 @@ public class LoggerName {
     public static final String RebalanceLockLoggerName = "RocketmqRebalanceLock";
     public static final String RocketmqStatsLoggerName = "RocketmqStats";
     public static final String RocketmqAuthorizeLoggerName = "RocketmqAuthorize";
+    //增加gmq-client日志 2016/7/5 Add by GaoYanLei
+    public static final String GmqClientoggerName = "gmqClient";
+
 }
