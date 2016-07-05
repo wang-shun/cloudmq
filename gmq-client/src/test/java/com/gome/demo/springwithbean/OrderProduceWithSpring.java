@@ -24,6 +24,7 @@ public class OrderProduceWithSpring {
         ApplicationContext context = new ClassPathXmlApplicationContext("orderproducer.xml");
         // 获取顺序消费者Bean
         OrderProducer orderProducer = (OrderProducer) context.getBean("orderProducer");
+        assert orderProducer != null;
         // 循环发送消息
         for (int i = 0; i < 10; i++) {
             Msg msg = new Msg( //
@@ -46,16 +47,21 @@ public class OrderProduceWithSpring {
                  * shardingKey用来随机获取集群中的一个queue（可以自由设置该值，建议此处尽可能唯一，
                  * 便于消息队列分散到不同的queue上）
                  */
-                String shardingKey = "orderProducerShardingKey";
+                String shardingKey = "orderProducerShardingKey125";
 
                 SendResult sendResult = orderProducer.send(msg, shardingKey);
                 assert sendResult != null;
-                System.out.println("send success : " + sendResult.getMsgId());
+                System.out.println("send success: " + sendResult.getMsgId()
+                        + ",offset=" + sendResult.getQueueOffset()
+                        + ",brokerName=" + sendResult.getMessageQueue().getBrokerName()
+                        + ",queueId=" + sendResult.getMessageQueue().getQueueId());
             }
             catch (GomeClientException e) {
+                e.printStackTrace();
                 System.out.println("发送失败");
             }
         }
+        System.out.println("OrderWithSpring send message end.");
         System.exit(0);
     }
 }

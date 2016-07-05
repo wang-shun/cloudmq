@@ -9,6 +9,7 @@ import com.gome.api.open.base.Producer;
 import com.gome.api.open.base.SendResult;
 import com.gome.api.open.exception.GomeClientException;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -27,20 +28,22 @@ public class DelayProduceWithSpring {
         ApplicationContext context = new ClassPathXmlApplicationContext("producer.xml");
         // 获取普通消费者Bean
         Producer producer = (Producer) context.getBean("producer");
+        assert producer != null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         // 循环发送消息
         for (int i = 0; i < 10; i++) {
             Msg msg = new Msg(
-                // Msg Topic
-                "TopicTestMQ",
-                // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤
-                "TagA",
-                // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，
-                // 需要Producer与Consumer协商好一致的序列化和反序列化方式
-                (" {MsgBornTime: " + new Date() + "} {MsgBody: Hello MQ " + i + "}").getBytes());
+                    // Msg Topic
+                    "TopicTestMQ",
+                    // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤
+                    "TagA",
+                    // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，
+                    // 需要Producer与Consumer协商好一致的序列化和反序列化方式
+                    (" {MsgBornTime: " + sdf.format(new Date()) + "} {MsgBody: Hello MQ " + i + "}").getBytes());
             // 设置代表消息的业务关键属性，请尽可能全局唯一。（例如订单ID）。
             // 以方便您在无法正常收到消息情况下，可通过MQ 控制台查询消息并补发。
             // 注意：不设置也不会影响消息正常收发
-            msg.setKey("ORDERID_10");
+            msg.setKey("ORDERID_180");
 
             // 延时模式（建议尽量使用常规模式，延时模式会降低性能及可靠性）
             // deliver time level 为延时等级（当前版本只支持固定的延时等级）,具体值参考DelayLevelConst枚举类，
@@ -52,12 +55,16 @@ public class DelayProduceWithSpring {
             try {
                 SendResult sendResult = producer.send(msg);
                 assert sendResult != null;
-                System.out.println("send success : " + sendResult.getMsgId());
-            }
-            catch (GomeClientException e) {
+                System.out.println("send success: " + sendResult.getMsgId()
+                        + ",offset=" + sendResult.getQueueOffset()
+                        + ",brokerName=" + sendResult.getMessageQueue().getBrokerName()
+                        + ",queueId=" + sendResult.getMessageQueue().getQueueId());
+            } catch (GomeClientException e) {
+                e.printStackTrace();
                 System.out.println("发送失败");
             }
         }
+        System.out.println("DelayWithSpring send message end.");
         System.exit(0);
     }
 }

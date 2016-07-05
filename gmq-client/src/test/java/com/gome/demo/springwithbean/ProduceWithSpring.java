@@ -7,6 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.gome.api.open.exception.GomeClientException;
 import com.gome.api.open.base.Producer;
 import com.gome.api.open.base.SendResult;
+import org.springframework.util.Assert;
 
 /**
  * @author tantexian
@@ -21,16 +22,17 @@ public class ProduceWithSpring {
         ApplicationContext context = new ClassPathXmlApplicationContext("producer.xml");
         // 获取普通消费者Bean
         Producer producer = (Producer) context.getBean("producer");
+        assert producer != null;
         //循环发送消息
         for (int i = 0; i < 10; i++) {
             Msg msg = new Msg( //
                     // Msg Topic
                     "TopicTestMQ",
                     // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤
-                    "TagA",
+                    "A",
                     // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，
                     // 需要Producer与Consumer协商好一致的序列化和反序列化方式
-                    ("Hello MQ " + i).getBytes());
+                    ("(ProduceWithSpring) Hello MQ " + i).getBytes());
             // 设置代表消息的业务关键属性，请尽可能全局唯一。（例如订单ID）。
             // 以方便您在无法正常收到消息情况下，可通过MQ 控制台查询消息并补发。
             // 注意：不设置也不会影响消息正常收发
@@ -40,11 +42,16 @@ public class ProduceWithSpring {
             try {
                 SendResult sendResult = producer.send(msg);
                 assert sendResult != null;
-                System.out.println("send success: " + sendResult.getMsgId());
-            }catch (GomeClientException e) {
+                System.out.println("send success: " + sendResult.getMsgId()
+                        + ",offset=" + sendResult.getQueueOffset()
+                        + ",brokerName=" + sendResult.getMessageQueue().getBrokerName()
+                        + ",queueId=" + sendResult.getMessageQueue().getQueueId());
+            } catch (GomeClientException e) {
+                e.printStackTrace();
                 System.out.println("发送失败");
             }
         }
+        System.out.println("ProducerWithSpring send message end.");
         System.exit(0);
     }
 }
