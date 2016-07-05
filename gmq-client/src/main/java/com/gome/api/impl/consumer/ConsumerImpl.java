@@ -23,6 +23,8 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.gome.api.open.base.Action.CommitMessage;
+
 
 /**
  * @author tantexian
@@ -148,14 +150,13 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
                 ConsumeContext context = new ConsumeContext();
                 Action action = listener.consume(MyUtils.msgConvert(msg), context);
 
-                if (action != null) {
-                    if (action.name().equals("CommitMessage")) {
-                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-
-                    }
-                    else if (action.name().equals("ReconsumeLater")) {
-                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                    }
+                switch (action) {
+                case CommitMessage:
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                case ReconsumeLater:
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                default:
+                    break;
                 }
 
                 return null;

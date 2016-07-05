@@ -169,16 +169,18 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
                 ConsumeOrderContext context = new ConsumeOrderContext();
                 OrderAction action = listener.consume(MyUtils.msgConvert(msg), context);
                 if (action != null) {
-                    if (action.name().equals("Success")) {
-                        return ConsumeOrderlyStatus.SUCCESS;
+                    switch (action){
+                        case Success:
+                            return ConsumeOrderlyStatus.SUCCESS;
+                        case Suspend:
+                            return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+                        default:
+                            break;
                     }
-                    else if (action.name().equals("Suspend")) {
-                        return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
-                    }
-                }
 
-                return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+                }
             }
+            return null;
         }
     }
 }
