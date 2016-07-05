@@ -1,11 +1,18 @@
 package com.gome.api.impl.consumer;
 
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.alibaba.rocketmq.remoting.common.RemotingHelper;
+import org.slf4j.Logger;
+
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.client.log.ClientLogger;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.gome.api.impl.base.MQClientAbstract;
@@ -16,12 +23,7 @@ import com.gome.api.open.base.MsgListener;
 import com.gome.api.open.exception.GomeClientException;
 import com.gome.common.MQTraceConstants;
 import com.gome.common.MyUtils;
-import org.slf4j.Logger;
-
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.gome.log.GClientLogger;
 
 
 /**
@@ -29,7 +31,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @since 2016/6/27
  */
 public class ConsumerImpl extends MQClientAbstract implements Consumer {
-    private static final Logger log = ClientLogger.getLog();
+    private static final Logger log = GClientLogger.getLog();
     private final DefaultMQPushConsumer defaultMQPushConsumer;
     private final ConcurrentHashMap<String, MsgListener> subscribeTable = new ConcurrentHashMap();
     private final AtomicBoolean started = new AtomicBoolean(false);

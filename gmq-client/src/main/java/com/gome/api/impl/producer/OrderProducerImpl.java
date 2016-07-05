@@ -1,29 +1,30 @@
 package com.gome.api.impl.producer;
 
-import com.alibaba.rocketmq.client.log.ClientLogger;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.slf4j.Logger;
+
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.client.producer.MessageQueueSelector;
 import com.alibaba.rocketmq.common.UtilAll;
 import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.gome.api.impl.base.MQClientAbstract;
-import com.gome.api.open.exception.GomeClientException;
 import com.gome.api.open.base.Msg;
-import com.gome.api.open.order.OrderProducer;
 import com.gome.api.open.base.SendResult;
+import com.gome.api.open.exception.GomeClientException;
+import com.gome.api.open.order.OrderProducer;
 import com.gome.common.MQTraceConstants;
 import com.gome.common.MyUtils;
-import org.slf4j.Logger;
-
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
+import com.gome.log.GClientLogger;
 
 /**
  * @author tantexian
  * @since 2016/6/27
  */
 public class OrderProducerImpl extends MQClientAbstract implements OrderProducer {
-    private static final Logger log = ClientLogger.getLog();
+    private static final Logger log = GClientLogger.getLog();
     private final DefaultMQProducer defaultMQProducer;
     private final AtomicBoolean started = new AtomicBoolean(false);
 

@@ -99,6 +99,7 @@ public abstract class MQClientAbstract {
 
     protected void checkONSProducerServiceState(DefaultMQProducerImpl producer) {
         // 修改异常信息 2016/7/5 Add by GaoYanLei
+
         switch (producer.getServiceState()) {
         case CREATE_JUST:
             throw new GomeClientException(GmqFAQ.errorMessage(

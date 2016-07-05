@@ -3,21 +3,22 @@ package com.gome.api.impl.producer;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.gome.api.open.base.Msg;
+import com.alibaba.rocketmq.remoting.common.RemotingHelper;
 import org.slf4j.Logger;
 
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.client.log.ClientLogger;
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.remoting.exception.RemotingConnectException;
 import com.alibaba.rocketmq.remoting.exception.RemotingTimeoutException;
 import com.gome.api.impl.base.MQClientAbstract;
+import com.gome.api.open.base.Msg;
 import com.gome.api.open.base.Producer;
 import com.gome.api.open.base.SendResult;
 import com.gome.api.open.exception.GomeClientException;
-import com.gome.common.FAQ;
+import com.gome.common.GmqFAQ;
 import com.gome.common.PropertiesConst;
+import com.gome.log.GClientLogger;
 
 ;
 
@@ -27,7 +28,7 @@ import com.gome.common.PropertiesConst;
  * @since 2016/6/27
  */
 public class ProducerImpl extends MQClientAbstract implements Producer {
-    private static final Logger log = ClientLogger.getLog();
+    private static final Logger log = GClientLogger.getLog();
     private final DefaultMQProducer defaultMQProducer;
     private final AtomicBoolean started = new AtomicBoolean(false);
 
@@ -72,6 +73,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
 
         }
         catch (Exception e) {
+            log.error("start Exception", RemotingHelper.exceptionSimpleDesc(e));
             throw new GomeClientException(e.getMessage());
         }
     }
@@ -98,7 +100,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
             return sendResult;
         }
         catch (Exception e) {
-            log.error(String.format("Send msg Exception, %s", new Object[] {msg}), e);
+//            log.error(String.format("Send msg Exception, %s", new Object[] {msg}), e);
             this.checkProducerException(e, msg);
             return null;
         }
@@ -106,44 +108,66 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
 
 
     private void checkProducerException(Exception e, Msg msg) {
+        // 修改异常信息 2016/7/5 Add by GaoYanLei
         if (e instanceof MQClientException) {
             if (e.getCause() != null) {
                 if (e.getCause() instanceof RemotingConnectException) {
-                    throw new GomeClientException(FAQ.errorMessage(
-                        String.format("Connect broker failed, Topic: %s",
-                            new Object[] { msg.getTopic() }),
-                        "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&connect_broker_failed"));
+                    // throw new GomeClientException(FAQ.errorMessage(
+                    // String.format("Connect broker failed, Topic: %s",
+                    // new Object[] { msg.getTopic() }),
+                    // "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&connect_broker_failed"));
+                    throw new GomeClientException(
+                        GmqFAQ.errorMessage(String.format(GmqFAQ.CONNECT_BROKER_FAILED, msg.getTopic())));
                 }
 
                 if (e.getCause() instanceof RemotingTimeoutException) {
-                    throw new GomeClientException(FAQ.errorMessage(
-                        String.format("Send msg to broker timeout, %dms, Topic: %s",
-                            new Object[] { Integer.valueOf(this.defaultMQProducer.getSendMsgTimeout()),
-                                           msg.getTopic() }),
-                        "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&send_msg_failed"));
+                    // throw new GomeClientException(FAQ.errorMessage(
+                    // String.format("Send msg to broker timeout, %dms, Topic:
+                    // %s",
+                    // new Object[] {
+                    // Integer.valueOf(this.defaultMQProducer.getSendMsgTimeout()),
+                    // msg.getTopic() }),
+                    // "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&send_msg_failed"));
+
+                    throw new GomeClientException(GmqFAQ.errorMessage(String.format(GmqFAQ.SEND_MSG_FAILED,
+                        new Object[] { Integer.valueOf(this.defaultMQProducer.getSendMsgTimeout()),
+                                       msg.getTopic() })));
                 }
 
                 if (e.getCause() instanceof MQBrokerException) {
-                    MQBrokerException excep = (MQBrokerException) e.getCause();
-                    throw new GomeClientException(FAQ.errorMessage(
-                        String.format("Receive a broker exception, Topic: %s, %s",
-                            new Object[] { msg.getTopic(), excep.getErrorMessage() }),
-                        "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&broker_response_exception"));
+                    // MQBrokerException excep = (MQBrokerException)
+                    // e.getCause();
+                    // throw new GomeClientException(FAQ.errorMessage(
+                    // String.format("Receive a broker exception, Topic: %s,
+                    // %s",
+                    // new Object[] { msg.getTopic(), excep.getErrorMessage()
+                    // }),
+                    // "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&broker_response_exception"));
+
+                    throw new GomeClientException(
+                        GmqFAQ.errorMessage(String.format(GmqFAQ.BROKER_RESPONSE_EXCEPTION)));
                 }
             }
             else {
                 MQClientException excep1 = (MQClientException) e;
                 if (-1 == excep1.getResponseCode()) {
-                    throw new GomeClientException(FAQ.errorMessage(
-                        String.format("Topic does not exist, Topic: %s", new Object[] { msg.getTopic() }),
-                        "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&topic_not_exist"));
-                }
+                    // throw new GomeClientException(FAQ.errorMessage(
+                    // String.format("Topic does not exist, Topic: %s", new
+                    // Object[] { msg.getTopic() }),
+                    // "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&topic_not_exist"));
 
+                    throw new GomeClientException(
+                        GmqFAQ.errorMessage(String.format(GmqFAQ.TOPIC_NOT_EXIST, msg.getTopic())));
+                }
                 if (13 == excep1.getResponseCode()) {
-                    throw new GomeClientException(FAQ.errorMessage(
-                        String.format("ONS Client check msg exception, Topic: %s",
-                            new Object[] { msg.getTopic() }),
-                        "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&msg_check_failed"));
+                    // throw new GomeClientException(FAQ.errorMessage(
+                    // String.format("ONS Client check msg exception, Topic:
+                    // %s",
+                    // new Object[] { msg.getTopic() }),
+                    // "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&msg_check_failed"));
+
+                    throw new GomeClientException(
+                        GmqFAQ.errorMessage(String.format(GmqFAQ.MSG_CHECK_FAILED)));
                 }
             }
         }
