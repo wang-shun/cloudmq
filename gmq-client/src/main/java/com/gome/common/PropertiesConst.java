@@ -12,8 +12,8 @@ import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 public class PropertiesConst {
 
     public static class Keys {
-        public static final String ProducerId = "ProducerId";
-        public static final String ConsumerId = "ConsumerId";
+        public static final String ProducerGroupId = "ProducerGroupId";
+        public static final String ConsumerGroupId = "ConsumerGroupId";
         public static final String NAMESRV_ADDR = "NAMESRV_ADDR";
         public static final String MessageModel = "MessageModel";
         // 下述值，当前版本还不支持使用 2016/6/28 Add by tantexixan

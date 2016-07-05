@@ -175,7 +175,7 @@ public class TopicConfigManager extends ConfigManager {
                     topicConfig = this.topicConfigTable.get(topic);
 
                     /**
-                     * 增加禁止业务系统自行创建topic配置项autoCreateTopicEnable(默认为true)
+                     * 增加禁止业务系统自行创建topic配置项autoCreateTopicEnable(默认为false)
                      * 如果autoCreateTopicEnable=false，那么业务系统不能够自行创建topic，只能申请，通过web界面创建
                      *
                      * @author tantexian

@@ -25,6 +25,8 @@ import com.gome.common.MQTraceConstants;
 import com.gome.common.MyUtils;
 import com.gome.log.GClientLogger;
 
+import static com.gome.api.open.base.Action.CommitMessage;
+
 
 /**
  * @author tantexian
@@ -40,9 +42,9 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
     public ConsumerImpl(Properties properties) {
         super(properties);
         this.defaultMQPushConsumer = new DefaultMQPushConsumer();
-        String consumerGroup = properties.getProperty("ConsumerId");
+        String consumerGroup = properties.getProperty("ConsumerGroupId");
         if (null == consumerGroup) {
-            throw new GomeClientException("\'ConsumerId\' property is null");
+            throw new GomeClientException("\'ConsumerGroupId\' property is null");
         }
 
         String messageModel = properties.getProperty("MessageModel", "CLUSTERING");
@@ -150,14 +152,13 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
                 ConsumeContext context = new ConsumeContext();
                 Action action = listener.consume(MyUtils.msgConvert(msg), context);
 
-                if (action != null) {
-                    if (action.name().equals("CommitMessage")) {
-                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-
-                    }
-                    else if (action.name().equals("ReconsumeLater")) {
-                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                    }
+                switch (action) {
+                case CommitMessage:
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                case ReconsumeLater:
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                default:
+                    break;
                 }
 
                 return null;

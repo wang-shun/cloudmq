@@ -1,5 +1,6 @@
 package com.gome.demo.delay;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Random;
@@ -10,7 +11,6 @@ import com.gome.api.open.base.SendResult;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.DelayLevelConst;
 import com.gome.common.PropertiesConst;
-import com.gome.demo.simple.MyProperties;
 
 
 /**
@@ -22,8 +22,8 @@ import com.gome.demo.simple.MyProperties;
 public class ProducerDelayTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
-        // 您在控制台创建的ProducerId
-        properties.put(PropertiesConst.Keys.ProducerId, "ProducerDelayTest");
+        // 您在控制台创建的生产者组ID（ProducerGroupId）
+        properties.put(PropertiesConst.Keys.ProducerGroupId, "DelayProducerGroupId-test");
         // 设置nameserver地址，不设置则默认为127.0.0.1:9876
         properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 
@@ -31,22 +31,22 @@ public class ProducerDelayTest {
         // 在发送消息前，必须调用start方法来启动Producer，只需调用一次即可。
         producer.start();
         // 循环发送消息
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         for (int i = 0; i < 10; i++) {
             // 随机0-10s中延时设置
             try {
-                Thread.sleep(new Random().nextInt(10)*1000);
-            }
-            catch (InterruptedException e) {
+                Thread.sleep(new Random().nextInt(10) * 1000);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             Msg msg = new Msg( //
-                // Msg Topic
-                "TopicTestMQ",
-                // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤
-                "TagA",
-                // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，
-                // 需要Producer与Consumer协商好一致的序列化和反序列化方式
-                (" {MsgBornTime: " + new Date() + "} {MsgBody: Hello MQ " + i + "}").getBytes());
+                    // Msg Topic
+                    "TopicTestMQ",
+                    // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤
+                    "TagA",
+                    // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，
+                    // 需要Producer与Consumer协商好一致的序列化和反序列化方式
+                    (" {MsgBornTime: " + sdf.format(new Date()) + "} {MsgBody: Hello MQ " + i + "}").getBytes());
             // 设置代表消息的业务关键属性，请尽可能全局唯一。（例如订单ID）。
             // 以方便您在无法正常收到消息情况下，可通过MQ控制台查询消息并补发。
             // 注意：不设置也不会影响消息正常收发
@@ -62,6 +62,8 @@ public class ProducerDelayTest {
             SendResult sendResult = producer.send(msg);
             System.out.println(sendResult);
         }
+        System.out.println("ProducerDelayTest send message end.");
+
         // 在应用退出前，销毁Producer对象
         // 注意：如果不销毁也没有问题
         producer.shutdown();

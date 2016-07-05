@@ -16,8 +16,8 @@ import com.gome.common.PropertiesConst;
 public class ProducerTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
-        // 您在控制台创建的ProducerId
-        properties.put(PropertiesConst.Keys.ProducerId, "ProducerId-test");
+        // 您在控制台创建的生产者组ID（ProducerGroupId）
+        properties.put(PropertiesConst.Keys.ProducerGroupId, "SimpleProducerGroupId-test");
         // 设置nameserver地址，不设置则默认为127.0.0.1:9876
         properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 
@@ -43,6 +43,8 @@ public class ProducerTest {
             SendResult sendResult = producer.send(msg);
             System.out.println(sendResult);
         }
+
+        System.out.println("simple producer send end.");
         // 在应用退出前，销毁Producer对象
         // 注意：如果不销毁也没有问题
         producer.shutdown();
