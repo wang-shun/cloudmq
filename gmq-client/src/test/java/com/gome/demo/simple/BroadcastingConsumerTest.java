@@ -18,8 +18,8 @@ import com.gome.common.PropertiesConst;
 public class BroadcastingConsumerTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
-        // 您在控制台创建的 ConsumerId
-        properties.put(PropertiesConst.Keys.ConsumerId, "ConsumerId-test");
+        // 您在控制台创建的消费者组ID（ConsumerGroupId）
+        properties.put(PropertiesConst.Keys.ProducerGroupId, "BroadcastingConsumerGroupId-test");
         // 设置为广播消费模式（不设置则默认为集群消费模式）
         properties.put(PropertiesConst.Keys.MessageModel, PropertiesConst.Values.BROADCASTING);
         // 设置nameserver地址，不设置则默认为127.0.0.1:9876

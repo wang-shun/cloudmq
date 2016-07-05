@@ -19,9 +19,9 @@ import com.gome.demo.simple.MyProperties;
 public class OrderProducerTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
-        // 您在控制台创建的ProducerId
-        properties.put(PropertiesConst.Keys.ProducerId, "OrderProducerTest-Id");
-        // 设置nameserver地址，不设置则默认为127.0.0.1:9876
+        // 您在控制台创建的生产者组ID（ProducerGroupId）
+        properties.put(PropertiesConst.Keys.ProducerGroupId, "OrderProducerGroupId-test");
+        // 设置nameserver地址，不设置则默认为 127.0.0.1:9876
         properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 
         // 创建顺序类型生产者（建议尽量使用常规模式，顺序类型会降低性能及可靠性）

@@ -22,8 +22,8 @@ import com.gome.common.PropertiesConst;
 public class ProducerDelayTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
-        // 您在控制台创建的ProducerId
-        properties.put(PropertiesConst.Keys.ProducerId, "ProducerDelayTest");
+        // 您在控制台创建的生产者组ID（ProducerGroupId）
+        properties.put(PropertiesConst.Keys.ProducerGroupId, "DelayProducerGroupId-test");
         // 设置nameserver地址，不设置则默认为127.0.0.1:9876
         properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 

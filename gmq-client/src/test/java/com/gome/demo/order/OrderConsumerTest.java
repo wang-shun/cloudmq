@@ -23,8 +23,8 @@ import com.gome.demo.simple.MyProperties;
 public class OrderConsumerTest {
     public static void main(String[] args) {
         Properties properties = new Properties();
-        // 您在控制台创建的ConsumerId
-        properties.put(PropertiesConst.Keys.ConsumerId, "OrderConsumerTest-Id");
+        // 您在控制台创建的消费者组ID（consumerGroupId）
+        properties.put(PropertiesConst.Keys.ConsumerGroupId, "OrderProducerGroupId-test");
         // 设置nameserver地址，不设置则默认为127.0.0.1:9876
         properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 
