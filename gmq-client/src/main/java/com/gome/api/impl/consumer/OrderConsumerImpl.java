@@ -36,9 +36,9 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
     public OrderConsumerImpl(Properties properties) {
         super(properties);
         this.defaultMQPushConsumer = new DefaultMQPushConsumer();
-        String consumerGroup = properties.getProperty("ConsumerId");
+        String consumerGroup = properties.getProperty("ConsumerGroupId");
         if (null == consumerGroup) {
-            throw new GomeClientException("\'ConsumerId\' property is null");
+            throw new GomeClientException("\'ConsumerGroupId\' property is null");
         }
         else {
             // 下述参数暂时不支持 2016/6/28 Add by tantexixan

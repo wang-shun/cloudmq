@@ -40,9 +40,9 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
     public ConsumerImpl(Properties properties) {
         super(properties);
         this.defaultMQPushConsumer = new DefaultMQPushConsumer();
-        String consumerGroup = properties.getProperty("ConsumerId");
+        String consumerGroup = properties.getProperty("ConsumerGroupId");
         if (null == consumerGroup) {
-            throw new GomeClientException("\'ConsumerId\' property is null");
+            throw new GomeClientException("\'ConsumerGroupId\' property is null");
         }
 
         String messageModel = properties.getProperty("MessageModel", "CLUSTERING");

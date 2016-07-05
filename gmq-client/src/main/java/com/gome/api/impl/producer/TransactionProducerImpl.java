@@ -31,7 +31,7 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
     public TransactionProducerImpl(Properties properties, TransactionCheckListener transactionCheckListener) {
         super(properties);
         this.properties = properties;
-        this.transactionMQProducer = new TransactionMQProducer((String) properties.get("ProducerId"), new RPCHook() {
+        this.transactionMQProducer = new TransactionMQProducer((String) properties.get("ProducerGroupId"), new RPCHook() {
             @Override
             public void doBeforeRequest(String remoteAddr, RemotingCommand request) {
 
@@ -86,7 +86,7 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
     public SendResult send(final Msg message, final LocalTransactionExecuter executer, Object arg) {
         this.checkONSProducerServiceState(this.transactionMQProducer.getDefaultMQProducerImpl());
         com.alibaba.rocketmq.common.message.Message msgRMQ = MyUtils.msgConvert(message);
-        MessageAccessor.putProperty(msgRMQ, "ProducerId", (String)this.properties.get("ProducerId"));
+        MessageAccessor.putProperty(msgRMQ, "ProducerGroupId", (String)this.properties.get("ProducerGroupId"));
         TransactionSendResult sendResultRMQ = null;
 
         try {

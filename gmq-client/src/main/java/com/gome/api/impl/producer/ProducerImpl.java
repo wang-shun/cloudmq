@@ -34,7 +34,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
     public ProducerImpl(Properties properties) {
         super(properties);
         this.defaultMQProducer = new DefaultMQProducer();
-        String producerGroup = properties.getProperty("ProducerId", "__PRODUCER_DEFAULT_GROUP");
+        String producerGroup = properties.getProperty("ProducerGroupId", "__PRODUCER_DEFAULT_GROUP");
         this.defaultMQProducer.setProducerGroup(producerGroup);
         if (properties.containsKey("SendMsgTimeoutMillis")) {
             this.defaultMQProducer.setSendMsgTimeout(
