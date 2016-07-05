@@ -42,6 +42,6 @@ public class ConsumerTest {
         });
         // 启动消费者，开始消费
         consumer.start();
-        System.out.println("consumer Started");
+        System.out.println("Simple Push consumer Started");
     }
 }

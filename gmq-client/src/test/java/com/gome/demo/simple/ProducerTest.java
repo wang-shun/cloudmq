@@ -43,6 +43,8 @@ public class ProducerTest {
             SendResult sendResult = producer.send(msg);
             System.out.println(sendResult);
         }
+
+        System.out.println("simple producer send end.");
         // 在应用退出前，销毁Producer对象
         // 注意：如果不销毁也没有问题
         producer.shutdown();

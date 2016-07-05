@@ -46,6 +46,7 @@ public class ProducerSendOneWayTest {
             producer.sendOneway(msg);
 
         }
+        System.out.println("send one way message end.");
         // 在应用退出前，销毁Producer对象
         // 注意：如果不销毁也没有问题
         producer.shutdown();

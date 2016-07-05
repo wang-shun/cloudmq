@@ -42,6 +42,6 @@ public class BroadcastingConsumerTest {
         });
         // 消费者启动，开始消费消息
         consumer.start();
-        System.out.println("consumer Started");
+        System.out.println("Simple Broadcasting Consumer Started");
     }
 }
