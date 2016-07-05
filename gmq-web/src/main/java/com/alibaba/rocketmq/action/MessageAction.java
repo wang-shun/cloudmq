@@ -20,7 +20,7 @@ import java.util.Collection;
  * @date 2014-2-17
  */
 @Controller
-@RequestMapping("/message")
+@RequestMapping("/msg")
 public class MessageAction extends AbstractAction {
 
     @Autowired
