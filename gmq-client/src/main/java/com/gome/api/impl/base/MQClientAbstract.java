@@ -1,15 +1,16 @@
 package com.gome.api.impl.base;
 
+import java.util.Properties;
+
+import org.slf4j.Logger;
+
 import com.alibaba.rocketmq.client.impl.producer.DefaultMQProducerImpl;
-import com.alibaba.rocketmq.client.log.ClientLogger;
 import com.alibaba.rocketmq.common.UtilAll;
 import com.alibaba.rocketmq.common.namesrv.TopAddressing;
 import com.gome.api.open.exception.GomeClientException;
-import com.gome.common.FAQ;
+import com.gome.common.GmqFAQ;
 import com.gome.common.MyUtils;
-import org.slf4j.Logger;
-
-import java.util.Properties;
+import com.gome.log.GClientLogger;
 
 
 /**
@@ -27,7 +28,7 @@ public abstract class MQClientAbstract {
         .parseLong(System.getProperty("com.aliyun.openservices.ons.addr.internal.timeoutmills", "3000"));
     protected static final long WSADDR_INTERNET_TIMEOUTMILLS = Long
         .parseLong(System.getProperty("com.aliyun.openservices.ons.addr.internet.timeoutmills", "5000"));
-    private static final Logger log = ClientLogger.getLog();
+    private static final Logger log = GClientLogger.getLog();
     protected final Properties properties;
     //protected final SessionCredentials sessionCredentials = new SessionCredentials();
     protected String nameServerAddr = MyUtils.getNamesrvAddr();
@@ -47,7 +48,11 @@ public abstract class MQClientAbstract {
             }
 
             if(null == this.nameServerAddr) {
-                throw new GomeClientException(FAQ.errorMessage("Can not find name server, May be your network problem.", "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&namesrv_not_exist"));
+                // 修改异常信息 2016/7/5 Add by GaoYanLei
+                // throw new GomeClientException(FAQ.errorMessage("Can not find
+                // name server, May be your network problem.",
+                // "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&namesrv_not_exist"));
+                throw new GomeClientException(GmqFAQ.errorMessage(GmqFAQ.CONNECT_NAMESRV_FAILED));
             }
         }
     }
@@ -93,28 +98,19 @@ public abstract class MQClientAbstract {
 
 
     protected void checkONSProducerServiceState(DefaultMQProducerImpl producer) {
-/*
-        switch (MQClientAbstract.SyntheticClass_1.$SwitchMap$com$alibaba$rocketmq$common$ServiceState[producer
-            .getServiceState().ordinal()]) {
-        case 1:
-            throw new GomeClientException(FAQ.errorMessage(
-                String.format("You do not have start the producer[" + UtilAll.getPid() + "], %s",
-                    new Object[] { producer.getServiceState() }),
-                "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&service_not_ok"));
-        case 2:
-            throw new GomeClientException(FAQ.errorMessage(
-                String.format("Your producer has been shut down, %s",
-                    new Object[] { producer.getServiceState() }),
-                "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&service_not_ok"));
-        case 3:
-            throw new GomeClientException(FAQ.errorMessage(
-                String.format("When you start your service throws an exception, %s",
-                    new Object[] { producer.getServiceState() }),
-                "http://docs.aliyun.com/cn#/pub/ons/faq/exceptions&service_not_ok"));
-        case 4:
+        // 修改异常信息 2016/7/5 Add by GaoYanLei
+        switch (producer.getServiceState()) {
+        case CREATE_JUST:
+            throw new GomeClientException(GmqFAQ.errorMessage(
+                    String.format(GmqFAQ.PRODUCER_NOT_START, new Object[]{producer.getServiceState()})));
+        case SHUTDOWN_ALREADY:
+            throw new GomeClientException(GmqFAQ.errorMessage(
+                    String.format(GmqFAQ.PRODUCER_SHUT_DOWN, new Object[]{producer.getServiceState()})));
+        case START_FAILED:
+            throw new GomeClientException(GmqFAQ.errorMessage(
+                    String.format(GmqFAQ.SERVICE_EXCEPTION, new Object[]{producer.getServiceState()})));
         default:
         }
-*/
     }
 
 }
