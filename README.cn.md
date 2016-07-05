@@ -9,9 +9,10 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 当前最新版本功能支持：
 * 1、将整个项目命名为gmq-all-1.0.1
 * 2、将项目中所有子工程命名为gmq-*，其中将rocketmq-client命名为gmq-api
-* 3、在gmq-api上面封装了一层客户端gmq-client，gmq-client提供给最终用户使用
-* 4、目前gmq-client支持普通send，高性能sendOneWay、顺序Order发送，延时消息发送等功能
-* 5、其中4中描述的所有功能在gmq-client中都能支持对应的spring及非spring的版本
+* 3、集成为web运维监控界面，gmq-web
+* 4、在gmq-api上面封装了一层客户端gmq-client，gmq-client提供给最终用户使用
+* 5、目前gmq-client支持普通send，高性能sendOneWay、顺序Order发送，延时消息发送等功能
+* 6、其中4中描述的所有功能在gmq-client中都能支持对应的spring及非spring的版本
 
 ----------
 
