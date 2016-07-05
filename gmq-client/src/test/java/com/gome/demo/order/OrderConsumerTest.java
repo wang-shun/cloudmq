@@ -39,8 +39,7 @@ public class OrderConsumerTest {
                 try {
                     // do something..
                     return OrderAction.Success;
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     // 消费失败，Suspend，消息被放置到重试队列，延时后下次重新消费
                     return OrderAction.Suspend;
                 }
@@ -48,6 +47,6 @@ public class OrderConsumerTest {
         });
         // 启动消费者，开始消费
         orderedConsumer.start();
-        System.out.println("order consumer Started");
+        System.out.println("order consumer started");
     }
 }

@@ -28,6 +28,7 @@ public class OrderProducerTest {
         OrderProducer orderProducer = MQFactory.createOrderProducer(properties);
         // 在发送消息前，必须调用start方法来启动Producer，只需调用一次即可。
         orderProducer.start();
+        System.out.println("order producer started");
         // 循环发送消息
         for (int i = 0; i < 10; i++) {
             Msg msg = new Msg( //
@@ -51,6 +52,8 @@ public class OrderProducerTest {
             SendResult sendResult = orderProducer.send(msg, shardingKey);
             System.out.println(sendResult);
         }
+
+        System.out.println("order producer send message end.");
         // 在应用退出前，销毁Producer对象
         // 注意：如果不销毁也没有问题
         orderProducer.shutdown();
