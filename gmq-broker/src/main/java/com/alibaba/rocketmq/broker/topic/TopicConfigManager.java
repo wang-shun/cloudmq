@@ -173,6 +173,19 @@ public class TopicConfigManager extends ConfigManager {
             if (this.lockTopicConfigTable.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
                 try {
                     topicConfig = this.topicConfigTable.get(topic);
+
+                    /**
+                     * 增加禁止业务系统自行创建topic配置项autoCreateTopicEnable(默认为true)
+                     * 如果autoCreateTopicEnable=false，那么业务系统不能够自行创建topic，只能申请，通过web界面创建
+                     *
+                     * @author tantexian
+                     * @since 2016/7/4
+                     */
+                    boolean autoCreateTopicEnable = brokerController.getBrokerConfig().isAutoCreateTopicEnable();
+                    if (topicConfig == null && !autoCreateTopicEnable){
+                        return null;
+                    }
+
                     if (topicConfig != null)
                         return topicConfig;
 

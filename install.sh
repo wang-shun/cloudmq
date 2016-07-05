@@ -8,4 +8,4 @@ fi
 export PATH=/opt/taobao/mvn/bin:$JAVA_HOME/bin:$PATH
 mvn -Dmaven.test.skip=true clean package install assembly:assembly -U
 
-ln -s target/alibaba-rocketmq.dir/alibaba-rocketmq devenv
+#ln -s target/gmq-all.dir/gmq-all devenv
