@@ -6,8 +6,8 @@ import com.alibaba.rocketmq.remoting.common.RemotingUtil;
 
 
 public class FiltersrvConfig {
-    private String rocketmqHome = System.getProperty(MixAll.ROCKETMQ_HOME_PROPERTY,
-        System.getenv(MixAll.ROCKETMQ_HOME_ENV));
+    private String rocketmqHome = System.getProperty(MixAll.GMQ_HOME_PROPERTY,
+        System.getenv(MixAll.GMQ_HOME_ENV));
 
     @ImportantField
     private String namesrvAddr = System.getProperty(MixAll.NAMESRV_ADDR_PROPERTY,

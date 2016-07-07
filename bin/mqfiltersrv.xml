@@ -9,7 +9,7 @@
 
 	<properties>
 		<java.ext.dirs>${cpd}/../lib</java.ext.dirs>
-		<rocketmq.home.dir>${cpd}/..</rocketmq.home.dir>
+		<gmq.home.dir>${cpd}/..</gmq.home.dir>
 	</properties>
 
 	<classpaths>

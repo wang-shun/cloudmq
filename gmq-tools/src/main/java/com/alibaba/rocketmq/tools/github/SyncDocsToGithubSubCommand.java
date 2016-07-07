@@ -81,7 +81,7 @@ public class SyncDocsToGithubSubCommand implements SubCommand {
             // 同步Issue
             //
             {
-                File dir = new File(System.getenv(MixAll.ROCKETMQ_HOME_ENV) + "/" + "issues");
+                File dir = new File(System.getenv(MixAll.GMQ_HOME_ENV) + "/" + "issues");
                 File[] files = dir.listFiles();
                 if (files != null) {
                     // ascending order
@@ -98,7 +98,7 @@ public class SyncDocsToGithubSubCommand implements SubCommand {
 
             // 同步Wiki
             {
-                File dir = new File(System.getenv(MixAll.ROCKETMQ_HOME_ENV) + "/" + "wiki");
+                File dir = new File(System.getenv(MixAll.GMQ_HOME_ENV) + "/" + "wiki");
                 File[] files = dir.listFiles();
                 if (files != null) {
                     // ascending order
