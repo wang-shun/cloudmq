@@ -82,7 +82,7 @@ public class Producer {
                     while (true) {
                         try {
                             final long beginTimestamp = System.currentTimeMillis();
-                            producer.send(msg);
+                            producer.sendOneway(msg);
                             oneWayStats.getSendRequestSuccessCount().incrementAndGet();
 
                             final long currentRT = System.currentTimeMillis() - beginTimestamp;
@@ -103,12 +103,6 @@ public class Producer {
                         } catch (MQClientException e) {
                             oneWayStats.getSendRequestFailedCount().incrementAndGet();
                             e.printStackTrace();
-                        } catch (MQBrokerException e) {
-                            oneWayStats.getSendRequestFailedCount().incrementAndGet();
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e1) {
-                            }
                         }
                     }
                 }
