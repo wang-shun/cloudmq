@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class Producer {
 
-    private static final String topic = "orderTopic_broadcast_1";
-    private static final String groupName = MyUtils.getDefaultCluster(); // OneBroadcastProducerGroup
+    private static final String topic = "topicTest123";
+    private static final String groupName = "BroadcastProducerGroup";
 
     public static void main(String[] args) {
         try {
@@ -29,21 +29,22 @@ public class Producer {
             producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
             producer.start();
             System.out.println("producerGroup=" + groupName + ", instanceName=" + producer.getInstanceName() + ",orderId=" + orderId + ", producer started.");
-            int sendOneTime = 10;
+            int sendOneTime = 40;
 
             SendResult result = null;
             Message message = null;
 
             for (int i = 0; i < sendOneTime; i++) {
                 message = new Message(topic, "A", ("three-A-" + i).getBytes());
-                result = producer.send(message, new MessageQueueSelector() {
+                result = producer.send(message);
+               /* result = producer.send(message, new MessageQueueSelector() {
                     @Override
                     public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
                         Integer id = (Integer) arg;
                         int index = id % mqs.size();
                         return mqs.get(index);
                     }
-                }, orderId);
+                }, orderId);*/
                 if (result.getSendStatus() == SendStatus.SEND_OK) {
                     System.out.println("topic=" + message.getTopic() + ",offset=" + result.getQueueOffset()
                             + ",queueId=" + result.getMessageQueue().getQueueId() + ",brokerName=" + result.getMessageQueue().getBrokerName()

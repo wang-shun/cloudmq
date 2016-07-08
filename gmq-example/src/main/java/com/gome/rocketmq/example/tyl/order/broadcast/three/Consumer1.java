@@ -1,4 +1,4 @@
-package com.gome.rocketmq.example.tyl.order.broadcast.two;
+package com.gome.rocketmq.example.tyl.order.broadcast.three;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -16,12 +16,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author tianyuliang
- * @date 2016/7/6
+ * @date 2016/7/1
  */
-public class Consumer2 {
+public class Consumer1 {
 
-    private static final String topic = "topicTest123";
-    private static final String groupName = "ClusterConsumerGroup";  //BroadcastConsumerGroup
+    private static final String topic = "SimpleTopic";
+    private static final String groupName = "SimpleGroupId";
     private static final String strDateTime = "yyyy-MM-dd#HH:mm:ss.SSS";
 
     public static void main(String[] args) throws InterruptedException, MQClientException {
@@ -29,7 +29,7 @@ public class Consumer2 {
         final DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(groupName);
         consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         consumer.subscribe(topic, "*");
-        consumer.setMessageModel(MessageModel.BROADCASTING);
+        consumer.setMessageModel(MessageModel.CLUSTERING);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
         final SimpleDateFormat sdf = new SimpleDateFormat(strDateTime);
         consumer.registerMessageListener(new MessageListenerConcurrently() {
@@ -49,6 +49,8 @@ public class Consumer2 {
         });
         consumer.start();
         System.out.println("consumerGroupName=" + groupName + ",instanceName=" + consumer.getInstanceName() + ",topic=" + topic + " consumer started ...");
+        
     }
+
 
 }

@@ -1,4 +1,4 @@
-package com.gome.rocketmq.example.tyl.order.broadcast.one;
+package com.gome.rocketmq.example.tyl.order.broadcast.three;
 
 import com.alibaba.rocketmq.client.exception.MQBrokerException;
 import com.alibaba.rocketmq.client.exception.MQClientException;
@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class Producer {
 
-    private static final String topic = "orderTopic_broadcast_1";
-    private static final String groupName = "OneBroadcastProducerGroup";
+    private static final String topic = "SimpleTopic";
+    private static final String groupName = "SimpleGroupId";
 
     public static void main(String[] args) {
         try {

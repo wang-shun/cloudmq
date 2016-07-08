@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Consumer1 {
 
-    private static final String topic = "orderTopic_broadcast_2";
-    private static final String groupName = MyUtils.getDefaultCluster();
+    private static final String topic = "topicTest123";  // orderTopic_broadcast_2
+    private static final String groupName = "ClusterConsumerGroup"; // ClusterConsumerGroup
     private static final String strDateTime = "yyyy-MM-dd#HH:mm:ss.SSS";
 
     public static void main(String[] args) throws InterruptedException, MQClientException {
