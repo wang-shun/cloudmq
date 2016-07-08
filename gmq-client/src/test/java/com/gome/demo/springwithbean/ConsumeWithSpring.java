@@ -1,7 +1,5 @@
 package com.gome.demo.springwithbean;
 
-import com.gome.api.open.base.Consumer;
-import com.gome.api.open.base.Producer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -16,7 +14,7 @@ public class ConsumeWithSpring {
          * 此处为启动消费者，具体消息消费，在consumer.xml中配置的对应Listener
          */
         ApplicationContext context = new ClassPathXmlApplicationContext("consumer.xml");
-
+        assert context != null;
         System.out.println("ConsumeWithSpring consumer Started");
     }
 }
