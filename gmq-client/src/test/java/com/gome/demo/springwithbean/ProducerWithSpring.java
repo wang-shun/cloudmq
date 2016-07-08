@@ -49,5 +49,4 @@ public class ProducerWithSpring {
         System.out.println("ProducerWithSpring send message end.");
         System.exit(0);
     }
-
 }

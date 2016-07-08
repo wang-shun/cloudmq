@@ -7,8 +7,6 @@ import java.util.Properties;
 import com.gome.api.open.base.*;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.PropertiesConst;
-import com.gome.demo.simple.MyProperties;
-
 
 /**
  * 延时消费类型消费者(延时消费的消费者与普通消费者一致)
@@ -28,13 +26,13 @@ public class ConsumerDelayTest {
 
         // 创建普通类型消费者
         Consumer consumer = MQFactory.createConsumer(properties);
-        // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
+        // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，
+        // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
         // 延时模式（建议尽量使用常规模式，延时模式会降低性能及可靠性）
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         consumer.subscribe("TopicTestMQ", "*", new MsgListener() {
             public Action consume(Msg msg, ConsumeContext context) {
-                System.out.println("[NowTime:" + sdf.format(new Date())
-                        + "] Receive Msg : " + new String(msg.getBody()));
+                System.out.println("[NowTime:" + sdf.format(new Date()) + "] Receive Msg : " + new String(msg.getBody()));
                 try {
                     // do something..
                     return Action.CommitMessage;

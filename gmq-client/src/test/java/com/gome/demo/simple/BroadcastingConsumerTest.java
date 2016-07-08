@@ -25,7 +25,8 @@ public class BroadcastingConsumerTest {
         // 设置nameserver地址，不设置则默认为127.0.0.1:9876
         properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
 
-        // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
+        // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，
+        // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
         Consumer consumer = MQFactory.createConsumer(properties);
         consumer.subscribe("TopicTestMQ", "*", new MsgListener() {
             public Action consume(Msg msg, ConsumeContext context) {
