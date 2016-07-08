@@ -16,12 +16,6 @@ public class ConsumeWithSpring {
          * 此处为启动消费者，具体消息消费，在consumer.xml中配置的对应Listener
          */
         ApplicationContext context = new ClassPathXmlApplicationContext("consumer.xml");
-        Consumer consumer = (Consumer) context.getBean("consumer");
-        assert consumer != null;
-        ConsumerMessageListener msgListener = (ConsumerMessageListener) context.getBean("msgListener");
-        assert msgListener != null;
-
-        consumer.subscribe("TopicTestMQ", "*", msgListener);
 
         System.out.println("ConsumeWithSpring consumer Started");
     }

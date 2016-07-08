@@ -5,11 +5,11 @@
     <!--Listener配置-->
     <bean id="msgListener" class="com.gome.demo.springwithbean.ConsumerMessageListener"></bean>
     <bean id="consumer" class="com.gome.api.open.bean.ConsumerBean" init-method="start" destroy-method="shutdown">
-        <property name="properties" > <!--消费者配置信息-->
+        <property name="properties"> <!--消费者配置信息-->
             <props>
                 <prop key="ConsumerGroupId">ConsumerGroupId-test</prop>
                 <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
-                <prop key="NAMESRV_ADDR">10.128.31.124:9876;10.128.31.125:9876;10.128.31.118:9876;10.128.31.119:9876</prop>
+                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
             </props>
         </property>
         <property name="subscriptionTable">
@@ -18,30 +18,6 @@
                     <key>
                         <bean class="com.gome.api.open.bean.Subscription">
                             <property name="topic" value="TopicTestMQ"/>
-                            <property name="expression" value="*"/>
-                        </bean>
-                    </key>
-                </entry>
-                <entry value-ref="msgListener">
-                    <key>
-                        <bean class="com.gome.api.open.bean.Subscription">
-                            <property name="topic" value="TopicOrderTestMQ"/>
-                            <property name="expression" value="*"/>
-                        </bean>
-                    </key>
-                </entry>
-                <entry value-ref="msgListener">
-                    <key>
-                        <bean class="com.gome.api.open.bean.Subscription">
-                            <property name="topic" value="simpleTpsTopic"/>
-                            <property name="expression" value="*"/>
-                        </bean>
-                    </key>
-                </entry>
-                <entry value-ref="msgListener">
-                    <key>
-                        <bean class="com.gome.api.open.bean.Subscription">
-                            <property name="topic" value="TopicOrderTestMQlch"/>
                             <property name="expression" value="*"/>
                         </bean>
                     </key>
