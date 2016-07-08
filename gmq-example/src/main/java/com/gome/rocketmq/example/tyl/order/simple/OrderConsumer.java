@@ -31,15 +31,16 @@ public class OrderConsumer {
         consumer.subscribe("orderTopicTest", "*");
         final long begin = System.currentTimeMillis();
         consumer.registerMessageListener(new MessageListenerOrderly() {
-
             @Override
             public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
-                context.setAutoCommit(false);
-                for (MessageExt msgEx : msgs) {
-                    long diff = UtilAll.computeEclipseTimeMilliseconds(begin);
-                    System.out.println(format.format(Calendar.getInstance().getTime()) + ",body=" + new String(msgEx.getBody())
-                            + ",success=" + success.incrementAndGet() + ",storeHost=" + msgEx.getStoreHost()
-                            + ",tps=" + (success.get() * 1000 / diff));
+                for (MessageExt msg : msgs) {
+                    if (msg.getTopic().equals("orderTopicTest")) {
+                        System.out.println("success=" + success.incrementAndGet() + ",msgId=" + msg.getMsgId() + ",offset=" + msg.getQueueOffset()
+                                + ",body=" + new String(msg.getBody()) + ",storeHost=" + msg.getStoreHost() + ",queueId=" + msg.getQueueId());
+                        //  + ",storeTime=" + sdf.format(msg.getStoreTimestamp()) + ",bronTime=" + sdf.format(msg.getBornTimestamp())
+                    } else {
+                        System.out.println("error: " + msg.toString());
+                    }
                 }
                 return ConsumeOrderlyStatus.SUCCESS;
             }

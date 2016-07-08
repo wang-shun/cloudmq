@@ -1,9 +1,7 @@
 package com.gome.rocketmq.example.tyl.order.client.one;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.consumer.listener.*;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
@@ -31,19 +29,23 @@ public class Consumer {
             consumer.subscribe(topic, "*");
             consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
             final SimpleDateFormat sdf = new SimpleDateFormat(strDateTime);
-            consumer.registerMessageListener(new MessageListenerConcurrently() {
+            consumer.registerMessageListener(new MessageListenerOrderly() {
+
                 @Override
-                public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+                public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
                     for (MessageExt msg : msgs) {
-                        if (msg.getTopic().equals(topic) && msg.getTags().equals("A")) {
+                        if (msg.getTopic().equals(topic)) {
                             System.out.println("success=" + success.incrementAndGet() + ",msgId=" + msg.getMsgId() + ",offset=" + msg.getQueueOffset()
                                     + ",body=" + new String(msg.getBody()) + ",storeHost=" + msg.getStoreHost() + ",queueId=" + msg.getQueueId());
                             //  + ",storeTime=" + sdf.format(msg.getStoreTimestamp()) + ",bronTime=" + sdf.format(msg.getBornTimestamp())
+                        } else {
+                            System.out.println("error: " + msg.toString());
                         }
                     }
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                    return ConsumeOrderlyStatus.SUCCESS;
                 }
             });
+
             consumer.start();
             System.out.println("consumerGroupName=" + groupName + ",instanceName=" + consumer.getInstanceName() + ",topic=" + topic + " consumer started ...");
         } catch (Exception e) {

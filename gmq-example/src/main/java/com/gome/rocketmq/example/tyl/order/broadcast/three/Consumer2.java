@@ -1,9 +1,7 @@
 package com.gome.rocketmq.example.tyl.order.broadcast.three;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import com.alibaba.rocketmq.client.consumer.listener.*;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
@@ -32,9 +30,9 @@ public class Consumer2 {
         consumer.setMessageModel(MessageModel.CLUSTERING);
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
         final SimpleDateFormat sdf = new SimpleDateFormat(strDateTime);
-        consumer.registerMessageListener(new MessageListenerConcurrently() {
+        consumer.registerMessageListener(new MessageListenerOrderly() {
             @Override
-            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
                 for (MessageExt msg : msgs) {
                     if (msg.getTopic().equals(topic)) {
                         System.out.println("success=" + success.incrementAndGet() + ",msgId=" + msg.getMsgId() + ",offset=" + msg.getQueueOffset()
@@ -44,7 +42,7 @@ public class Consumer2 {
                         System.out.println("error: " + msg.toString());
                     }
                 }
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                return ConsumeOrderlyStatus.SUCCESS;
             }
         });
         consumer.start();
