@@ -15,7 +15,7 @@ import com.gome.api.open.exception.GomeClientException;
  * @author tantexian
  * @since 2016/6/27
  */
-public class OrderProduceWithSpring {
+public class OrderProducerWithSpring {
 
     public static void main(String[] args) {
         /**

@@ -19,7 +19,7 @@ import java.util.Date;
  * @author tantexian
  * @since 2016/6/27
  */
-public class DelayProduceWithSpring {
+public class DelayProducerWithSpring {
     public static void main(String[] args) {
         /**
          * 生产者Bean配置在producer.xml中,
