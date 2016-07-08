@@ -1,17 +1,15 @@
 package com.gome.demo.springwithbean;
 
 import com.gome.api.open.base.Msg;
+import com.gome.api.open.base.Producer;
+import com.gome.api.open.base.SendResult;
+import com.gome.api.open.exception.GomeClientException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.gome.api.open.exception.GomeClientException;
-import com.gome.api.open.base.Producer;
-import com.gome.api.open.base.SendResult;
-import org.springframework.util.Assert;
-
 /**
- * @author tantexian
- * @since 2016/6/27
+ * @author tianyuliang
+ * @date 2016/7/8
  */
 public class ProduceWithSpring {
     public static void main(String[] args) {
@@ -20,7 +18,7 @@ public class ProduceWithSpring {
          * 如果项目本身已经集成spring、则直接使用项目已有的spring配置bean、获取bean方式，不需要使用下述ClassPathXmlApplicationContext类方法来获取bean
          */
         ApplicationContext context = new ClassPathXmlApplicationContext("producer.xml");
-        // 获取普通消费者Bean
+        // 获取普通生产者Bean
         Producer producer = (Producer) context.getBean("producer");
         assert producer != null;
         //循环发送消息
@@ -42,16 +40,14 @@ public class ProduceWithSpring {
             try {
                 SendResult sendResult = producer.send(msg);
                 assert sendResult != null;
-                System.out.println("send success: " + sendResult.getMsgId()
-                        + ",offset=" + sendResult.getQueueOffset()
-                        + ",brokerName=" + sendResult.getMessageQueue().getBrokerName()
-                        + ",queueId=" + sendResult.getMessageQueue().getQueueId());
+                System.out.println("send success. msgId=" + sendResult.getMsgId());
             } catch (GomeClientException e) {
+                System.out.println("send error: " + e.getMessage());
                 e.printStackTrace();
-                System.out.println("发送失败");
             }
         }
         System.out.println("ProducerWithSpring send message end.");
         System.exit(0);
     }
+
 }
