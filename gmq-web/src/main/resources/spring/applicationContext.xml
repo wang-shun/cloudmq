@@ -22,7 +22,7 @@
 	</context:component-scan>
 
 	<bean id="configureInitializer" class="com.alibaba.rocketmq.config.ConfigureInitializer" init-method="init">
-		<property name="namesrvAddr" value="${rocketmq.namesrv.addr}" />
+		<property name="namesrvAddr" value="${gmq.namesrv.addr}" />
 	</bean>
 
 	<bean id="cmdValidator" class="com.alibaba.rocketmq.validate.CmdValidator">

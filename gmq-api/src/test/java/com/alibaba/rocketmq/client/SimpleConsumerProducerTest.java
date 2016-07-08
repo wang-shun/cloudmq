@@ -23,7 +23,7 @@ public class SimpleConsumerProducerTest {
 
     @Test
     public void producerConsumerTest() throws MQClientException, InterruptedException {
-        System.setProperty("rocketmq.namesrv.domain", "jmenv.tbsite.alipay.net");
+        System.setProperty("gmq.namesrv.domain", "jmenv.tbsite.alipay.net");
 
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("S_fundmng_demo_producer");
         DefaultMQProducer producer = new DefaultMQProducer("P_fundmng_demo_producer");

@@ -108,12 +108,16 @@ public class BrokerStartup {
 
             // 初始化配置文件
             final BrokerConfig brokerConfig = new BrokerConfig();
+            // netty服务器端配置
             final NettyServerConfig nettyServerConfig = new NettyServerConfig();
+            // netty客户端配置
             final NettyClientConfig nettyClientConfig = new NettyClientConfig();
+            // 设置netty服务器端监听端口
             nettyServerConfig.setListenPort(10911);
+            // 消息存储的相关配置
             final MessageStoreConfig messageStoreConfig = new MessageStoreConfig();
 
-            // 如果是slave，修改默认值
+            // 如果是slave，修改默认值（修改命中消息在内存的最大比例40为30【40-10】）
             if (BrokerRole.SLAVE == messageStoreConfig.getBrokerRole()) {
                 int ratio = messageStoreConfig.getAccessMessageInMemoryMaxRatio() - 10;
                 messageStoreConfig.setAccessMessageInMemoryMaxRatio(ratio);
@@ -158,7 +162,7 @@ public class BrokerStartup {
             MixAll.properties2Object(ServerUtil.commandLine2Properties(commandLine), brokerConfig);
 
             if (null == brokerConfig.getRocketmqHome()) {
-                System.out.println("Please set the " + MixAll.ROCKETMQ_HOME_ENV
+                System.out.println("Please set the " + MixAll.GMQ_HOME_ENV
                         + " variable in your environment to match the location of the RocketMQ installation");
                 System.exit(-2);
             }
@@ -183,9 +187,9 @@ public class BrokerStartup {
                 }
             }
 
-            // BrokerId的处理
+            // BrokerId的处理（switch-case语法：只要匹配到一个case，则顺序往下执行，直到遇到break，因此若没有break则不管后续case匹配与否都会执行）
             switch (messageStoreConfig.getBrokerRole()) {
-            case ASYNC_MASTER:
+            case ASYNC_MASTER://如果是同步master也会执行下述case中brokerConfig.setBrokerId(MixAll.MASTER_ID);语句，直到遇到break
             case SYNC_MASTER:
                 // Master Id必须是0
                 brokerConfig.setBrokerId(MixAll.MASTER_ID);

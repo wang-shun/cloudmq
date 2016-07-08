@@ -54,17 +54,17 @@ import com.alibaba.rocketmq.common.help.FAQUrl;
  * @author lansheng.zj@taobao.com
  */
 public class MixAll {
-    public static final String ROCKETMQ_HOME_ENV = "ROCKETMQ_HOME";
-    public static final String ROCKETMQ_HOME_PROPERTY = "rocketmq.home.dir";
+    public static final String GMQ_HOME_ENV = "GMQ_HOME";
+    public static final String GMQ_HOME_PROPERTY = "gmq.home.dir";
     public static final String NAMESRV_ADDR_ENV = "NAMESRV_ADDR";
-    public static final String NAMESRV_ADDR_PROPERTY = "rocketmq.namesrv.addr";
-    public static final String MESSAGE_COMPRESS_LEVEL = "rocketmq.message.compressLevel";
-    public static final String WS_DOMAIN_NAME = System.getProperty("rocketmq.namesrv.domain",
+    public static final String NAMESRV_ADDR_PROPERTY = "gmq.namesrv.addr";
+    public static final String MESSAGE_COMPRESS_LEVEL = "gmq.message.compressLevel";
+    public static final String WS_DOMAIN_NAME = System.getProperty("gmq.namesrv.domain",
         "jmenv.tbsite.net");
-    public static final String WS_DOMAIN_SUBGROUP = System.getProperty("rocketmq.namesrv.domain.subgroup",
+    public static final String WS_DOMAIN_SUBGROUP = System.getProperty("gmq.namesrv.domain.subgroup",
         "nsaddr");
     // http://jmenv.tbsite.net:8080/rocketmq/nsaddr
-    public static final String WS_ADDR = "http://" + WS_DOMAIN_NAME + ":8080/rocketmq/" + WS_DOMAIN_SUBGROUP;
+    public static final String WS_ADDR = "http://" + WS_DOMAIN_NAME + ":8080/gmq/" + WS_DOMAIN_SUBGROUP;
     public static final String DEFAULT_TOPIC = "MY_DEFAULT_TOPIC";
     public static final String BENCHMARK_TOPIC = "BenchmarkTest";
     public static final String DEFAULT_PRODUCER_GROUP = "DEFAULT_PRODUCER";
