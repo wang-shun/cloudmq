@@ -25,14 +25,14 @@ public class OrderMsgProducer {
             producer.start();
             
             int orderId = 1;
-            String topic = "orderTopic";
+            String topic = "orderTopic2";
             String key = orderId + "";
         
             String body = null;
             String tag = null;
             Message message = null;
             SendResult sendResult = null;
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 10000; i++) {
                 body = "创建订单-第" + i + "步";
                 tag ="TagA";
                 message = new Message(topic, tag, key, body.getBytes());
@@ -46,7 +46,7 @@ public class OrderMsgProducer {
                     }
                 }, orderId);
                 System.out.println(sendResult);
-                Thread.sleep(new Random().nextInt(2000));
+                Thread.sleep(new Random().nextInt(5000));
             }
 
             System.out.println("订单创建消息发送完成！！！");
