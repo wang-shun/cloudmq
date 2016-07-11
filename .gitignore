@@ -63,3 +63,4 @@ src/main/resources/hibernate.reveng.xml
 /target*
 *.log*
 
+/target/
