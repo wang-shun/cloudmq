@@ -18,15 +18,15 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Consumer {
 
-
-    private static final String topic = "retryDemoTopic";
     private static final String groupName = MyUtils.getDefaultCluster();
     private static final String strDateTime = "yyyy-MM-dd#HH:mm:ss.SSS";
 
 
     public static void main(String[] args) throws InterruptedException, MQClientException {
         try {
-            final Long start = System.currentTimeMillis();
+
+            final String topic = args.length >= 1 ? args[0].trim() : "topicMaxNumTest1070";
+
             final AtomicLong index = new AtomicLong(0L);
             final DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(groupName);
             consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
@@ -39,12 +39,10 @@ public class Consumer {
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                     for (MessageExt msg : msgs) {
                         Date nowDate = new Date();
-                        long diff = System.currentTimeMillis() - start;
-
+                        long diff = (System.currentTimeMillis() - msg.getBornTimestamp()) / 1000;
                         System.out.println("index=" + index.incrementAndGet() + ",msgId=" + msg.getMsgId() + ",reTimes=" + msg.getReconsumeTimes()
-                                + ",body=" + new String(msg.getBody()) + "," + sdf.format(nowDate) + ",diff=" + (diff / 1000));
-                        //  + ",storeTime=" + sdf.format(msg.getStoreTimestamp()) + ",bronTime=" + sdf.format(msg.getBornTimestamp())
-
+                                + ",body=" + new String(msg.getBody()) + "," + sdf.format(nowDate) + ",diff=" + (diff)
+                                + ",bronTime=" + sdf.format(msg.getBornTimestamp()));
                     }
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                 }

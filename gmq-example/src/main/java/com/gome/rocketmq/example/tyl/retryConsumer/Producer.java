@@ -16,7 +16,10 @@ import com.gome.rocketmq.common.MyUtils;
 public class Producer {
 
     public static void main(String[] args) {
+
         try {
+            final String topic = args.length >= 1 ? args[0].trim() : "topicMaxNumTest1070";
+
             DefaultMQProducer producer = new DefaultMQProducer(MyUtils.getDefaultCluster());
             producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
             producer.start();
@@ -24,13 +27,14 @@ public class Producer {
             SendResult sendResult = null;
             Message message = null;
             for (int i = 0; i < sendOneTime; i++) {
-                message = new Message("retryDemoTopic", "tagA", ("data-" + i).getBytes());
+                message = new Message(topic, "tagA", ("data-" + i).getBytes());
                 sendResult = producer.send(message);
                 if (sendResult.getSendStatus() == SendStatus.SEND_OK) {
                     System.out.println("send success. topic=" + message.getTopic() + ",msgId=" + sendResult.getMsgId() + ",body=" + new String(message.getBody()));
                 }
             }
             System.out.println("send message end. total=" + sendOneTime);
+            producer.shutdown();
         } catch (MQClientException e) {
             e.printStackTrace();
         } catch (RemotingException e) {
