@@ -60,7 +60,7 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 * 注释类型3、
 
 ```
-// xxx 2016/7/11 Add by xxx
+// xxx 2016/7/11 Add by xxx Or // xxx 2016/7/11 Edit by xxx
 ```
 
 
