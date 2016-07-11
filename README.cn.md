@@ -33,8 +33,27 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 * 代码使用Eclipse代码样式格式化，提交代码前须格式化[gmq.java.code.style.xml](http://git.oschina.net/tantexian/MyRocketMQ/blob/gome/docs/gmq.java.code.style.xml)
 * Java源文件使用Unix换行、UTF-8文件编码
 * 请在git clone命令之前执行`git config --global core.autocrlf false`，确保本地代码使用Unix换行格式
-* 请在非主干分支上开发
-* 每次提交及，对代码进行修改必须有相对应的解释说明
+* 请在非主干分支上开发，禁止提交本地未测试运行通过代码到线上
+* 每次提交及之前(正常来说需要先pull,解决冲突)，对代码进行修改必须有相对应的解释说明
+* 为了避免对原生代码的侵入、对于修改原生Rocketmq代码的，需要知会组内所有开发人员，经过审核后方可提交（且需要有统一格式注释，参照注释类型3）
+* 对于注释，请遵照以下规范：
+* 注释类型1、
+/**
+ * 顺序消息的生产者（顺序消息的消费者与普通消费者一致）
+ *
+ * @author tantexian
+ * @since 2016/6/27
+ */
+* 注释类型2、
+// 由于是顺序消息，因此只能选择一个queue生产和消费消息
+* 注释类型3、
+// xxx 2016/7/11 Add by tantexixan
+
+
+### 开发IDE
+* 开发工具不做同一规定（Idea、Eclipse都可以，建议使用Idea）
+* 建议使用最新版格式Idea，附下载地址：http://pan.baidu.com/s/1slMkXY1
+* 附对Idea属性格式注释文件下载地址：http://pan.baidu.com/s/1nvhHAPz
 
 ----------
 
