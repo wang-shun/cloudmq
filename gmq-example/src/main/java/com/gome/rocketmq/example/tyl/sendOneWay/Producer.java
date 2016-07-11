@@ -113,11 +113,11 @@ public class Producer {
 
     private static Message buildMessage(final int messageSize) {
         Message msg = new Message();
-        msg.setTags("A");
+        msg.setTags("tagA");
         msg.setTopic(topic);
         StringBuilder sb = new StringBuilder(messageSize + 1);
-        for (int i = 0; i < messageSize; i++) {
-            sb.append("w");
+        for (int i = 0; i < messageSize; i += 10) {
+            sb.append("hello baby.");
         }
         msg.setBody(sb.toString().getBytes());
         return msg;
