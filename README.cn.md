@@ -46,7 +46,7 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 /**
  * 顺序消息的生产者（顺序消息的消费者与普通消费者一致）
  *
- * @author tantexian
+ * @author xxx
  * @since 2016/6/27
  */
 ```
