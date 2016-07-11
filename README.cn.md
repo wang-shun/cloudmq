@@ -45,9 +45,9 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
  * @author tantexian
  * @since 2016/6/27
  */
+```
 * 注释类型2、 // 由于是顺序消息，因此只能选择一个queue生产和消费消息
 * 注释类型3、 // xxx 2016/7/11 Add by tantexixan
-```
 
 
 ### 开发IDE
@@ -60,4 +60,3 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 ### 联系我们
 
 ----------
-
