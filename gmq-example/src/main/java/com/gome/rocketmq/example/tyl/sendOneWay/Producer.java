@@ -26,7 +26,7 @@ public class Producer {
 
     public static void main(String[] args) throws MQClientException {
         final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 10;
-        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 50;
+        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
 
         final Message msg = buildMessage(messageSize);
         final ExecutorService sendThreadPool = Executors.newFixedThreadPool(threadCount);
