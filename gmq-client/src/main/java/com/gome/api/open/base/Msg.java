@@ -90,19 +90,19 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     }
 
     public String getMsgId() {
-        return this.msgId;
+        return this.getSystemProperties(SystemPropKey.MSGID);
     }
 
     public void setMsgId(String msgId) {
-        this.msgId = msgId;
+        this.putSystemProperties(SystemPropKey.MSGID, msgId);
     }
 
     public void setTransactionMsgId(String transactionMsgId) {
-        this.putSystemProperties(SystemPropKey.MSGID, transactionMsgId);
+        this.putSystemProperties(SystemPropKey.TRANSATIONMSGID, transactionMsgId);
     }
 
     public String getTransactionMsgId() {
-        return this.getSystemProperties(SystemPropKey.MSGID);
+        return this.getSystemProperties(SystemPropKey.TRANSATIONMSGID);
     }
 
     Properties getSystemProperties() {
@@ -168,6 +168,7 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
         public static final String TAG = "__TAG";
         public static final String KEY = "__KEY";
         public static final String MSGID = "__MSGID";
+        public static final String TRANSATIONMSGID = "__TRANSATIONMSGID";
         public static final String RECONSUMETIMES = "__RECONSUMETIMES";
         public static final String STARTDELIVERTIME = "__STARTDELIVERTIME";
 

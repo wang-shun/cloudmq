@@ -8,7 +8,7 @@ package com.gome.demo.simple;
  */
 public class MyProperties {
 
-    private static String nameServerAddr = "127.0.0.1:9876";
+    private static String nameServerAddr = "10.128.31.103:9876;10.128.31.104:9876;10.128.31.105:9876;10.128.31.106:9876";
 
     public static String getNameServerAddr() {
         return nameServerAddr;
