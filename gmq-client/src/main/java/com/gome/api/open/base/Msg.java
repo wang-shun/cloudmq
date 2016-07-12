@@ -26,6 +26,7 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
         this.body = body;
         this.putSystemProperties("__TAG", tag);
         this.putSystemProperties("__KEY", key);
+        super.setTags(tag);
     }
 
     void putSystemProperties(String key, String value) {
@@ -76,6 +77,7 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
 
     public void setTag(String tag) {
         this.putSystemProperties("__TAG", tag);
+        super.setTags(tag);
     }
 
     public String getKey() {
