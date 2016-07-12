@@ -24,9 +24,8 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     public Msg(String topic, String tag, String key, byte[] body) {
         this.topic = topic;
         this.body = body;
-        this.putSystemProperties("__TAG", tag);
-        this.putSystemProperties("__KEY", key);
-        super.setTags(tag);
+        this.setTag(tag);
+        this.setKey(key);
     }
 
     void putSystemProperties(String key, String value) {
@@ -68,7 +67,7 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     }
 
     public String getTag() {
-        return this.getSystemProperties("__TAG");
+        return this.getSystemProperties(SystemPropKey.TAG);
     }
 
     String getSystemProperties(String key) {
@@ -76,24 +75,24 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     }
 
     public void setTag(String tag) {
-        this.putSystemProperties("__TAG", tag);
+        this.putSystemProperties(SystemPropKey.TAG, tag);
         super.setTags(tag);
     }
 
     public String getKey() {
-        return this.getSystemProperties("__KEY");
+        return this.getSystemProperties(SystemPropKey.KEY);
     }
 
     public void setKey(String key) {
-        this.putSystemProperties("__KEY", key);
+        this.putSystemProperties(SystemPropKey.KEY, key);
     }
 
     public String getMsgID() {
-        return this.getSystemProperties("__MSGID");
+        return this.getSystemProperties(SystemPropKey.MSGID);
     }
 
     public void setMsgID(String msgid) {
-        this.putSystemProperties("__MSGID", msgid);
+        this.putSystemProperties(SystemPropKey.MSGID, msgid);
     }
 
     Properties getSystemProperties() {
@@ -121,12 +120,12 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     }
 
     public int getReconsumeTimes() {
-        String pro = this.getSystemProperties("__RECONSUMETIMES");
+        String pro = this.getSystemProperties(SystemPropKey.RECONSUMETIMES);
         return pro != null?Integer.parseInt(pro):0;
     }
 
     public void setReconsumeTimes(int value) {
-        this.putSystemProperties("__RECONSUMETIMES", String.valueOf(value));
+        this.putSystemProperties(SystemPropKey.RECONSUMETIMES, String.valueOf(value));
     }
 
     // 当前版本目前只支持固定等级的消息延时Level 2016/6/28 Add by tantexixan
