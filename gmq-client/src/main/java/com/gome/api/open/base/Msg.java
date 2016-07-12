@@ -157,7 +157,11 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     }
 
     public String toString() {
-        return "Msg [topic=" + this.topic + ", systemProperties=" + this.systemProperties + ", userProperties=" + this.userProperties + ", body.length=" + (this.body != null ? this.body.length : 0) + "]";
+        return "Msg [topic=" + this.topic
+                + ", systemProperties=" + this.systemProperties
+                + ", userProperties=" + this.userProperties
+                + ", body.length=" + (this.body != null ? this.body.length : 0)
+                + ", msgId=" + this.msgId + "]";
     }
 
     public static class SystemPropKey {
