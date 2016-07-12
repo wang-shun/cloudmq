@@ -4,6 +4,8 @@ import com.gome.api.open.exception.GomeClientException;
 import com.gome.common.DelayLevelConst;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Properties;
 
 /**
@@ -14,7 +16,6 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     private static final long serialVersionUID = -1385924226856188094L;
     Properties systemProperties;
     private String topic;
-    private String msgId;
     private Properties userProperties;
     private byte[] body;
 
@@ -22,10 +23,10 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
         this((String) null, (String) null, "", (byte[]) null);
     }
 
-    public Msg(String topic, String tag, String key, byte[] body) {
+    public Msg(String topic, String tags, String key, byte[] body) {
         this.topic = topic;
         this.body = body;
-        this.setTag(tag);
+        this.setTags(tags);
         this.setKey(key);
     }
 
@@ -67,17 +68,17 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
         this.topic = topic;
     }
 
-    public String getTag() {
-        return this.getSystemProperties(SystemPropKey.TAG);
+    public String getTags() {
+        return this.getSystemProperties(SystemPropKey.TAGS);
     }
 
     String getSystemProperties(String key) {
         return null != this.systemProperties ? this.systemProperties.getProperty(key) : null;
     }
 
-    public void setTag(String tag) {
-        this.putSystemProperties(SystemPropKey.TAG, tag);
-        super.setTags(tag);
+    public void setTags(String tags) {
+        this.putSystemProperties(SystemPropKey.TAGS, tags);
+        super.setTags(tags);
     }
 
     public String getKey() {
@@ -165,7 +166,7 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     }
 
     public static class SystemPropKey {
-        public static final String TAG = "__TAG";
+        public static final String TAGS = "__TAGS";
         public static final String KEY = "__KEY";
         public static final String MSGID = "__MSGID";
         public static final String TRANSATIONMSGID = "__TRANSATIONMSGID";

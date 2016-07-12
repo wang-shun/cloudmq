@@ -47,8 +47,8 @@ public class MyUtils {
                 msgRMQ.setKeys(msg.getKey());
             }
 
-            if (msg.getTag() != null) {
-                msgRMQ.setTags(msg.getTag());
+            if (msg.getTags() != null) {
+                msgRMQ.setTags(msg.getTags());
             }
 
             /*if(msg.getStartDeliverTime() > 0L) {
@@ -107,7 +107,7 @@ public class MyUtils {
         }
 
         if (msgRMQ.getTags() != null) {
-            msg.setTag(msgRMQ.getTags());
+            msg.setTags(msgRMQ.getTags());
         }
 
         if (msgRMQ.getBody() != null) {
