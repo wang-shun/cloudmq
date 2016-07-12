@@ -25,7 +25,7 @@ public class Consumer {
     public static void main(String[] args) throws InterruptedException, MQClientException {
         try {
 
-            final String topic = args.length >= 1 ? args[0].trim() : "topicMaxNumTest1070";
+            final String topic = args.length >= 1 ? args[0].trim() : "topicMaxNumTest59";
 
             final AtomicLong index = new AtomicLong(0L);
             final DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(groupName);
@@ -44,7 +44,7 @@ public class Consumer {
                                 + ",body=" + new String(msg.getBody()) + "," + sdf.format(nowDate) + ",diff=" + (diff)
                                 + ",bronTime=" + sdf.format(msg.getBornTimestamp()));
                     }
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             });
 
