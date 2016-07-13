@@ -1,0 +1,57 @@
+<div class="container">
+    <button class="btn btn-sm btn-success" type="button" onclick="add()">Add</button>
+</div>
+<p>&nbsp;</p>
+<div class="container theme-showcase"><!-- /container  -->
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>RealName</th>
+            <th>UserName</th>
+            <th>CreateTime</th>
+            <th>Operations</th>
+        </tr>
+        </thead>
+        <tbody>
+            #foreach($tr in $!table.tbodyData)
+            <tr>
+                #foreach($object in $tr)
+                    <td>$object</td>
+                #end
+                <td>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-sm btn-info" type="submit" onclick="upd('$tr[0]')">Update</button>
+                    &nbsp;&nbsp;
+                    <button class="btn btn-sm btn-danger" type="submit" onclick="del('$tr[0]')">Delete</button>
+                </td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+</div><!-- container-->
+<script language="javascript">
+    function add() {
+        window.location.href = "add.do";
+    }
+
+    function stat(topicName) {
+        window.location.href = "stats.do?userId=" + topicName;
+    }
+
+    function route(topicName) {
+        window.location.href = "route.do?userId=" + topicName;
+    }
+
+    function del(topicName) {
+        window.location.href = "delete.do?userId=" + topicName;
+    }
+
+    function upd(topicName) {
+        window.location.href = "update.do?userId=" + topicName;
+    }
+
+    function alert(msg) {
+        alert(msg);
+    }
+</script>
