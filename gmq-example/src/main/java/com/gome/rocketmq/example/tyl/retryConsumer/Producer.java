@@ -18,7 +18,7 @@ public class Producer {
     public static void main(String[] args) {
 
         try {
-            final String topic = args.length >= 1 ? args[0].trim() : "topicMaxNumTest1070";
+            final String topic = args.length >= 1 ? args[0].trim() : "topicMaxNumTest59";
 
             DefaultMQProducer producer = new DefaultMQProducer(MyUtils.getDefaultCluster());
             producer.setNamesrvAddr(MyUtils.getNamesrvAddr());

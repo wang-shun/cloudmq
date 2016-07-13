@@ -39,8 +39,7 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
         String consumerGroup = properties.getProperty("ConsumerGroupId");
         if (null == consumerGroup) {
             throw new GomeClientException("\'ConsumerGroupId\' property is null");
-        }
-        else {
+        } else {
             // 下述参数暂时不支持 2016/6/28 Add by tantexixan
             /*
              * String suspendTimeMillis =
@@ -69,9 +68,9 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
             this.defaultMQPushConsumer.setNamesrvAddr(this.getNameServerAddr());
             if (properties.containsKey("ConsumeThreadNums")) {
                 this.defaultMQPushConsumer.setConsumeThreadMin(
-                    Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
+                        Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
                 this.defaultMQPushConsumer.setConsumeThreadMax(
-                    Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
+                        Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
             }
 
             // 当前版本不支持 2016/6/28 Add by tantexixan
@@ -101,15 +100,14 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
 
     public void start() {
         this.defaultMQPushConsumer
-            .registerMessageListener(new OrderConsumerImpl.MessageListenerOrderlyImpl());
+                .registerMessageListener(new OrderConsumerImpl.MessageListenerOrderlyImpl());
 
         try {
             if (this.started.compareAndSet(false, true)) {
                 this.defaultMQPushConsumer.start();
             }
 
-        }
-        catch (Exception var2) {
+        } catch (Exception var2) {
             throw new GomeClientException(var2);
         }
     }
@@ -126,16 +124,13 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
     public void subscribe(String topic, String subExpression, MsgOrderListener listener) {
         if (null == topic) {
             throw new GomeClientException("topic is null");
-        }
-        else if (null == listener) {
+        } else if (null == listener) {
             throw new GomeClientException("listener is null");
-        }
-        else {
+        } else {
             try {
                 this.subscribeTable.put(topic, listener);
                 this.defaultMQPushConsumer.subscribe(topic, subExpression);
-            }
-            catch (MQClientException var5) {
+            } catch (MQClientException var5) {
                 throw new GomeClientException("defaultMQPushConsumer subscribe exception", var5);
             }
         }
@@ -157,25 +152,24 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
 
 
         public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs,
-                ConsumeOrderlyContext consumeOrderlyContext) {
+                                                   ConsumeOrderlyContext consumeOrderlyContext) {
             MessageExt msg = msgs.get(0);
-
+            String msgId = msg.getMsgId();
             MsgOrderListener listener = OrderConsumerImpl.this.subscribeTable.get(msg.getTopic());
             if (null == listener) {
                 throw new GomeClientException("MsgOrderListener is null");
-            }
-            else {
+            } else {
 
                 ConsumeOrderContext context = new ConsumeOrderContext();
-                OrderAction action = listener.consume(MyUtils.msgConvert(msg), context);
+                OrderAction action = listener.consume(MyUtils.msgConvert(msg, msgId), context);
                 if (action != null) {
                     switch (action) {
-                    case Success:
-                        return ConsumeOrderlyStatus.SUCCESS;
-                    case Suspend:
-                        return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
-                    default:
-                        break;
+                        case Success:
+                            return ConsumeOrderlyStatus.SUCCESS;
+                        case Suspend:
+                            return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+                        default:
+                            break;
                     }
 
                 }

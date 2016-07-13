@@ -27,7 +27,7 @@ public class ProducerWithSpring {
                     // Msg Topic
                     "TopicTestMQ",
                     // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤
-                    "A",
+                    "TagA",
                     // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，
                     // 需要Producer与Consumer协商好一致的序列化和反序列化方式
                     ("(ProducerWithSpring) Hello MQ " + i).getBytes());
