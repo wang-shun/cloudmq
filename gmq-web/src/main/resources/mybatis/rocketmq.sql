@@ -13,13 +13,17 @@ File Encoding         : 65001
 Date: 2016-07-13 10:47:48
 */
 
-SET FOREIGN_KEY_CHECKS=0;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+CREATE SCHEMA IF NOT EXISTS `rocketmq` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+USE `rocketmq` ;
 
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
+CREATE  TABLE IF NOT EXISTS `rocketmq`.`user` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `real_name` varchar(50) DEFAULT NULL COMMENT '真实姓名',
   `user_name` varchar(50) DEFAULT NULL COMMENT '登录用户名',
