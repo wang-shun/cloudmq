@@ -2,6 +2,8 @@ package com.alibaba.rocketmq.action;
 
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,7 +15,6 @@ import com.alibaba.rocketmq.common.Table;
 
 
 /**
- * 
  * @author yankai913@gmail.com
  * @date 2014-2-17
  */
@@ -31,7 +32,9 @@ public abstract class AbstractAction {
     public static final String FORM_ACTION = "action";
 
     public static final String KEY_TABLE = "table";
+    public static final String TBODY_DATA = "tbodyData";
 
+    // 新增类型 2016/7/15 Add by gaoyanlei
     public static final String OPTIONS = "options";
 
 
@@ -39,15 +42,33 @@ public abstract class AbstractAction {
         map.put(KEY_TABLE, table);
     }
 
+    // 新增 2016/7/15 Add by gaoyanlei
+    protected void putTable(ModelMap map, Object object) {
+        map.put(TBODY_DATA, object);
+    }
+
 
     protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options,
-            HttpServletRequest request) {
+                                      HttpServletRequest request) {
         putPublicAttribute(map, title, options);
         @SuppressWarnings("unchecked")
         Enumeration<String> enumer = request.getParameterNames();
         while (enumer.hasMoreElements()) {
             String key = enumer.nextElement();
             String value = request.getParameter(key);
+            addOptionValue(options, key, value);
+        }
+    }
+
+    protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options,
+                                      Map object) {
+        putPublicAttribute(map, title, options);
+        @SuppressWarnings("unchecked")
+        Iterator entries = object.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry entry = (Map.Entry) entries.next();
+            String key = (String) entry.getKey();
+            Object value = entry.getValue();
             addOptionValue(options, key, value);
         }
     }

@@ -20,7 +20,10 @@ public class User extends BaseDomain {
     private String realName;
     @FieldMeta(name = "用户名")
     private String userName;
-    @FieldMeta(name = "123")
+    @FieldMeta(name = "电话")
+    private String mobile;
+    @FieldMeta(name = "邮箱地址")
+    private String email;
     private String password;
     @FieldMeta(name = "创建时间")
     private Date createdTime;
@@ -30,6 +33,22 @@ public class User extends BaseDomain {
 
     public User() {
         //默认无参构造方法
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getRealName() {

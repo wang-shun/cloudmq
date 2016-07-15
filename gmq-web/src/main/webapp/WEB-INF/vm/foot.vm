@@ -1,1 +1,9 @@
-<p>Powered by Gome</p>
+##<p>Powered by Gome</p>
+<footer>
+    <hr>
+
+    <!-- Purchase a site license to remove this link from the footer: http://www.portnine.com/bootstrap-themes -->
+    <p class="pull-right">A Powered by <a href="http://www.gome.com.cn" target="_blank"> Gome</a></p>
+
+##    <p>© 2016 <a href="http://www.portnine.com" target="_blank">Gome</a></p>
+</footer>
