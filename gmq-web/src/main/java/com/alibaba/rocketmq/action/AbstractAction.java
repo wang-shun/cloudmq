@@ -143,6 +143,7 @@ public abstract class AbstractAction {
     public static final String POST = "POST";
 
     public static final String GET = "GET";
+    public static final String DELETE = "DELETE";
 
 
     protected void throwUnknowRequestMethodException(HttpServletRequest request) {
