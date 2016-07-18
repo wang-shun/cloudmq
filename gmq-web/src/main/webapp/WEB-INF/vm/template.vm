@@ -1,19 +1,20 @@
-<!DOCTYPE  html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     #set($root=$link.getContextPath())
 	#parse("head.vm")
+	#parse("head-js.vm")
 </head>
-<body class="theme-blue">
-    #parse("top.vm")
-    #parse("menu.vm")
-<div class="content">
+<body class="theme-blue" role="document">
+    #parse("navbar.vm")
+<div class="content" role="main">
+    #parse("content-head.vm")
+    #parse("msg.vm")
     <!--changed part begin-->
-    #parse("content_top.vm")
-        #parse($bodyPage)
+    #parse($bodyPage)
     <!--changed part end -->
     #parse("foot.vm")
 </div>
-    #parse("js.vm")
+    #parse("body-js.vm")
 </body>
 </html>
