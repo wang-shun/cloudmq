@@ -5,8 +5,14 @@
     <div class="navbar navbar-default" role="navigation">
         <!-- start logo navbar -->
         <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a href="index.html">
-                <span class="navbar-brand"><span class="fa fa-paper-plane"></span>&nbsp; GMQ Consonle</span>
+                <span class="navbar-brand"><span class="fa fa-paper-plane"></span>&nbsp;&nbsp;GMQ Consonle</span>
             </a>
         </div>
         <!-- end logo navbar -->
@@ -36,7 +42,7 @@
     </div>
 
     <div class="sidebar-nav">
-        <ul>
+        <ul id="navbarEl">
             <li #if($cluster_flag) class="$cluster_flag" #end>
                 <a href="$root/cluster/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-dashboard"></i> Cluster
@@ -49,14 +55,14 @@
                 </a>
             </li>
 
-            <li>
+            <li #if($topic_flag) class="$topic_flag" #end>
                 <a href="$root/topic/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-paragraph"></i> Topic
                 </a>
             </li>
 
 
-            <li data-popover="true" rel="popover" data-placement="right">
+            <li #if($connection_flag) class="$connection_flag" #end data-popover="true" rel="popover" data-placement="right">
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".connection-menu">
                     <i class="fa fa-fw fa-fighter-jet"></i> Connection<i class="fa fa-collapse"></i>
                 </a>
@@ -69,7 +75,7 @@
             </li>
 
 
-            <li data-popover="true" rel="popover" data-placement="right">
+            <li #if($account_flag) class="$account_flag" #end data-popover="true" rel="popover" data-placement="right">
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".account-menu">
                     <i class="fa fa-fw fa-briefcase"></i> Account<i class="fa fa-collapse"></i>
                 </a>
@@ -83,7 +89,7 @@
             </li>
 
 
-            <li>
+            <li #if($nameSrv_flag) class="$nameSrv_flag" #end >
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".nameSrv-menu">
                     <i class="fa fa-fw fa-tags"></i> NameSrv<i class="fa fa-collapse"></i>
                 </a>
@@ -100,8 +106,8 @@
             </li>
 
 
-            <li>
-                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".message-menu">
+            <li #if($message_flag) class="$message_flag" #end >
+                <a href="#navbarEl_message" class="nav-header collapsed" data-toggle="collapse" data-target=".message-menu" id="navbarEl_message">
                     <i class="fa fa-fw fa-legal"></i> Message<i class="fa fa-collapse"></i>
                 </a>
             </li>
@@ -114,7 +120,7 @@
             </li>
 
 
-            <li>
+            <li #if($broker_flag) class="$broker_flag" #end >
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".broker-menu">
                     <i class="fa fa-fw fa-book"></i> Broker<i class="fa fa-collapse"></i>
                 </a>
@@ -127,7 +133,7 @@
             </li>
 
 
-            <li>
+            <li #if($consumer_flag) class="$consumer_flag" #end >
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".consumer-menu">
                     <i class="fa fa-fw fa-inbox"></i> Consumer<i class="fa fa-collapse"></i>
                 </a>
@@ -141,7 +147,7 @@
             </li>
 
 
-            <li>
+            <li #if($offset_flag) class="$offset_flag" #end >
                 <a href="$root/offset/resetOffsetByTime.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-paragraph"></i> Offset
                 </a>

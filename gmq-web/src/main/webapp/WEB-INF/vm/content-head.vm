@@ -12,10 +12,9 @@
 ##        </div>
 
 <div class="header">
-    <h1 class="page-title">Edit User</h1>
+    <h1 class="page-title">gmq console</h1>
     <ul class="breadcrumb">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="users.html">Users</a></li>
-        <li class="active">jsmith</li>
+        <li><a href="$root/index.html">Home</a></li>
+        #parseTitle($title)
     </ul>
 </div>
