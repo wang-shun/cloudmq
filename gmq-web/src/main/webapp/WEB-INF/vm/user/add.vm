@@ -104,3 +104,4 @@
         var ajaxHandler =new ajaxDataController("$root/user/saveOrUpdate1.do", JSON.stringify(o), "/user/list.do",false, 'post');
     }
 </script>
+
