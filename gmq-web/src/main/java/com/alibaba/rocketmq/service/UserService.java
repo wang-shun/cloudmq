@@ -5,6 +5,7 @@ import com.alibaba.rocketmq.common.Table;
 import com.alibaba.rocketmq.dao.UserDao;
 import com.alibaba.rocketmq.domain.User;
 import com.alibaba.rocketmq.tools.command.user.UpdateUserSubCommand;
+import com.alibaba.rocketmq.util.MyBeanUtils;
 import org.apache.commons.cli.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,12 +46,22 @@ public class UserService extends AbstractService {
         return null;
     }
 
-    final static UpdateUserSubCommand updateUserSubCommand = new UpdateUserSubCommand();
-
-
-    public Collection<Option> getOptionsForUpdate() {
-        return getOptions(updateUserSubCommand);
+    public int saveOrUpdate(User user) throws Exception {
+        if (user.getId() == null) {
+            return userDao.insertEntry(user);
+        } else {
+            User u = this.findById(user.getId());
+            MyBeanUtils.copyBeanNotNull2Bean(user, u);
+            return userDao.updateByKey(u);
+        }
     }
+
+//    final static UpdateUserSubCommand updateUserSubCommand = new UpdateUserSubCommand();
+
+
+//    public Collection<Option> getOptionsForUpdate() {
+//        return getOptions(updateUserSubCommand);
+//    }
 
     public Table delate(int userId) {
         userDao.deleteByKey(userId);
@@ -70,19 +81,6 @@ public class UserService extends AbstractService {
             return table;
         }
         return null;
-    }
-
-    public int update(int id,
-                      String userName,
-                      String email,
-                      String mobile, String realName) {
-        User user = new User();
-        user.setId(id + "");
-        user.setUserName(userName);
-        user.setEmail(email);
-        user.setMobile(mobile);
-        user.setRealName(realName);
-        return userDao.updateByKey(user);
     }
 
     public User findById(int userId) {

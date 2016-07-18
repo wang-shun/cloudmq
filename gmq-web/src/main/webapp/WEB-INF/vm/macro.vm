@@ -72,12 +72,5 @@
 
 <!-- 动态生成form表单 -->
 #macro ( add)
-<div class="main-content">
 
-    <table class="table table-bordered table-hover">
-        <tbody>
-
-        </tbody>
-    </table>
-</div>
 #end

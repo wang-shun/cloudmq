@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE  html>
 <html lang="en">
 <head>
     #set($root=$link.getContextPath())
@@ -7,10 +7,10 @@
 <body class="theme-blue">
     #parse("top.vm")
     #parse("menu.vm")
-<div class="content" role="main">
+<div class="content">
     <!--changed part begin-->
     #parse("content_top.vm")
-    #parse($bodyPage)
+        #parse($bodyPage)
     <!--changed part end -->
     #parse("foot.vm")
 </div>

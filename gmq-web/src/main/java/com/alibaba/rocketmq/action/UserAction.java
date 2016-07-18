@@ -1,6 +1,7 @@
 package com.alibaba.rocketmq.action;
 
 import com.alibaba.rocketmq.domain.User;
+import com.alibaba.rocketmq.domain.UserVo;
 import com.alibaba.rocketmq.util.MyBeanUtils;
 import com.alibaba.rocketmq.common.Table;
 import com.alibaba.rocketmq.service.UserService;
@@ -38,31 +39,6 @@ public class UserAction extends AbstractAction {
         return "User";
     }
 
-    @RequestMapping(value = "/login.do", method = RequestMethod.GET)
-    public String list(@RequestParam(required = false) String userName, @RequestParam(required = false) String password) {
-        userService.checkUserTest(userName, password);
-        return TEMPLATE;
-    }
-
-    @RequestMapping(value = "/add.do", method = {RequestMethod.GET, RequestMethod.POST})
-    public String add(ModelMap map, HttpServletRequest request, @RequestParam(required = false) String id,
-                      @RequestParam(required = false) String userName,
-                      @RequestParam(required = false) String email,
-                      @RequestParam(required = false) String mobile, @RequestParam(required = false) String realName) {
-        if (request.getMethod().equals(GET)) {
-            putPublicAttribute(map, "add");
-//            putOptions(map, options);
-//            map.put(FORM_ACTION, "add.do");// add as update
-        } else if (request.getMethod().equals(POST)) {
-//            checkOptions(options);
-            userService.save(userName, email, mobile, realName);
-            putAlertTrue(map);
-        } else {
-            throwUnknowRequestMethodException(request);
-        }
-        return TEMPLATE;
-    }
-
     @RequestMapping(value = "/list.do", method = RequestMethod.GET)
     public String list(ModelMap map) {
         putPublicAttribute(map, "list");
@@ -73,6 +49,35 @@ public class UserAction extends AbstractAction {
         }
         return TEMPLATE;
     }
+
+    @RequestMapping(value = "/saveOrUpdate.do", method = {RequestMethod.GET})
+    public String AddView(ModelMap map, @RequestParam(required = false) Integer id) {
+        putPublicAttribute(map, "add");
+        if (id != null) {
+            putTable(map, userService.findById(id));
+        }
+        return TEMPLATE;
+    }
+
+    @RequestMapping(value = "/saveOrUpdate1.do", method = {RequestMethod.POST})
+    public String save(ModelMap map, @RequestBody UserVo user) {
+        try {
+            putPublicAttribute(map, "list");
+//            if (user.getId() == null) {
+//                userService.saveOrUpdate(UserVo);
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return TEMPLATE;
+    }
+
+    @RequestMapping(value = "/login.do", method = RequestMethod.GET)
+    public String list(@RequestParam(required = false) String userName, @RequestParam(required = false) String password) {
+        userService.checkUserTest(userName, password);
+        return TEMPLATE;
+    }
+
 
     @RequestMapping(value = "/delete.do", method = {RequestMethod.GET, RequestMethod.POST})
     public String delete(ModelMap map, HttpServletRequest request, @RequestParam int id) {
@@ -95,13 +100,13 @@ public class UserAction extends AbstractAction {
 
     @RequestMapping(value = "/update.do", method = {RequestMethod.GET, RequestMethod.POST})
     public String update(ModelMap map, HttpServletRequest request, @RequestBody User user) {
-        Collection<Option> options = userService.getOptionsForUpdate();
+//        Collection<Option> options = userService.getOptionsForUpdate();
 //        putPublicAttribute(map, "update", options, MyBeanUtils.copyBean2Map(userService.findById(user.getId())));
         try {
             if (request.getMethod().equals(GET)) {
 
             } else if (request.getMethod().equals(POST)) {
-                checkOptions(options);
+//                checkOptions(options);
 //                userService.update(id, userName, email, mobile, realName);
                 putAlertTrue(map);
             } else {

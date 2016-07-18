@@ -24,7 +24,7 @@
                 <td>$!{user.mobile}</td>
                 <td>$!{user.email}</td>
                 <td>
-                    <a href="$root/user/update.do/$!{user.id}"><i class="fa fa-pencil"></i></a>
+                    <a href="$root/user/saveOrUpdate.do?id=$!{user.id}"><i class="fa fa-pencil"></i></a>
                     <a href="#myModal" role="button" data-toggle="modal"><i class="fa fa-trash-o"></i></a>
                 </td>
             </tr>
@@ -67,7 +67,7 @@
 
 <script language="javascript">
     function add() {
-        window.location.href = "add.do";
+        window.location.href = "saveOrUpdate.do";
     }
 
 </script>

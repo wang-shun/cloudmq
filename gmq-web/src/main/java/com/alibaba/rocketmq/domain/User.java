@@ -35,6 +35,10 @@ public class User extends BaseDomain {
         //默认无参构造方法
     }
 
+    public User(int id) {
+        super.setId(id);
+    }
+
     public String getMobile() {
         return mobile;
     }
