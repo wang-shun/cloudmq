@@ -31,7 +31,7 @@ function ajaxDataController(url, params, callback, async, method) {
                 message = err.message
             }
 
-            XUI.gotoPageHref('user/list.do');
+            XUI.gotoPageHref('list.do');
 //                if (code == 200) {
 //                    window.location.href="$root/user/list.do"
 //                }
