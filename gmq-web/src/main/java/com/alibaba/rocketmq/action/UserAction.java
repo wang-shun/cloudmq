@@ -59,7 +59,7 @@ public class UserAction extends AbstractAction {
         return TEMPLATE;
     }
 
-    @RequestMapping(value = "/saveOrUpdate1.do", method = {RequestMethod.POST})
+    @RequestMapping(value = "/saveOrUpdate.do", method = {RequestMethod.POST})
     public String save(ModelMap map, @RequestBody User user) {
         try {
             putPublicAttribute(map, "list");
@@ -77,19 +77,13 @@ public class UserAction extends AbstractAction {
     }
 
 
-    @RequestMapping(value = "/delete.do", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/delete.do", method = {RequestMethod.DELETE})
     public String delete(ModelMap map, HttpServletRequest request, @RequestParam int id) {
 //        Collection<Option> options = topicService.getOptionsForDelete();
 //        putPublicAttribute(map, "delete", options, request);
         try {
-            if (request.getMethod().equals(GET)) {
-
-            } else if (request.getMethod().equals(POST)) {
-                userService.delate(id);
-                putAlertTrue(map);
-            } else {
-                throwUnknowRequestMethodException(request);
-            }
+            putPublicAttribute(map, "list");
+            userService.delate(id);
         } catch (Throwable t) {
             putAlertMsg(t, map);
         }
