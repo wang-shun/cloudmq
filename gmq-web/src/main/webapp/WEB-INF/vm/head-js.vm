@@ -1,5 +1,6 @@
 	<script type="text/javascript" src="$root/js/jquery-1.11.1.min.js"/>
     <script type="text/javascript" src="$root/js/jQuery-Knob/js/jquery.knob.js" />
+    <script type="text/javascript" src="$root/js/ajaxDataController.js" />
 
     <script type="text/javascript">
         $(function() {
