@@ -12,9 +12,9 @@
 ##        </div>
 
 <div class="header">
-    <h1 class="page-title">gmq console</h1>
+    ## <h1 class="page-title">gmq console</h1>
     <ul class="breadcrumb">
         <li><a href="$root/index.html">Home</a></li>
-        #parseTitle($title)
+        #parseTitleToLink()
     </ul>
 </div>
