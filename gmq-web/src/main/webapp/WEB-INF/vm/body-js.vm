@@ -1,4 +1,7 @@
 	<script src="$root/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="$root/js/ajaxDataController.js" />
+    <script type="text/javascript" src="$root/js/base.js" />
+
     <script type="text/javascript">
         $("[rel=tooltip]").tooltip();
         $(function() {

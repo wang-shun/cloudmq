@@ -60,12 +60,10 @@ public class UserAction extends AbstractAction {
     }
 
     @RequestMapping(value = "/saveOrUpdate1.do", method = {RequestMethod.POST})
-    public String save(ModelMap map, @RequestBody UserVo user) {
+    public String save(ModelMap map, @RequestBody User user) {
         try {
             putPublicAttribute(map, "list");
-//            if (user.getId() == null) {
-//                userService.saveOrUpdate(UserVo);
-//            }
+            userService.saveOrUpdate(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
