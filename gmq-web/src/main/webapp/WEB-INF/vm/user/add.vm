@@ -101,7 +101,7 @@
                 o[this.name] = this.value || '';
             }
         });
-        var ajaxHandler =new ajaxDataController("$root/user/saveOrUpdate1.do", JSON.stringify(o), "/user/list.do",false, 'post');
+        var ajaxHandler =new ajaxDataController("$root/user/saveOrUpdate.do", JSON.stringify(o), "list.do",false, 'post');
     }
 </script>
 
