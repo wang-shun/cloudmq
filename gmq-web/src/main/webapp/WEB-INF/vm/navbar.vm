@@ -50,17 +50,20 @@
     <div class="sidebar-nav">
         <ul>
 
-            <li><a href="$root/user/list.do" class="nav-header"><i class="fa fa-fw fa-question-circle"></i> User</a></li>
-
-            <li>
-                <a href="#" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+            <li #if($cluster_flag) class="$cluster_flag" #end>
+                <a href="$root/cluster/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-dashboard"></i> Cluster
                 </a>
             </li>
 
+            <li #if($user_flag) class="$user_flag" #end>
+                <a href="$root/user/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+                    <i class="fa fa-fw fa-question-circle"></i> User
+                </a>
+            </li>
 
             <li>
-                <a href="#" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+                <a href="$root/topic/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-paragraph"></i> Topic
                 </a>
             </li>
@@ -73,8 +76,8 @@
             </li>
             <li>
                 <ul class="connection-menu nav nav-list collapse">
-                    <li><a href="#"><span class="fa fa-caret-right"></span> ConsumerConnection</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> ProducerConnection</a></li>
+                    <li><a href="$root/connection/consumerConnection.do"><span class="fa fa-caret-right"></span> ConsumerConnection</a></li>
+                    <li><a href="$root/connection/producerConnection.do"><span class="fa fa-caret-right"></span> ProducerConnection</a></li>
                 </ul>
             </li>
 
@@ -100,12 +103,12 @@
             </li>
             <li>
                 <ul class="nameSrv-menu nav nav-list collapse">
-                    <li><a href="#"><span class="fa fa-caret-right"></span> UpdateKvConfig</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> DeleteKvConfig</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> GetProjectGroup</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> UpdateProjectGroup</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> DeleteProjectGroup</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> WipeWritePerm</a></li>
+                    <li><a href="$root/namesrv/updateKvConfig.do"><span class="fa fa-caret-right"></span> UpdateKvConfig</a></li>
+                    <li><a href="$root/namesrv/updateKvConfig.do"><span class="fa fa-caret-right"></span> DeleteKvConfig</a></li>
+                    <li><a href="$root/namesrv/getProjectGroup.do"><span class="fa fa-caret-right"></span> GetProjectGroup</a></li>
+                    <li><a href="$root/namesrv/updateProjectGroup.do"><span class="fa fa-caret-right"></span> UpdateProjectGroup</a></li>
+                    <li><a href="$root/namesrv/deleteProjectGroup.do"><span class="fa fa-caret-right"></span> DeleteProjectGroup</a></li>
+                    <li><a href="$root/namesrv/wipeWritePerm.do"><span class="fa fa-caret-right"></span> WipeWritePerm</a></li>
                 </ul>
             </li>
 
@@ -117,9 +120,9 @@
             </li>
             <li>
                 <ul class="message-menu nav nav-list collapse">
-                    <li><a href="#"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> QueryMsgByKey</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> QueryMsgByOffset</a></li>
+                    <li><a href="$root/msg/queryMsgById.do"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
+                    <li><a href="$root/msg/queryMsgByKey.do"><span class="fa fa-caret-right"></span> QueryMsgByKey</a></li>
+                    <li><a href="$root/msg/queryMsgByOffset.do"><span class="fa fa-caret-right"></span> QueryMsgByOffset</a></li>
                 </ul>
             </li>
 
@@ -131,8 +134,8 @@
             </li>
             <li>
                 <ul class="broker-menu nav nav-list collapse">
-                    <li><a href="#"><span class="fa fa-caret-right"></span> BrokerStats</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> UpdateBrokerConfig</a></li>
+                    <li><a href="$root/broker/brokerStats.do"><span class="fa fa-caret-right"></span> BrokerStats</a></li>
+                    <li><a href="$root/broker/updateBrokerConfig.do"><span class="fa fa-caret-right"></span> UpdateBrokerConfig</a></li>
                 </ul>
             </li>
 
@@ -144,15 +147,15 @@
             </li>
             <li>
                 <ul class="consumer-menu nav nav-list collapse">
-                    <li><a href="#"><span class="fa fa-caret-right"></span> ConsumerProgress</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> DeleteSubGroup</a></li>
-                    <li><a href="#"><span class="fa fa-caret-right"></span> UpdateSubGroup</a></li>
+                    <li><a href="$root/consumer/consumerProgress.do"><span class="fa fa-caret-right"></span> ConsumerProgress</a></li>
+                    <li><a href="$root/consumer/deleteSubGroup.do"><span class="fa fa-caret-right"></span> DeleteSubGroup</a></li>
+                    <li><a href="$root/consumer/updateSubGroup.do"><span class="fa fa-caret-right"></span> UpdateSubGroup</a></li>
                 </ul>
             </li>
 
 
             <li>
-                <a href="#" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+                <a href="$root/offset/resetOffsetByTime.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-paragraph"></i> Offset
                 </a>
             </li>
