@@ -72,22 +72,6 @@
 </div>
 <script type="application/javascript">
 
-//    $.fn.serializeObject = function () {
-//        var o = {};
-//        var a = this.serializeArray();
-//        $.each(a, function () {
-//            if (o[this.name]) {
-//                if (!o[this.name].push) {
-//                    o[this.name] = [o[this.name]];
-//                }
-//                o[this.name].push(this.value || '');
-//            } else {
-//                o[this.name] = this.value || '';
-//            }
-//        });
-//        return o;
-//    };
-
     function onClik() {
         var o = new Object();
         var a = $('#UserFORM').serializeArray();
@@ -101,7 +85,7 @@
                 o[this.name] = this.value || '';
             }
         });
-        var ajaxHandler =new ajaxDataController("$root/user/saveOrUpdate.do", JSON.stringify(o), "list.do",false, 'post');
+        var ajaxHandler = new ajaxDataController("$root/user/saveOrUpdate.do", JSON.stringify(o), "list.do", false, "post");
     }
 </script>
 

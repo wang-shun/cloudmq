@@ -78,12 +78,12 @@ public class UserAction extends AbstractAction {
 
 
     @RequestMapping(value = "/delete.do", method = {RequestMethod.DELETE})
-    public String delete(ModelMap map, HttpServletRequest request, @RequestParam int id) {
+    public String delete(ModelMap map, HttpServletRequest request, @RequestBody User user) {
 //        Collection<Option> options = topicService.getOptionsForDelete();
 //        putPublicAttribute(map, "delete", options, request);
         try {
             putPublicAttribute(map, "list");
-            userService.delate(id);
+            userService.delate(user.getId());
         } catch (Throwable t) {
             putAlertMsg(t, map);
         }
