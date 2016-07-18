@@ -4,7 +4,6 @@ import com.alibaba.rocketmq.common.PropertyToArray;
 import com.alibaba.rocketmq.common.Table;
 import com.alibaba.rocketmq.dao.UserDao;
 import com.alibaba.rocketmq.domain.User;
-import com.alibaba.rocketmq.tools.command.user.UpdateUserSubCommand;
 import com.alibaba.rocketmq.util.MyBeanUtils;
 import org.apache.commons.cli.Option;
 import org.slf4j.Logger;
