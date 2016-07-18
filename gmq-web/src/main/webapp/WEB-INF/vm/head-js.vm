@@ -1,6 +1,6 @@
 	<script type="text/javascript" src="$root/js/jquery-1.11.1.min.js"/>
-    <script type="text/javascript" src="$root/js/common/base.js" />
     <script type="text/javascript" src="$root/js/jQuery-Knob/js/jquery.knob.js" />
+    <script type="text/javascript" src="$root/js/common/base.js" />
     <script type="text/javascript" src="$root/js/common/ajaxDataController.js" />
     <script type="text/javascript">
         $(function() {
@@ -22,7 +22,6 @@
             $('#main-menu').append(uls.clone());
 
         });
-
     </script>
 	
 	
