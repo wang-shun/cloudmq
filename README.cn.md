@@ -7,7 +7,7 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 * 比较友好的分布式特性
 
 当前最新版本功能支持：
-* 1、将整个项目命名为gmq-all-1.0.1
+* 1、将整个项目命名为gmq-all-1.0.0
 * 2、将项目中所有子工程命名为gmq-*，其中将rocketmq-client命名为gmq-api
 * 3、集成为web运维监控界面，gmq-web
 * 4、在gmq-api上面封装了一层客户端gmq-client，gmq-client提供给最终用户使用
