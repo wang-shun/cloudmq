@@ -29,28 +29,33 @@ public class UserAction extends AbstractAction {
     @Autowired
     UserService userService;
 
+
     @Override
     protected String getFlag() {
         return "user_flag";
     }
+
 
     @Override
     protected String getName() {
         return "User";
     }
 
+
     @RequestMapping(value = "/list.do", method = RequestMethod.GET)
     public String list(ModelMap map) {
         putPublicAttribute(map, "list");
         try {
             putTable(map, userService.findAll());
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             putAlertMsg(t, map);
         }
         return TEMPLATE;
     }
 
-    @RequestMapping(value = "/saveOrUpdate.do", method = {RequestMethod.GET})
+
+    @RequestMapping(value = "/saveOrUpdate.do", method = { RequestMethod.GET })
     public String AddView(ModelMap map, @RequestParam(required = false) Integer id) {
         putPublicAttribute(map, "add");
         if (id != null) {
@@ -59,55 +64,37 @@ public class UserAction extends AbstractAction {
         return TEMPLATE;
     }
 
-    @RequestMapping(value = "/saveOrUpdate.do", method = {RequestMethod.POST})
+
+    @RequestMapping(value = "/saveOrUpdate.do", method = { RequestMethod.POST })
     public String save(ModelMap map, @RequestBody User user) {
         try {
             putPublicAttribute(map, "list");
             userService.saveOrUpdate(user);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
         return TEMPLATE;
     }
 
+
     @RequestMapping(value = "/login.do", method = RequestMethod.GET)
-    public String list(@RequestParam(required = false) String userName, @RequestParam(required = false) String password) {
+    public String list(@RequestParam(required = false) String userName,
+            @RequestParam(required = false) String password) {
         userService.checkUserTest(userName, password);
         return TEMPLATE;
     }
 
 
-    @RequestMapping(value = "/delete.do", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/delete.do", method = { RequestMethod.DELETE })
     public String delete(ModelMap map, HttpServletRequest request, @RequestBody User user) {
-//        Collection<Option> options = topicService.getOptionsForDelete();
-//        putPublicAttribute(map, "delete", options, request);
         try {
             putPublicAttribute(map, "list");
-            userService.delate(user.getId());
-        } catch (Throwable t) {
+            userService.delete(user.getId());
+        }
+        catch (Throwable t) {
             putAlertMsg(t, map);
         }
-        return TEMPLATE;
-    }
-
-    @RequestMapping(value = "/update.do", method = {RequestMethod.GET, RequestMethod.POST})
-    public String update(ModelMap map, HttpServletRequest request, @RequestBody User user) {
-//        Collection<Option> options = userService.getOptionsForUpdate();
-//        putPublicAttribute(map, "update", options, MyBeanUtils.copyBean2Map(userService.findById(user.getId())));
-        try {
-            if (request.getMethod().equals(GET)) {
-
-            } else if (request.getMethod().equals(POST)) {
-//                checkOptions(options);
-//                userService.update(id, userName, email, mobile, realName);
-                putAlertTrue(map);
-            } else {
-                throwUnknowRequestMethodException(request);
-            }
-        } catch (Throwable t) {
-            putAlertMsg(t, map);
-        }
-
         return TEMPLATE;
     }
 
