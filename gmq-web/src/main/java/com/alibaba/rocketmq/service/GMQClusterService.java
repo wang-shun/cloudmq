@@ -31,7 +31,7 @@ public class GMQClusterService extends AbstractService {
     static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
 
 
-    @CmdTrace(cmdClazz = ClusterListSubCommand.class)
+    // @CmdTrace(cmdClazz = ClusterListSubCommand.class)
     public List<Cluster> list() throws Throwable {
         Throwable t = null;
         DefaultMQAdminExt defaultMQAdminExt = getDefaultMQAdminExt();
@@ -66,9 +66,10 @@ public class GMQClusterService extends AbstractService {
             Iterator<Map.Entry<String, Set<String>>> itCluster = clusterSet.iterator();
             while (itCluster.hasNext()) {
                 Cluster cluster = new Cluster();
-                cluster.setName(itCluster.next().getKey());
+                Map.Entry<String, Set<String>> next = itCluster.next();
+                cluster.setName(next.getKey());
                 Set<String> brokerNameSet = new HashSet<String>();
-                brokerNameSet.addAll(itCluster.next().getValue());
+                brokerNameSet.addAll(next.getValue());
                 cluster
                     .setBrokerList(brokerList(brokerNameSet, clusterInfoSerializeWrapper, defaultMQAdminExt));
                 clusterList.add(cluster);
@@ -97,7 +98,7 @@ public class GMQClusterService extends AbstractService {
         List<Broker> brokerList = new ArrayList<Broker>();
         for (String brokerName : brokerNameSet) {
             BrokerData brokerData = clusterInfoSerializeWrapper.getBrokerAddrTable().get(brokerName);
-            if (brokerData != null) {
+                if (brokerData != null) {
                 Set<Map.Entry<Long, String>> brokerAddrSet = brokerData.getBrokerAddrs().entrySet();
                 Iterator<Map.Entry<Long, String>> itAddr = brokerAddrSet.iterator();
                 while (itAddr.hasNext()) {
