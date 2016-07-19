@@ -20,6 +20,7 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 * [下载最新版安装包](http://git.oschina.net/tantexian/MyRocketMQ)
 * [集群部署相关文档](http://my.oschina.net/tantexian/blog/703784)
 * [`MyRocketMQ测试相关数据`](http://my.oschina.net/tantexian/blog?catalog=3613328&temp=1467698707818)
+* [`MyRocketMQ使用指南`]、 [`RocketMQ官方文档`]都已经归档到当前项目docs/目录下
 
 
 ----------
