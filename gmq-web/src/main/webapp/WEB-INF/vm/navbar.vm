@@ -122,6 +122,7 @@
                     <i class="fa fa-fw fa-book"></i> Broker<i class="fa fa-collapse"></i>
                 </a>
                 <ul class="broker-menu nav nav-list collapse">
+                    <li><a href="$root/gmq/broker/brokerList.do"><span class="fa fa-caret-right"></span> BrokerList</a></li>
                     <li><a href="$root/broker/brokerStats.do"><span class="fa fa-caret-right"></span> BrokerStats</a></li>
                     <li><a href="$root/broker/updateBrokerConfig.do"><span class="fa fa-caret-right"></span> UpdateBrokerConfig</a></li>
                 </ul>
