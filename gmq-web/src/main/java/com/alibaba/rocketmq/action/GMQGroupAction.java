@@ -1,19 +1,10 @@
 package com.alibaba.rocketmq.action;
 
-import com.alibaba.rocketmq.common.Table;
 import com.alibaba.rocketmq.service.GMQGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-
-import java.util.Map;
-
-import static com.sun.xml.internal.fastinfoset.alphabet.BuiltInRestrictedAlphabets.table;
 
 /**
  * @author: tianyuliang
@@ -26,7 +17,8 @@ public class GMQGroupAction extends AbstractAction {
     @Autowired
     GMQGroupService gmqGroupService;
 
-    @RequestMapping(value = "/consumerGroup.do", method = {RequestMethod.GET, RequestMethod.POST})
+
+    /*@RequestMapping(value = "/consumerGroup.do", method = {RequestMethod.GET, RequestMethod.POST})
     public String consumerGroup(ModelMap map, HttpServletRequest request, @RequestParam(required = false) String groupId) {
         putPublicAttribute(map, "consumerGroup");
         try {
@@ -45,6 +37,23 @@ public class GMQGroupAction extends AbstractAction {
         }
         return TEMPLATE;
     }
+
+
+    @RequestMapping(value = "/topicStats.do", method = RequestMethod.GET)
+    public String topicStats(ModelMap map, HttpServletRequest request, @RequestParam(required = true) String topic, @RequestParam String groupId) {
+        putPublicAttribute(map, "topicStats");
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            List<TopicStatsVo> statsList = gmqGroupService.topicStats(topic);
+            params.put("topic", topic);
+            params.put("groupId", groupId);
+            params.put("statsList", statsList);
+            putTable(map, statsList);
+        } catch (Throwable t) {
+            putAlertMsg(t, map);
+        }
+        return TEMPLATE;
+    }*/
 
 
     @Override
