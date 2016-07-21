@@ -74,3 +74,11 @@
 #macro ( add)
 
 #end
+
+<!-- 解析title字段 -->
+#macro(parseTitleToLink)
+    #set ($myTitle = $title.split(":"))
+    #foreach($param in $!{myTitle})
+        <li><a href="#">$param</a></li>
+    #end
+#end

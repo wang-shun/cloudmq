@@ -1,63 +1,37 @@
-function ajaxDataController(url, params, callback, async, method) {
-
-
+function ajaxDataController(requestUrl, params, gotoUrl, callback, async, method) {
     if (!method) {
         throw 'method 参数未设置'
     }
 
-    params = params || {}
-    async = async || true
+    params = params || {};
+    async = async || true;
 
     $.ajax({
         async: async,
-        url: url,
+        url: requestUrl,
         dataType: 'json',
         data: params,
         type: method,
-        contentType: 'application/json;charset=UTF-8',
-        complete: function (xhr) {
-
-            try {
-                var result = JSON.parse(xhr.status),
-                    DOM_ID = 'promptDialog',
-                    code = parseInt(result),
-//                        message = result.status.message,
-                    prompt = {
-                        'id': DOM_ID,
-                        'title': '操作结果',
-                        'message': errorDic(code)
-                    }
-            } catch (err) {
-                message = err.message
+        contentType: 'application/json;charset=utf-8',
+        success: function (data) {
+            if (gotoUrl) {
+                XUI.gotoPageHref(gotoUrl);
+                return;
             }
-
-            XUI.gotoPageHref('list.do');
-//                if (code == 200) {
-//                    window.location.href="$root/user/list.do"
-//                }
-
-//                callback(result.data)
+            if (callback && isFunction(callback)) {
+                callback(data);
+                return;
+            }
+        },
+        error: function (xhr) {
+            try {
+                console.log("httpStatus=" + xhr.status + ",descition=" + xhr.responseText);
+            } catch (e) {
+            }
         }
     });
+}
 
-// TODO: 需要添加请求未成功的验证
-
-//    return {
-//        'insert': function(url, params, callback, async) {
-//
-//            dataHandle(url, JSON.stringify(params), callback, async, 'post')
-//        },
-//        'update': function(url, params, callback, async) {
-//
-//            dataHandle(url, JSON.stringify(params), callback, async, 'put')
-//        },
-//        'delete': function(url, params, callback, async) {
-//
-//            dataHandle(url, JSON.stringify(params), callback, async, 'delete')
-//        },
-//        'select': function(url, params, callback, async) {
-//
-//            dataHandle(url, params, callback, async, 'get')
-//        }
-//    };
+function isFunction(funName) {
+    return Object.prototype.toString.call(funName) === '[object Function]';
 }

@@ -228,7 +228,7 @@ Namespace.register("XUI.ajax");
 (function(){
 	//内部私有方法
 	var successMethod = function(data,dataType){//请求成功
-		try{if(data != null && !XUI.isne(data.result)) {alert(data.result);return;}} catch (e) {}
+		try{if(data != null && !XUI.isne(data.result)) {;return;}} catch (e) {}
 		XUI.init(XUI.vmContainer().html(data));
 	},errorMethod = function(xhr,url,requestType){//请求错误
 		var message = {"code":"failure","result":"请求URL["+url+"],发生"+xhr["statusText"]+"错误."};

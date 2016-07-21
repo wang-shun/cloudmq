@@ -1,23 +1,21 @@
-
-	<!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="../assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
-
-
-    <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
     <!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
     <!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
     <!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
-	
 
     <div class="navbar navbar-default" role="navigation">
         <!-- start logo navbar -->
         <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a href="index.html">
-                <span class="navbar-brand"><span class="fa fa-paper-plane"></span>&nbsp; GMQ Consonle</span>
+                <span class="navbar-brand">
+                    <img alt="" src="$root/images/gome_logo.png" class="img-rounded">&nbsp;&nbsp;GMQ Consonle
+                </span>
+                ## <span class="navbar-brand"><span class="fa fa-paper-plane"></span>&nbsp;&nbsp;GMQ Consonle</span>
             </a>
         </div>
         <!-- end logo navbar -->
@@ -27,19 +25,18 @@
             <ul id="main-menu" class="nav navbar-nav navbar-right">
                 <li class="dropdown hidden-xs">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-user padding-right-small"
-                                      style="position:relative;top: 3px;"></span>
-                        Jack Smith <i class="fa fa-caret-down"></i>
+                        <span class="glyphicon glyphicon-user padding-right-small" style="position:relative;top: 3px;"/>&nbsp;
+                        userName <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu"> <!-- 下拉菜单class样式 -->
-                        <li><a href="./">My Account</a></li>
+                        <li><a href="#">My Account</a></li>
                         <li class="divider"></li>
                         <li class="dropdown-header">Admin Panel</li>
-                        <li><a href="./">Users</a></li>
-                        <li><a href="./">Security</a></li>
-                        <li><a tabindex="-1" href="./">Payments</a></li>
+                        <li><a href="#">Users</a></li>
+                        <li><a href="#">Security</a></li>
+                        <li><a tabindex="-1" href="#">Payments</a></li>
                         <li class="divider"></li>
-                        <li><a tabindex="-1" href="sign-in.html">Logout</a></li>
+                        <li><a tabindex="-1" href="#">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -48,7 +45,7 @@
     </div>
 
     <div class="sidebar-nav">
-        <ul>
+        <ul id="navbarEl">
 
             <li #if($cluster_flag) class="$cluster_flag" #end>
                 <a href="$root/cluster/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
@@ -62,47 +59,50 @@
                 </a>
             </li>
 
-            <li>
+            <li #if($topic_flag) class="$topic_flag" #end>
                 <a href="$root/topic/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-paragraph"></i> Topic
                 </a>
             </li>
 
 
-            <li data-popover="true" rel="popover" data-placement="right">
+            <li #if($connection_flag) class="$!connection_flag" #end data-popover="true" rel="popover" data-placement="right">
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".connection-menu">
                     <i class="fa fa-fw fa-fighter-jet"></i> Connection<i class="fa fa-collapse"></i>
                 </a>
-            </li>
-            <li>
                 <ul class="connection-menu nav nav-list collapse">
                     <li><a href="$root/connection/consumerConnection.do"><span class="fa fa-caret-right"></span> ConsumerConnection</a></li>
                     <li><a href="$root/connection/producerConnection.do"><span class="fa fa-caret-right"></span> ProducerConnection</a></li>
                 </ul>
             </li>
 
+            <li class="$!group_flag">
+                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".group-menu">
+                    <i class="fa fa-fw fa-outdent"></i> Group<i class="fa fa-collapse"></i>
+                </a>
+                <ul class="group-menu nav nav-list collapse">
+                    <li><a href="$root/group/consumerGroup.do"><span class="fa fa-caret-right"></span> ConsumerGroup</a></li>
+                </ul>
+            </li>
 
-            <li data-popover="true" rel="popover" data-placement="right">
+            <li #if($account_flag) class="$!account_flag" #end data-popover="true" rel="popover" data-placement="right">
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".account-menu">
                     <i class="fa fa-fw fa-briefcase"></i> Account<i class="fa fa-collapse"></i>
                 </a>
-            </li>
-            <li>
                 <ul class="account-menu nav nav-list collapse">
-                    <li><a href="privacy-policy.html"><span class="fa fa-caret-right"></span> Sign In</a></li>
-                    <li><a href="terms-and-conditions.html"><span class="fa fa-caret-right"></span> Sign Up</a></li>
-                    <li><a href="terms-and-conditions.html"><span class="fa fa-caret-right"></span> Reset Password</a></li>
+                    <li><a href="#"><span class="fa fa-caret-right"></span> Sign In</a></li>
+                    <li><a href="#"><span class="fa fa-caret-right"></span> Sign Up</a></li>
+                    <li><a href="#"><span class="fa fa-caret-right"></span> Reset Password</a></li>
                 </ul>
             </li>
 
 
-            <li>
-                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".nameSrv-menu">
+            <li #if($namesrv_flag) class="$!namesrv_flag" #end >
+                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".namesrv-menu">
                     <i class="fa fa-fw fa-tags"></i> NameSrv<i class="fa fa-collapse"></i>
                 </a>
-            </li>
-            <li>
-                <ul class="nameSrv-menu nav nav-list collapse">
+                <ul class="namesrv-menu nav nav-list collapse">
+                    <li><a href="$root/gmq/namesrv/getNameSrvAddr.do"><span class="fa fa-caret-right"></span> GetNameSrvAddr</a></li>
                     <li><a href="$root/namesrv/updateKvConfig.do"><span class="fa fa-caret-right"></span> UpdateKvConfig</a></li>
                     <li><a href="$root/namesrv/updateKvConfig.do"><span class="fa fa-caret-right"></span> DeleteKvConfig</a></li>
                     <li><a href="$root/namesrv/getProjectGroup.do"><span class="fa fa-caret-right"></span> GetProjectGroup</a></li>
@@ -113,12 +113,10 @@
             </li>
 
 
-            <li>
-                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".message-menu">
+            <li #if($message_flag) class="$!message_flag" #end >
+                <a href="#navbarEl_message" class="nav-header collapsed" data-toggle="collapse" data-target=".message-menu" id="navbarEl_message">
                     <i class="fa fa-fw fa-legal"></i> Message<i class="fa fa-collapse"></i>
                 </a>
-            </li>
-            <li>
                 <ul class="message-menu nav nav-list collapse">
                     <li><a href="$root/msg/queryMsgById.do"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
                     <li><a href="$root/msg/queryMsgByKey.do"><span class="fa fa-caret-right"></span> QueryMsgByKey</a></li>
@@ -127,25 +125,22 @@
             </li>
 
 
-            <li>
+            <li #if($broker_flag) class="$!broker_flag" #end >
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".broker-menu">
                     <i class="fa fa-fw fa-book"></i> Broker<i class="fa fa-collapse"></i>
                 </a>
-            </li>
-            <li>
                 <ul class="broker-menu nav nav-list collapse">
+                    <li><a href="$root/gmq/broker/brokerList.do"><span class="fa fa-caret-right"></span> BrokerList</a></li>
                     <li><a href="$root/broker/brokerStats.do"><span class="fa fa-caret-right"></span> BrokerStats</a></li>
                     <li><a href="$root/broker/updateBrokerConfig.do"><span class="fa fa-caret-right"></span> UpdateBrokerConfig</a></li>
                 </ul>
             </li>
 
 
-            <li>
+            <li class="$!consumer_flag">
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".consumer-menu">
                     <i class="fa fa-fw fa-inbox"></i> Consumer<i class="fa fa-collapse"></i>
                 </a>
-            </li>
-            <li>
                 <ul class="consumer-menu nav nav-list collapse">
                     <li><a href="$root/consumer/consumerProgress.do"><span class="fa fa-caret-right"></span> ConsumerProgress</a></li>
                     <li><a href="$root/consumer/deleteSubGroup.do"><span class="fa fa-caret-right"></span> DeleteSubGroup</a></li>
@@ -154,17 +149,25 @@
             </li>
 
 
-            <li>
-                <a href="$root/offset/resetOffsetByTime.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+            <li #if($offset_flag) class="$!offset_flag" #end >
+                <a href="$root/offset/resetOffsetByTime.do" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-paragraph"></i> Offset
                 </a>
             </li>
 
 
-            <li><a href="faq.html" class="nav-header"><i class="fa fa-fw fa-comment"></i> FAQ</a></li>
+            <li #if($faq_flag) class="$!faq_flag" #end >
+                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
+                    <i class="fa fa-fw fa-comment"></i> FAQ
+                </a>
+            </li>
 
 
-            <li><a href="#" class="nav-header"><i class="fa fa-fw fa-question-circle"></i> Help</a></li>
+            <li #if($help_flag) class="$!help_flag" #end >
+                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
+                    <i class="fa fa-fw fa-question-circle"></i> Help
+                </a>
+            </li>
 
         </ul>
     </div> <!-- end of navigation  -->

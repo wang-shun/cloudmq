@@ -1,19 +1,16 @@
 package com.alibaba.rocketmq.service;
 
-import com.alibaba.rocketmq.common.PropertyToArray;
-import com.alibaba.rocketmq.common.Table;
-import com.alibaba.rocketmq.dao.UserDao;
-import com.alibaba.rocketmq.domain.User;
-import com.alibaba.rocketmq.util.MyBeanUtils;
-import org.apache.commons.cli.Option;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collection;
-import java.util.List;
+import com.alibaba.rocketmq.dao.UserDao;
+import com.alibaba.rocketmq.domain.User;
+import com.alibaba.rocketmq.util.MyBeanUtils;
+
 
 /**
  * @author gaoyanlei
@@ -26,6 +23,12 @@ public class UserService extends AbstractService {
     static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 
+    /**
+     * login test
+     * 
+     * @author gaoyanlei
+     * @since 2016/7/19
+     */
     public boolean checkUserTest(String userName, String password) {
         User user = new User();
         user.setUserName(userName);
@@ -37,6 +40,13 @@ public class UserService extends AbstractService {
         return false;
     }
 
+
+    /**
+     * 查找全部用户
+     *
+     * @author gaoyanlei
+     * @since 2016/7/19
+     */
     public List<User> findAll() {
         List<User> users = userDao.selectEntryList(new User());
         if (users.size() > 0) {
@@ -45,55 +55,44 @@ public class UserService extends AbstractService {
         return null;
     }
 
+
+    /**
+     * 保存 修改用户
+     *
+     * @author gaoyanlei
+     * @since 2016/7/19
+     */
     public int saveOrUpdate(User user) throws Exception {
         if (user.getId() == null) {
             return userDao.insertEntry(user);
-        } else {
+        }
+        else {
             User u = this.findById(user.getId());
             MyBeanUtils.copyBeanNotNull2Bean(user, u);
             return userDao.updateByKey(u);
         }
     }
 
-//    final static UpdateUserSubCommand updateUserSubCommand = new UpdateUserSubCommand();
 
-
-//    public Collection<Option> getOptionsForUpdate() {
-//        return getOptions(updateUserSubCommand);
-//    }
-
-    public Table delate(int userId) {
-        userDao.deleteByKey(userId);
-        List<User> users = userDao.selectEntryList(new User());
-        int row = users.size();
-        if (row > 0) {
-            Table table = new Table(PropertyToArray.EntityToPropertyArray(User.class), row);
-//            Table table = new Table(new String[]{"id", "realName", "userName", "createdTime"}, row);
-            for (User user : users) {
-                Object[] tr = table.createTR();
-                tr[0] = user.getId();
-                tr[1] = user.getRealName();
-                tr[2] = user.getUserName();
-                tr[3] = user.getCreatedTime();
-                table.insertTR(tr);
-            }
-            return table;
-        }
-        return null;
-    }
-
+    /**
+     * 按用户ID查询用户
+     *
+     * @author gaoyanlei
+     * @since 2016/7/19
+     */
     public User findById(int userId) {
         return userDao.selectEntry(userId);
     }
 
-    public void save(String userName,
-                     String email,
-                     String mobile, String realName) {
-        User user = new User();
-        user.setUserName(userName);
-        user.setEmail(email);
-        user.setMobile(mobile);
-        user.setRealName(realName);
-        userDao.insertEntry(user);
+
+    /**
+     * 删除用户
+     *
+     * @author gaoyanlei
+     * @since 2016/7/19
+     */
+    public int delete(int userId) {
+        return userDao.deleteByKey(userId);
     }
+
 }

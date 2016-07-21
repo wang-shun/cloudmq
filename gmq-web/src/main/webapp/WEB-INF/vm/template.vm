@@ -7,14 +7,14 @@
 </head>
 <body class="theme-blue" role="document">
     #parse("navbar.vm")
-<div class="content" role="main">
-    #parse("content-head.vm")
-    #parse("msg.vm")
-    <!--changed part begin-->
-    #parse($bodyPage)
-    <!--changed part end -->
-    #parse("foot.vm")
-</div>
+    <div class="content" role="main">
+        #parse("content-head.vm")
+        #parse("msg.vm")
+        <!--changed part begin-->
+        #parse($bodyPage)
+        <!--changed part end -->
+        #parse("foot.vm")
+    </div>
     #parse("body-js.vm")
 </body>
 </html>
