@@ -21,7 +21,10 @@
                 <tr>
                     <th>BID</th>
                     <th>Addr</th>
+                    <th>Broker Name</th>
                     <th>Version</th>
+                    <th>InTPS</th>
+                    <th>OutTPS</th>
                     <th>InTotalYest</th>
                     <th>OutTotalYest</th>
                     <th>InTotalToday</th>
@@ -34,13 +37,17 @@
                     <tr>
                         <td>$!{broker.brokerID}</td>
                         <td>$!{broker.addr}</td>
+                        <td>$!{broker.brokerName}</td>
                         <td>$!{broker.version}</td>
+                        <td>$!{broker.inTPS}</td>
+                        <td>$!{broker.outTPS}</td>
                         <td>$!{broker.inTotalToday}</td>
                         <td>$!{broker.outTotalTodtay}</td>
                         <td>$!{broker.inTotalYest}</td>
                         <td>$!{broker.outTotalYest}</td>
                         <td>
-                            <a href="$root/user/saveOrUpdate.do?id=$!{user.id}"><i class="fa fa-pencil"></i></a>
+                            <a href="$root/broker/brokerStats.do?brokerAddr=$!{broker.addr}"><i
+                                    class="fa fa-pencil"></i></a>
                             <a href="javascript:void(0)" onclick="showModal($!{user.id})" role="button"
                                userid="$!{user.id}"
                                data-toggle="modal"><i class="fa fa-trash-o"></i></a>
@@ -57,7 +64,7 @@
 
     <script language="javascript">
         function add() {
-            window.location.href = "saveOrUpdate.do";
+            window.location.href = "broker/brokerStats.do";
         }
 
         function showModal(userId) {
