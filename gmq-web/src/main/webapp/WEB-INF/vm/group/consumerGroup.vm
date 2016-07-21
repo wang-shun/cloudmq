@@ -10,7 +10,7 @@
                 </th>
                 <td style="width: 25%;" class="text-center">
                     <input id="txtGroupId" name="groupId" type="text" class="form-control" style="width: 240px;"
-                           value="$!tbodyData.consumerGroupId"/>
+                           value="$!tbodyData.groupId"/>
                 </td>
                 <td style="width: 15%;" class="text-center">
                     <center>
@@ -26,6 +26,8 @@
 
 
 <div class="main-content">
+    <div id="hdGroupId" style="display: none;">$!tbodyData.groupId</div>
+    <br/>
     #if($!tbodyData.list && $!tbodyData.list.size() > 0)
         <table class="table">
             <thead>
@@ -49,39 +51,55 @@
                     <td>$!{groupVo.consumerOffset}</td>
                     <td>$!{groupVo.diffOffset}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-info" type="button" onclick="stat('$topicName')">Stat</button>
+                        <button class="btn btn-sm btn-info" type="button" onclick="stat('$groupVo.topic')">Stat</button>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <button class="btn btn-sm btn-info" type="button" onclick="route('$topicName')">Route</button>
+                        <button class="btn btn-sm btn-info" type="button" onclick="route('$groupVo.topic')">Route
+                        </button>
                     </td>
                 </tr>
                 #end
             </tbody>
+            <tfoot>
+                <tr>
+                    <td class="text-left">Consume TPS:  $!tbodyData.tps</td>
+                    <td class="text-left" colspan="6"></td>
+                </tr>
+                <tr>
+                    <td class="text-left">Diff Total:  $!tbodyData.diffTotal</td>
+                    <td class="text-left" colspan="6"></td>
+                </tr>
+                #if($!tbodyData.list && $!tbodyData.list.size() > 50)
+                <tr>
+                    <td class="text-left" colspan="7">
+                        <ul class="pagination">
+                            <li><a href="#">&laquo;</a></li>
+                            <li><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li><a href="#">3</a></li>
+                            <li><a href="#">4</a></li>
+                            <li><a href="#">5</a></li>
+                            <li><a href="#">&raquo;</a></li>
+                        </ul>
+                    </td>
+                </tr>
+                #end
+            </tfoot>
         </table>
-
-        <p>Consume TPS: $!tbodyData.tps</p>
-        <p>Diff Total: $!tbodyData.diffTotal</p>
-
-        <ul class="pagination">
-            <li><a href="#">&laquo;</a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li><a href="#">&raquo;</a></li>
-        </ul>
     #end
 </div>
 
 <script language="javascript">
 
     function stat(topicName) {
-        window.location.href = "$root/topic/stats.do?topic=" + topicName;
+        var groupId = $("#hdGroupId").html();
+        var gotoAction = "$root/group/topicStats.do?";
+        XUI.gotoPageHref(gotoAction + "topic=" + topicName + "&groupId=" + groupId);
     }
 
     function route(topicName) {
-        window.location.href = "$root/topic/route.do?topic=" + topicName;
+        XUI.gotoPageHref("$root/topic/route.do?topic=" + topicName);
     }
+
 </script>
 
 

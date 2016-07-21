@@ -1,9 +1,18 @@
 package com.alibaba.rocketmq.action;
 
+import com.alibaba.rocketmq.domain.TopicStatsVo;
 import com.alibaba.rocketmq.service.GMQGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -18,20 +27,12 @@ public class GMQGroupAction extends AbstractAction {
     GMQGroupService gmqGroupService;
 
 
-    /*@RequestMapping(value = "/consumerGroup.do", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/consumerGroup.do", method = {RequestMethod.GET, RequestMethod.POST})
     public String consumerGroup(ModelMap map, HttpServletRequest request, @RequestParam(required = false) String groupId) {
         putPublicAttribute(map, "consumerGroup");
         try {
-            if (request.getMethod().equals(GET)) {
-
-            } else if (request.getMethod().equals(POST)) {
-                Map<String, Object> params = gmqGroupService.consumerProgress(groupId);
-                params.put("consumerGroupId", groupId);
-                putTable(map, params);
-            } else {
-                throwUnknowRequestMethodException(request);
-            }
-
+            Map<String, Object> params = gmqGroupService.consumerProgress(groupId);
+            putTable(map, params);
         } catch (Throwable t) {
             putAlertMsg(t, map);
         }
@@ -40,20 +41,22 @@ public class GMQGroupAction extends AbstractAction {
 
 
     @RequestMapping(value = "/topicStats.do", method = RequestMethod.GET)
-    public String topicStats(ModelMap map, HttpServletRequest request, @RequestParam(required = true) String topic, @RequestParam String groupId) {
+    public String topicStats(ModelMap map, HttpServletRequest request,
+                             @RequestParam(required = true) String topic,
+                             @RequestParam(required = true) String groupId) {
         putPublicAttribute(map, "topicStats");
         try {
             Map<String, Object> params = new HashMap<String, Object>();
-            List<TopicStatsVo> statsList = gmqGroupService.topicStats(topic);
-            params.put("topic", topic);
-            params.put("groupId", groupId);
+            List<TopicStatsVo> statsList = gmqGroupService.topicStats(topic.trim());
+            params.put("topic", topic.trim());
+            params.put("groupId", groupId.trim());
             params.put("statsList", statsList);
-            putTable(map, statsList);
+            putTable(map, params);
         } catch (Throwable t) {
             putAlertMsg(t, map);
         }
         return TEMPLATE;
-    }*/
+    }
 
 
     @Override
