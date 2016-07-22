@@ -24,14 +24,14 @@
                 #end
             </tbody>
             <tfoot>
-                <tr>
-                    <td class="text-center" colspan="5"></td>
-                    <td class="text-center" >
-                        <div id="hdGroupId" style="display: none;">$!tbodyData.groupId</div>
-                        <button class="btn btn-sm btn-info" type="button" onclick="goBack()">返回</button>
-                    </td>
-                </tr>
-            </tfoot>
+        <tr>
+            <td class="text-center" colspan="5"></td>
+            <td class="text-center" >
+                <div id="hdGroupId" style="display: none;">$!tbodyData.groupId</div>
+                <button class="btn btn-sm btn-info" type="button" onclick="goBack()">返回</button>
+            </td>
+        </tr>
+        </tfoot>
         </table>
     #end
 </div>

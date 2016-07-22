@@ -6,8 +6,9 @@ import com.alibaba.rocketmq.common.admin.OffsetWrapper;
 import com.alibaba.rocketmq.common.admin.TopicOffset;
 import com.alibaba.rocketmq.common.admin.TopicStatsTable;
 import com.alibaba.rocketmq.common.message.MessageQueue;
-import com.alibaba.rocketmq.domain.ConsumerGroupVo;
-import com.alibaba.rocketmq.domain.TopicStatsVo;
+import com.alibaba.rocketmq.common.protocol.route.TopicRouteData;
+import com.alibaba.rocketmq.domain.ConsumerGroup;
+import com.alibaba.rocketmq.domain.TopicStats;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
@@ -29,7 +30,7 @@ public class GMQGroupService extends AbstractService {
 
     public Map<String, Object> consumerProgress(String consumerGroupId) throws Throwable {
         Map<String, Object> params = new HashedMap();
-        List<ConsumerGroupVo> list = new ArrayList<>();
+        List<ConsumerGroup> list = new ArrayList<>();
         if (StringUtils.isBlank(consumerGroupId)) {
             params.put("list", list);
             return params;
@@ -47,10 +48,10 @@ public class GMQGroupService extends AbstractService {
                 Collections.sort(mqList);
 
                 // "#Topic", "#Broker Name", "#QID", "#BrokerOffset", "#ConsumerOffset", "#DiffOffset"
-                ConsumerGroupVo groupVo = null;
+                ConsumerGroup groupVo = null;
                 long diffTotal = 0L;
                 for (MessageQueue mq : mqList) {
-                    groupVo = new ConsumerGroupVo();
+                    groupVo = new ConsumerGroup();
                     groupVo.setBrokerName(mq.getBrokerName());
                     groupVo.setQueueId(mq.getQueueId());
                     groupVo.setTopic(mq.getTopic());
@@ -80,8 +81,8 @@ public class GMQGroupService extends AbstractService {
         throw t;
     }
 
-    public List<TopicStatsVo> topicStats(String topicName) throws Throwable {
-        List<TopicStatsVo> topicStatsList = new ArrayList<>();
+    public List<TopicStats> topicStats(String topicName) throws Throwable {
+        List<TopicStats> topicStatsList = new ArrayList<>();
         Throwable t = null;
         DefaultMQAdminExt defaultMQAdminExt = getDefaultMQAdminExt();
         try {
@@ -92,11 +93,11 @@ public class GMQGroupService extends AbstractService {
             mqList.addAll(topicStatsTable.getOffsetTable().keySet());
             Collections.sort(mqList);
             // "#Broker Name", "#QueueID", "#Min Offset", "#Max Offset", "#Last Updated"
-            TopicStatsVo statsVo = null;
+            TopicStats statsVo = null;
             TopicOffset topicOffset = null;
             for (MessageQueue mq : mqList) {
                 topicOffset = topicStatsTable.getOffsetTable().get(mq);
-                statsVo = new TopicStatsVo();
+                statsVo = new TopicStats();
                 statsVo.setBrokerName(mq.getBrokerName());
                 statsVo.setTopic(mq.getTopic());
                 statsVo.setQueueId(mq.getQueueId());
@@ -115,5 +116,23 @@ public class GMQGroupService extends AbstractService {
         throw t;
     }
 
+    public Map<String, Object> topicRoute(String topicName) throws Throwable {
+        Map<String, Object> params = new HashMap<>();
+        Throwable t = null;
+        DefaultMQAdminExt adminExt = getDefaultMQAdminExt();
+        try {
+            adminExt.start();
+            TopicRouteData routeData = adminExt.examineTopicRouteInfo(topicName);
+            params.put("brokerDatas", routeData.getBrokerDatas());
+            params.put("queueDatas", routeData.getQueueDatas());
+            return params;
+        } catch (Throwable e) {
+            logger.error(e.getMessage(), e);
+            t = e;
+        } finally {
+            shutdownDefaultMQAdminExt(adminExt);
+        }
+        throw t;
+    }
 
 }

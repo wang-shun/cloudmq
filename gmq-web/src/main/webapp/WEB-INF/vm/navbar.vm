@@ -60,7 +60,7 @@
             </li>
 
             <li #if($topic_flag) class="$topic_flag" #end>
-                <a href="$root/topic/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+                <a href="$root/gmq/topic/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-paragraph"></i> Topic
                 </a>
             </li>

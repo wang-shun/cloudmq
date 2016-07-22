@@ -1,2 +1,29 @@
-#table($table)
-   
+<div class="main-content">
+    #if($!tbodyData.statsList && $!tbodyData.statsList.size() > 0)
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>Topic</th>
+                <th>BrokerName</th>
+                <th>QueueID</th>
+                <th>Max Offset</th>
+                <th>Min Offset</th>
+                <th>Last Updated</th>
+            </tr>
+            </thead>
+            <tbody>
+                #foreach($statsVo in $!tbodyData.statsList)
+                <tr>
+                    <td>$!{statsVo.topic}</td>
+                    <td>$!{statsVo.brokerName}</td>
+                    <td>$!{statsVo.queueId}</td>
+                    <td>$!{statsVo.maxOffset}</td>
+                    <td>$!{statsVo.minOffset}</td>
+                    <td>$!{statsVo.lastUpdated}</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    #end
+</div>
+

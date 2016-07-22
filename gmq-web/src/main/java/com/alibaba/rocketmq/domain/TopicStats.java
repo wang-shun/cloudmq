@@ -6,7 +6,7 @@ import com.alibaba.rocketmq.common.message.MessageQueue;
  * @author: tianyuliang
  * @since: 2016/7/20
  */
-public class TopicStatsVo extends MessageQueue {
+public class TopicStats extends MessageQueue {
 
     private Long minOffset;
 
