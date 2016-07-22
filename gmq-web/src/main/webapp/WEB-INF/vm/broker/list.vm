@@ -79,7 +79,8 @@
             var id = $("#btnDelUser").attr("data-value");
             var data = new Object();
             data.id = Number(id);
-            var ajaxHandler = new ajaxDataController("$root/user/delete.do", JSON.stringify(data), "list.do", false, 'delete');
+            var returnUrl = "list.do";
+            var ajaxHandler = new ajaxDataController("$root/user/delete.do", JSON.stringify(data), returnUrl, null, false, 'delete');
         }
 
     </script>
