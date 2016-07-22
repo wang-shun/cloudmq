@@ -66,22 +66,14 @@
             </li>
 
 
-            <li #if($connection_flag) class="$!connection_flag" #end data-popover="true" rel="popover" data-placement="right">
-                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".connection-menu">
-                    <i class="fa fa-fw fa-fighter-jet"></i> Connection<i class="fa fa-collapse"></i>
-                </a>
-                <ul class="connection-menu nav nav-list collapse">
-                    <li><a href="$root/connection/consumerConnection.do"><span class="fa fa-caret-right"></span> ConsumerConnection</a></li>
-                    <li><a href="$root/connection/producerConnection.do"><span class="fa fa-caret-right"></span> ProducerConnection</a></li>
-                </ul>
-            </li>
-
-            <li class="$!group_flag">
+            <li #if($group_flag) class="$!group_flag" #end data-popover="true" rel="popover" data-placement="right">
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".group-menu">
                     <i class="fa fa-fw fa-outdent"></i> Group<i class="fa fa-collapse"></i>
                 </a>
                 <ul class="group-menu nav nav-list collapse">
                     <li><a href="$root/group/consumerGroup.do"><span class="fa fa-caret-right"></span> ConsumerGroup</a></li>
+                    <li><a href="$root/connection/consumerConnection.do"><span class="fa fa-caret-right"></span> ConsumerConnection</a></li>
+                    <li><a href="$root/connection/producerConnection.do"><span class="fa fa-caret-right"></span> ProducerConnection</a></li>
                 </ul>
             </li>
 
