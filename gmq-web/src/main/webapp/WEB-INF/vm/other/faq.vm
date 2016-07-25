@@ -29,14 +29,14 @@
             <i class="fa fa-arrow-circle-up"></i> Top
         </a>
         <h3 id="q1">GMQ当前版本号?</h3>
-        <p>V3.2.6</p> <br/>
+        <p>1.0.0-SNAPSHOT</p> <br/>
 
         <a href="#" style="float: right; line-height: 1.25em; display: inline-block; padding: .75em 0em;"><i
                 class="fa fa-arrow-circle-up"></i> Top</a>
         <h3 id="q2">如何获取开发文档?</h3>
         <p>
             开发文档已上传至文档知识库，详见
-            <a href="http://10.128.36.93:8090/pages/viewpage.action?pageId=2526361"> GMQ消息队列使用指南v1.0.0-2016-7-13 </a>
+            <a href="http://10.128.36.93:8090/pages/viewpage.action?pageId=2526361" target="_blank"> GMQ消息队列使用指南v1.0.0-2016-7-13 </a>
         </p> <br/>
 
         <a href="#" style="float: right; line-height: 1.25em; display: inline-block; padding: .75em 0em;"><i
@@ -60,7 +60,7 @@
                 class="fa fa-arrow-circle-up"></i> Top</a>
         <h3 id="q6">如何寻求帮助?</h3>
         <p>
-            所有问题均可通过邮件（tianyuiang@gome.com.cn）反馈，如有任何关于GMQ的问题，欢迎骚扰。
+            所有问题均可通过邮件（tantexian@gome.com.cn）反馈，如有任何关于GMQ的问题，欢迎骚扰。
         </p> <br/>
 
         #*<a href="#" style="float: right; line-height: 1.25em; display: inline-block; padding: .75em 0em;"><i
