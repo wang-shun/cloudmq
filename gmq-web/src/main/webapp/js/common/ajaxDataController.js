@@ -16,11 +16,8 @@ function ajaxDataController(requestUrl, params, gotoUrl, callback, async, method
         success: function (data) {
             if (gotoUrl) {
                 XUI.gotoPageHref(gotoUrl);
-                return;
-            }
-            if (callback && isFunction(callback)) {
+            } else if (callback && isFunction(callback)) {
                 callback(data);
-                return;
             }
         },
         error: function (xhr) {

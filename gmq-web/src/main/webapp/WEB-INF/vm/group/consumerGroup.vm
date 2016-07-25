@@ -25,7 +25,7 @@
     </table>
 
 
-    <div id="hdGroupId" style="display: none;">$!tbodyData.groupId</div>
+    <input type="hidden" id="hdGroupId" value="$!tbodyData.groupId">
     <br/>
     #if($!tbodyData.list && $!tbodyData.list.size() > 0)
         <table class="table table-bordered table-hover">
@@ -96,9 +96,6 @@
     }
 
     function route(topicName) {
-        // XUI.gotoPageHref("$root
-        /topic/
-        route.do ? topic = " + topicName);
         var groupId = $("#hdGroupId").html();
         var gotoAction = "$root/group/topicRoute.do?";
         XUI.gotoPageHref(gotoAction + "topicName=" + topicName + "&groupId=" + groupId);
