@@ -1,7 +1,8 @@
 package com.alibaba.rocketmq.util.date;
 
 /**
- * Created by dell on 2016/7/13.
+ * @author gaoyanlei
+ * @since 2016/7/22
  */
 public enum Week {
     MONDAY("星期一", "Monday", "Mon.", 1),
@@ -17,6 +18,7 @@ public enum Week {
     String name_enShort;
     int number;
 
+
     Week(String name_cn, String name_en, String name_enShort, int number) {
         this.name_cn = name_cn;
         this.name_en = name_en;
@@ -24,17 +26,21 @@ public enum Week {
         this.number = number;
     }
 
+
     public String getChineseName() {
         return name_cn;
     }
+
 
     public String getName() {
         return name_en;
     }
 
+
     public String getShortName() {
         return name_enShort;
     }
+
 
     public int getNumber() {
         return number;
