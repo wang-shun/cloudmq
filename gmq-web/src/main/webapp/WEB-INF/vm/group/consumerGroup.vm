@@ -1,4 +1,5 @@
 <div class="main-content">
+    <h2>consumer  group  subscribe  topic  list</h2><br/>
     <table class="table table-bordered table-hover">
         <tbody>
         <form action="$action" method="post">
@@ -93,11 +94,14 @@
     function stat(topicName) {
         var groupId = $("#hdGroupId").html();
         var gotoAction = "$root/group/topicStats.do?";
-        XUI.gotoPageHref(gotoAction + "topic=" + topicName + "&groupId=" + groupId);
+        XUI.gotoPageHref(gotoAction + "topicName=" + topicName + "&groupId=" + groupId);
     }
 
     function route(topicName) {
-        XUI.gotoPageHref("$root/topic/route.do?topic=" + topicName);
+       // XUI.gotoPageHref("$root/topic/route.do?topic=" + topicName);
+        var groupId = $("#hdGroupId").html();
+        var gotoAction = "$root/group/topicRoute.do?";
+        XUI.gotoPageHref(gotoAction + "topicName=" + topicName + "&groupId=" + groupId);
     }
 
 </script>

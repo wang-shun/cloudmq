@@ -44,7 +44,7 @@
                         </div>
                     </form>
                     <div class="btn-toolbar list-toolbar">
-                        <button type="button" class="btn btn-primary"
+                        <button type="button" class="btn btn-info"
                                 onclick="onClik()"><i class=" fa fa-save"></i> Save
                         </button>
                         </button>

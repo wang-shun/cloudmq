@@ -6,7 +6,7 @@ import com.alibaba.rocketmq.common.message.MessageQueue;
  * @author: tianyuliang
  * @since: 2016/7/19
  */
-public class ConsumerGroupVo extends MessageQueue {
+public class ConsumerGroup extends MessageQueue {
 
     private Long brokerOffset;
 

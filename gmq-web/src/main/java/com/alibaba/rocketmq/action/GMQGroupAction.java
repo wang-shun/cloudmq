@@ -1,6 +1,6 @@
 package com.alibaba.rocketmq.action;
 
-import com.alibaba.rocketmq.domain.TopicStatsVo;
+import com.alibaba.rocketmq.domain.TopicStats;
 import com.alibaba.rocketmq.service.GMQGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,15 +42,32 @@ public class GMQGroupAction extends AbstractAction {
 
     @RequestMapping(value = "/topicStats.do", method = RequestMethod.GET)
     public String topicStats(ModelMap map, HttpServletRequest request,
-                             @RequestParam(required = true) String topic,
+                             @RequestParam(required = true) String topicName,
                              @RequestParam(required = true) String groupId) {
         putPublicAttribute(map, "topicStats");
         try {
             Map<String, Object> params = new HashMap<String, Object>();
-            List<TopicStatsVo> statsList = gmqGroupService.topicStats(topic.trim());
-            params.put("topic", topic.trim());
+            List<TopicStats> statsList = gmqGroupService.topicStats(topicName.trim());
+            params.put("topic", topicName.trim());
             params.put("groupId", groupId.trim());
             params.put("statsList", statsList);
+            putTable(map, params);
+        } catch (Throwable t) {
+            putAlertMsg(t, map);
+        }
+        return TEMPLATE;
+    }
+
+
+    @RequestMapping(value = "/topicRoute.do", method = RequestMethod.GET)
+    public String topicRoute(ModelMap map, HttpServletRequest request,
+                             @RequestParam(required = true) String topicName,
+                             @RequestParam(required = true) String groupId) {
+        putPublicAttribute(map, "topicRoute");
+        try {
+            Map<String, Object> params = gmqGroupService.topicRoute(topicName.trim());
+            params.put("groupId", groupId.trim());
+            params.put("topicName", topicName.trim());
             putTable(map, params);
         } catch (Throwable t) {
             putAlertMsg(t, map);
