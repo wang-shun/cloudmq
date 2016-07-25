@@ -141,25 +141,25 @@
             </li>
 
 
-            <li #if($offset_flag) class="$!offset_flag" #end >
+            #*<li #if($offset_flag) class="$!offset_flag" #end >
                 <a href="$root/offset/resetOffsetByTime.do" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-paragraph"></i> Offset
                 </a>
-            </li>
+            </li>*#
 
 
             <li #if($faq_flag) class="$!faq_flag" #end >
-                <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
+                <a href="$root/gmq/other/faq.do" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-comment"></i> FAQ
                 </a>
             </li>
 
 
-            <li #if($help_flag) class="$!help_flag" #end >
+           #* <li #if($help_flag) class="$!help_flag" #end >
                 <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-question-circle"></i> Help
                 </a>
-            </li>
+            </li>*#
 
         </ul>
     </div> <!-- end of navigation  -->

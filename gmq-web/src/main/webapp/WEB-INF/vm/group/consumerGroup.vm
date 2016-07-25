@@ -30,7 +30,7 @@
     <div id="hdGroupId" style="display: none;">$!tbodyData.groupId</div>
     <br/>
     #if($!tbodyData.list && $!tbodyData.list.size() > 0)
-        <table class="table">
+        <table class="table table-bordered table-hover">
             <thead>
             <tr>
                 <th>Topic</th>
