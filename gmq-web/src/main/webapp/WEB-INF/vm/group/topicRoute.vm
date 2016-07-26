@@ -2,7 +2,7 @@
 
     #if($tbodyData.brokerDatas && $tbodyData.brokerDatas.size() > 0)
         <h3>brokerDatas</h3>
-    <table class="table">
+    <table class="table table-bordered table-hover">
         <thead>
         <tr>
             <th>topicName</th>

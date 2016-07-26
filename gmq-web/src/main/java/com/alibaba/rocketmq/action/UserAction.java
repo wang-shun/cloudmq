@@ -5,10 +5,7 @@ import com.alibaba.rocketmq.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -42,15 +39,14 @@ public class UserAction extends AbstractAction {
         putPublicAttribute(map, "list");
         try {
             putTable(map, userService.findAll());
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             putAlertMsg(t, map);
         }
         return TEMPLATE;
     }
 
 
-    @RequestMapping(value = "/saveOrUpdate.do", method = { RequestMethod.GET })
+    @RequestMapping(value = "/saveOrUpdate.do", method = {RequestMethod.GET})
     public String AddView(ModelMap map, @RequestParam(required = false) Integer id) {
         putPublicAttribute(map, "add");
         if (id != null) {
@@ -60,34 +56,34 @@ public class UserAction extends AbstractAction {
     }
 
 
-    @RequestMapping(value = "/saveOrUpdate.do", method = { RequestMethod.POST })
+    @RequestMapping(value = "/saveOrUpdate.do", method = {RequestMethod.POST})
+    @ResponseBody
     public String save(ModelMap map, @RequestBody User user) {
+        Integer result = 0;
         try {
             putPublicAttribute(map, "list");
-            userService.saveOrUpdate(user);
-        }
-        catch (Exception e) {
+            result = userService.saveOrUpdate(user);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return TEMPLATE;
+        return "{\"result\":" + result + "}";
     }
 
 
     @RequestMapping(value = "/login.do", method = RequestMethod.GET)
     public String list(@RequestParam(required = false) String userName,
-            @RequestParam(required = false) String password) {
+                       @RequestParam(required = false) String password) {
         userService.checkUserTest(userName, password);
         return TEMPLATE;
     }
 
 
-    @RequestMapping(value = "/delete.do", method = { RequestMethod.DELETE })
+    @RequestMapping(value = "/delete.do", method = {RequestMethod.DELETE})
     public String delete(ModelMap map, HttpServletRequest request, @RequestBody User user) {
         try {
             putPublicAttribute(map, "list");
             userService.delete(user.getId());
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             putAlertMsg(t, map);
         }
         return TEMPLATE;
