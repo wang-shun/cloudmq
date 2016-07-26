@@ -46,6 +46,12 @@
             <artifactId>jackson-core-lgpl</artifactId>
             <version>1.8.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.14.8</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
@@ -202,6 +208,11 @@
 			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+            <version>1.9.0.RELEASE</version>
+        </dependency>
         <!--添加mybatis依赖 start  2016/7/12 Add by gaoyanlei -->
         <dependency>
             <groupId>org.mybatis</groupId>

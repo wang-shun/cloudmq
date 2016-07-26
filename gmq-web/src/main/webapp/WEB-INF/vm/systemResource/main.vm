@@ -1,0 +1,31 @@
+<div class="panel panel-default">
+    <a href="#page-stats" class="panel-heading" data-toggle="collapse">Latest Stats</a>
+    <div id="page-stats" class="panel-collapse panel-body collapse in">
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <div class="knob-container">
+                    <input class="knob" data-width="200" data-min="0" data-max="$!tbodyData.total" data-displayPrevious="true" value="$!tbodyData.used" data-fgColor="#92A3C2" data-readOnly=true;>
+                    <h3 class="text-muted text-center">Used</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="knob-container">
+                    <input class="knob" data-width="200" data-min="0" data-max="$!tbodyData.total" data-displayPrevious="true" value="$!tbodyData.free" data-fgColor="#92A3C2" data-readOnly=true;>
+                    <h3 class="text-muted text-center">Free</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="knob-container">
+                    <input class="knob" data-width="200" data-min="0" data-max="2700" data-displayPrevious="true" value="1840" data-fgColor="#92A3C2" data-readOnly=true;>
+                    <h3 class="text-muted text-center">Pending</h3>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="knob-container">
+                    <input class="knob" data-width="200" data-min="0" data-max="15000" data-displayPrevious="true" value="10067" data-fgColor="#92A3C2" data-readOnly=true;>
+                    <h3 class="text-muted text-center">Completed</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -53,6 +53,12 @@
                 </a>
             </li>
 
+            <li #if($systemResource_flag) class="$systemResource_flag" #end>
+                <a href="$root/SystemResource/memoryStats.do?ipAndPort=127.0.0.1:8080" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+                    <i class="fa fa-fw fa-dashboard"></i> Main
+                </a>
+            </li>
+
             <li #if($user_flag) class="$user_flag" #end>
                 <a href="$root/user/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-question-circle"></i> User
