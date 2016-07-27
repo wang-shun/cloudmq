@@ -4,6 +4,7 @@
     <script type="text/javascript" src="$root/js/common/base.js" ></script>
     <script type="text/javascript" src="$root/js/common/ajaxDataController.js" ></script>
     <script type="text/javascript" src="$root/js/jQuery-Knob/js/jquery.knob.js" ></script>
+    <script type="text/javascript" src="$root/js/echarts/echarts-all.js" ></script>
 
     <script type="text/javascript">
         $(function() {
