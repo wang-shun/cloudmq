@@ -34,6 +34,18 @@ public class GMQSystemResourceAction extends AbstractAction {
         return TEMPLATE;
     }
 
+    @RequestMapping(value = "/all.do", method = { RequestMethod.GET, RequestMethod.POST })
+    public String all(ModelMap map,@RequestParam(required = false) String ipAndPort) {
+        putPublicAttribute(map, "main");
+        try {
+            putTable(map, systemResourceService.all(ipAndPort));
+        } catch (Throwable t) {
+            t.printStackTrace();
+         putAlertMsg(t, map);
+        }
+        return TEMPLATE;
+    }
+
 
     @Override
     protected String getFlag() {

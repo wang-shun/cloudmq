@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -23,6 +25,8 @@ public class GMQSystemResourceService {
     private String cpuUrl;
     @Value("#{configProperties['memory.url']}")
     private String memoryUrl;
+    @Value("#{configProperties['all.url']}")
+    private String allUrl;
     @Value("#{configProperties['http']}")
     private String http;
 
@@ -36,5 +40,13 @@ public class GMQSystemResourceService {
         AbstractEntity abstractEntity = restOperations.getForObject(url, AbstractEntity.class);
         Memory memory = ObjectHandle.getForObject(abstractEntity, Memory.class);
         return memory;
+    }
+
+
+    public Object all(String ipAndPort)
+            throws InvocationTargetException, IllegalAccessException, InstantiationException {
+        String url = http + ipAndPort + allUrl;
+        AbstractEntity abstractEntity = restOperations.getForObject(url, AbstractEntity.class);
+        return abstractEntity.getData();
     }
 }
