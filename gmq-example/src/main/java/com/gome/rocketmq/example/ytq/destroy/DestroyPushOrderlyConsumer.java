@@ -16,8 +16,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by yintongjiang on 2016/7/18.
  */
 public class DestroyPushOrderlyConsumer {
-    private final static String group = "destroyConsumerGroup";
-    private final static String topicName = "flow_topic_3";
+    private final static String group = "destroyConsumerOrderGroup";
+    private final static String topicName = "flow_topic_9";
     private final static String tags = "A";
     private final static AtomicLong msgCount = new AtomicLong(0L);
     private final static ConcurrentHashMap<String, String> CONCURRENT_HASH_MAP = new ConcurrentHashMap<>();

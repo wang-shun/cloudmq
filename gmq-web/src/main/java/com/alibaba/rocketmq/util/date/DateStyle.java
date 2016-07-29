@@ -1,7 +1,8 @@
 package com.alibaba.rocketmq.util.date;
 
 /**
- * Created by dell on 2016/7/13.
+ * @author gaoyanlei
+ * @since 2016/7/22
  */
 public enum DateStyle {
     MM_DD("MM-dd"),
@@ -31,12 +32,13 @@ public enum DateStyle {
     HH_MM("HH:mm"),
     HH_MM_SS("HH:mm:ss");
 
-
     private String value;
+
 
     DateStyle(String value) {
         this.value = value;
     }
+
 
     public String getValue() {
         return value;

@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class DestroyProducer {
 
     private final static String group = "destroyConsumerGroup";
-    private final static String topicName = "flow_topic_5";
+    private final static String topicName = "flow_topic_9";
     private final static String tags = "A";
     private final static int nThreads = 1000;
     private final static int topicNums = 10;
