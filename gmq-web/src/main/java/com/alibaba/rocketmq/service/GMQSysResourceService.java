@@ -23,9 +23,9 @@ import static com.alibaba.rocketmq.util.restful.handle.ObjectHandle.getForObject
  * @since 2016/7/25
  */
 @Service
-public class GMQSystemResourceService extends AbstractService {
+public class GMQSysResourceService extends AbstractService {
 
-    private static final Logger logger = LoggerFactory.getLogger(GMQSystemResourceService.class);
+    private static final Logger logger = LoggerFactory.getLogger(GMQSysResourceService.class);
 
     @Value("#{configProperties['sigar.cpu.url']}")
     private String cpuUrl;
@@ -73,6 +73,7 @@ public class GMQSystemResourceService extends AbstractService {
         return brokers;
     }
 
+    @SuppressWarnings("unchecked")
     public Map<String, Object> getAllStats(String brokerAddr) {
         try {
             String url = httpPrefix + brokerAddr + port + allUrl;
@@ -84,7 +85,6 @@ public class GMQSystemResourceService extends AbstractService {
             logger.error("remoting client all stats error. ", e);
             return Maps.newHashMap();
         }
-
     }
 
 

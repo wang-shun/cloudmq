@@ -1,9 +1,6 @@
 function buildEchart(containerEl, titleText, subTitleText, legendArray, xArray, yName, colorArray, dataArray, brokerAddr) {
-    console.log(legendArray);
-    console.log(dataArray);
 
-
-    var option = {
+    var tmpOption = {
         backgroundColor: "#F1FAFA",
         title: {
             text: titleText,
@@ -30,7 +27,9 @@ function buildEchart(containerEl, titleText, subTitleText, legendArray, xArray, 
         }
     };
 
-    var option111 = {
+
+    //饼状图option配置
+    var option = {
         backgroundColor: "#F1FAFA",
         // 标题
         title: {
@@ -62,8 +61,8 @@ function buildEchart(containerEl, titleText, subTitleText, legendArray, xArray, 
 
 
     //初始化显示图形的Dom元素
-    var myChart = echarts.init(containerEl); // main
+    var myChart = echarts.init(containerEl);
 
     //显示图形
-    myChart.setOption(option111);
+    myChart.setOption(option);
 }

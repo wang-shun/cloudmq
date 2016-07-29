@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.alibaba.rocketmq.service.GMQSystemResourceService;
+import com.alibaba.rocketmq.service.GMQSysResourceService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -22,19 +22,18 @@ import java.util.Map;
 
 
 /**
- * @author gaoyanlei
- * @since 2016/7/25
+ * 系统监控
+ * @author tianyuliang
+ * @since 2016/7/29
  */
 @Controller
 @RequestMapping("/sysResource")
-public class GMQSystemResourceAction extends AbstractAction {
+public class GMQSysResourceAction extends AbstractAction {
 
     @Autowired
-    private GMQSystemResourceService sysResourceService;
+    private GMQSysResourceService sysResourceService;
 
-    static final Logger logger = LoggerFactory.getLogger(GMQSystemResourceAction.class);
-
-    // http://10.128.31.109:10020/sigar/systemResource/allStats
+    static final Logger logger = LoggerFactory.getLogger(GMQSysResourceAction.class);
 
     @RequestMapping(value = "/memoryStats.do", method = {RequestMethod.GET, RequestMethod.POST})
     public String memory(ModelMap map, @RequestParam(required = true) String brokerAddr) {
@@ -50,7 +49,7 @@ public class GMQSystemResourceAction extends AbstractAction {
             params.put("brokerAddrs", brokerAddrs);
             putTable(map, params);
         } catch (Throwable t) {
-            t.printStackTrace();
+            logger.error("get memory stats error. ", t);
             putAlertMsg(t, map);
         }
         return TEMPLATE;
@@ -64,9 +63,10 @@ public class GMQSystemResourceAction extends AbstractAction {
             List<String> brokerAddrs = sysResourceService.getBrokerAddrs();
             params.put("brokerAddrs", brokerAddrs);
             logger.info("broker ip list: {}", StringUtils.join(brokerAddrs, ","));
-            
+
             Map<String, Object> allStats = sysResourceService.getAllStats(brokerAddr.trim());
             params.put("allStats", allStats);
+            params.put("currBrokerAddr", brokerAddr.trim());
             putTable(map, params);
         } catch (Throwable t) {
             logger.error("get all stats error. ", t);
@@ -86,7 +86,7 @@ public class GMQSystemResourceAction extends AbstractAction {
             navigation.put("firstBroker", firstBroker);
             putNavigation(map, navigation);
         } catch (Throwable t) {
-            t.printStackTrace();
+            logger.error("get main first broker error. ", t);
             putAlertMsg(t, map);
         }
         return TEMPLATE;

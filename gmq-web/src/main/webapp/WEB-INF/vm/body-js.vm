@@ -1,5 +1,5 @@
-	<script src="$root/js/bootstrap.min.js"></script>
+<script src="$root/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript">
-        $("[rel=tooltip]").tooltip();
-    </script>
+<script type="text/javascript">
+    $("[rel='tooltip']").tooltip();
+</script>
