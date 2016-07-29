@@ -1,12 +1,16 @@
 <div class="main-content">
 
+    <input type="hidden" id="currBrokerAddr" value="$!tbodyData.currBrokerAddr"/>
     <ul class="nav nav-tabs" id="ulBrokerAddr">
-        #foreach($brokerIp in ${tbodyData.brokerAddrs})
-            <li #if($velocityCount==1) class="active" #end ip="$brokerIp">
+        #foreach($brokerIp in $!tbodyData.brokerAddrs)
+            <li #if($!tbodyData.currBrokerAddr == $brokerIp) class="active" #end ip="$brokerIp">
                 <a href="#$brokerIp" data-toggle="tab" name="liBroker" addr="$brokerIp">$brokerIp</a>
             </li>
         #end
     </ul>
+
+    <br/>
+    <br/>
 
     <div class="row">
         <div class="col-md-12">
@@ -16,8 +20,10 @@
 
                     <div class="row"> <!-- pie start -->
                         <div class="col-md-14">
-                            <div id="jvmChartEl" class="col-md-7 pull-left" style="width: 400px;height: 400px;float: left;"></div>
-                            <div id="memoryChartEl" class="col-md-7 pull-right" style="width: 400px;height: 400px;"></div>
+                            <div id="jvmChartEl" class="col-md-7 pull-left"
+                                 style="width: 400px;height: 400px;float: left;"></div>
+                            <div id="memoryChartEl" class="col-md-7 pull-right"
+                                 style="width: 400px;height: 400px;"></div>
                         </div>
 
 
@@ -34,6 +40,9 @@
 
                     </div> <!-- pie end -->
 
+                    <br/>
+                    <hr/>
+                    <br/>
 
                     <div class="row"> <!-- cpu List start-->
                         <div class="col-md-12">
@@ -70,6 +79,11 @@
                             </div>
                         </div>
                     </div><!-- cpu List end-->
+
+
+                    <br/>
+                    <hr/>
+                    <br/>
 
                     <div class="row">
 
@@ -162,6 +176,12 @@
 
                     </div>  <!-- OS java Ip info end -->
 
+
+                    <br/>
+                    <hr/>
+                    <br/>
+
+
                     <div class="row"> <!-- netWork start -->
                     #*<div class="col-md-12">
 
@@ -230,25 +250,34 @@
 
 
 <script type="text/javascript" src="$root/js/echarts/echarts-all.js"></script>
-<script type="text/javascript" src="$root/js/common/echarts.js"></script>
+<script type="text/javascript" src="$root/js/common/gmq-echarts.js"></script>
 
 <script type="text/javascript">
 
     $(function () {
 
-        $("#ulBrokerAddr li[class='active']").children().css("background-color", "#D0D2EB");
+        var bgColor = "#D0D2EB";
+        var currBrokerAddr = $("#currBrokerAddr").attr("value");
+        $("#ulBrokerAddr li a[addr='" + currBrokerAddr + "']").css("background-color", bgColor);
 
-        $("#ulBrokerAddr li").on("click", "a", function () {
+        /*$("#ulBrokerAddr li").on("click", "a", function () {
             var addr = $(this).attr("addr");
             $("#ulBrokerAddr li a[name='liBroker']").each(function (i, el) {
                 var tmpAddr = $(el).attr("addr");
                 if (addr === tmpAddr) {
-                    $(el).css("background-color", "#D0D2EB");
+                    $(el).css("background-color", bgColor);
                 } else {
                     $(el).css("background-color", "#FFFFFF");
                 }
             });
-        });
+        });*/
+
+        $("#ulBrokerAddr a").click(function (e) {
+            e.preventDefault();
+            var currBrokerAddr = $(this).attr("addr");
+            var allStatsUrl = "$root/sysResource/allStats.do?brokerAddr=" + currBrokerAddr;
+            XUI.gotoPageHref(allStatsUrl);
+        })
 
 
         function buildJVM() {
@@ -294,7 +323,6 @@
 
             return memory;
         }
-
 
         function initJVMData() {
             var dataArray = new Array();
