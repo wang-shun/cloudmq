@@ -22,8 +22,8 @@ public abstract class AbstractAction {
 
     protected abstract String getFlag();
 
-
     protected abstract String getName();
+
 
     public static final String TITLE = "title";
 
@@ -32,21 +32,37 @@ public abstract class AbstractAction {
     public static final String FORM_ACTION = "action";
 
     public static final String KEY_TABLE = "table";
+
     public static final String TBODY_DATA = "tbodyData";
+
+    public static final String TEMPLATE = "template";
+
+    public static final String POST = "POST";
+
+    public static final String GET = "GET";
+
+    @SuppressWarnings("unused")
+    public static final String DELETE = "DELETE";
+
+    // 新增导航栏类型 2016/7/29 Add by tianyuliang
+    public static final String NAVIGATION = "navigation";
 
     // 新增类型 2016/7/15 Add by gaoyanlei
     public static final String OPTIONS = "options";
-
-
-    protected void putTable(ModelMap map, Table table) {
-        map.put(KEY_TABLE, table);
-    }
 
     // 新增 2016/7/15 Add by gaoyanlei
     protected void putTable(ModelMap map, Object object) {
         map.put(TBODY_DATA, object);
     }
 
+    // 新增导航栏额外参数 2016/7/29 Add by tianyuliang
+    protected void putNavigation(ModelMap map, Object object) {
+        map.put(NAVIGATION, object);
+    }
+
+    protected void putTable(ModelMap map, Table table) {
+        map.put(KEY_TABLE, table);
+    }
 
     protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options,
                                       HttpServletRequest request) {
@@ -137,14 +153,6 @@ public abstract class AbstractAction {
     protected void putAlertTrue(ModelMap map) {
         map.put(ALERT_TRUE, true);
     }
-
-    public static final String TEMPLATE = "template";
-
-    public static final String POST = "POST";
-
-    public static final String GET = "GET";
-    public static final String DELETE = "DELETE";
-
 
     protected void throwUnknowRequestMethodException(HttpServletRequest request) {
         throw new IllegalStateException("unknown request method: " + request.getMethod());

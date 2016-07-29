@@ -1,39 +1,36 @@
-	<meta charset="utf-8" />
-    <title>GMQ Console</title>
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+<meta charset="utf-8"/>
+<title>GMQ Console</title>
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content=""/>
+<meta name="author" content=""/>
 
-    <!-- let ico -->
-	<link rel="shortcut icon" href="$root/images/favicon.ico"/>
-	<!-- font family css -->
-    <link rel="stylesheet" type="text/css" href="$root/font/font-ext/css/family.css"/>
-	<!-- Bootstrap core CSS -->
-    <link rel="stylesheet" type="text/css" href="$root/bootstrap/css/bootstrap.min.css"/>
-	<!-- font css for web application icon -->
-    <link rel="stylesheet" type="text/css" href="$root/font/font-awesome/css/font-awesome.css"/>
-	<!-- font css theme -->
-    <link rel="stylesheet" type="text/css" href="$root/theme/theme.css"/>
-	<!-- font css premium -->
-    <link rel="stylesheet" type="text/css" href="$root/theme/premium.css"/>
+<!-- let ico -->
+<link rel="shortcut icon" href="$root/images/favicon.ico"/>
+<!-- font family css -->
+<link rel="stylesheet" type="text/css" href="$root/font/font-ext/css/family.css"/>
+<!-- Bootstrap core CSS -->
+<link rel="stylesheet" type="text/css" href="$root/bootstrap/css/bootstrap.min.css"/>
+<!-- font css for web application icon -->
+<link rel="stylesheet" type="text/css" href="$root/font/font-awesome/css/font-awesome.css"/>
+<!-- font css theme -->
+<link rel="stylesheet" type="text/css" href="$root/theme/theme.css"/>
+<!-- font css premium -->
+<link rel="stylesheet" type="text/css" href="$root/theme/premium.css"/>
 
-    <!-- gmq diy css -->
-    <link rel="stylesheet" type="text/css" href="$root/bootstrap/css/gmqDIY.css"/>
+<style type="text/css">
+    #line-chart {
+        height: 300px;
+        width: 800px;
+        margin: 0px auto;
+        margin-top: 1em;
+    }
 
-    <style type="text/css">
-        #line-chart {
-            height:300px;
-            width:800px;
-            margin: 0px auto;
-            margin-top: 1em;
-        }
-
-        /*** 左上角logo区域颜色 ***/
-        .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
-            color: #fff;
-        }
-    </style>
+    /*** 左上角logo区域颜色 ***/
+    .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
+        color: #fff;
+    }
+</style>
 
 
     

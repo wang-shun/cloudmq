@@ -26,12 +26,17 @@
             <li class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-user padding-right-small" style="position:relative;top: 3px;"/>&nbsp;
-                    $!userName <i class="fa fa-caret-down"></i>
+                    userName <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu"> <!-- 下拉菜单class样式 -->
-                    <li><a href="$root/user/saveOrUpdate.do?id=11">My Account</a></li>
+                    <li><a href="#">My Account</a></li>
                     <li class="divider"></li>
-                    <li><a tabindex="-1" href="$root/gmq/logout.do">Logout</a></li>
+                    <li class="dropdown-header">Admin Panel</li>
+                    <li><a href="#">Users</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a tabindex="-1" href="#">Payments</a></li>
+                    <li class="divider"></li>
+                    <li><a tabindex="-1" href="#">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -49,8 +54,7 @@
         </li>
 
         <li #if($sysResource_flag) class="$sysResource_flag" #end>
-            <a href="$root/sysResource/allStats.do?brokerAddr=10.128.31.109" class="nav-header" data-toggle="collapse"
-               data-target=".dashboard-menu">
+            <a href="$root/sysResource/main.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                 <i class="fa fa-fw fa-dashboard"></i> Main
             </a>
         </li>
