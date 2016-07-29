@@ -18,6 +18,9 @@
 	<!-- font css premium -->
     <link rel="stylesheet" type="text/css" href="$root/theme/premium.css"/>
 
+    <!-- gmq diy css -->
+    <link rel="stylesheet" type="text/css" href="$root/bootstrap/css/gmqDIY.css"/>
+
     <style type="text/css">
         #line-chart {
             height:300px;

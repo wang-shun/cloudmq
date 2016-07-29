@@ -5,7 +5,7 @@
 package com.alibaba.rocketmq.dao;
 
 import com.alibaba.rocketmq.dao.base.BaseDaoImpl;
-import com.alibaba.rocketmq.domain.User;
+import com.alibaba.rocketmq.domain.gmq.User;
 import org.springframework.stereotype.Component;
 
 

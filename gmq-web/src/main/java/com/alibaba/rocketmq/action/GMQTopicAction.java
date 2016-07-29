@@ -1,7 +1,7 @@
 package com.alibaba.rocketmq.action;
 
 import com.alibaba.rocketmq.common.protocol.route.QueueData;
-import com.alibaba.rocketmq.domain.TopicStats;
+import com.alibaba.rocketmq.domain.gmq.TopicStats;
 import com.alibaba.rocketmq.service.GMQGroupService;
 import com.alibaba.rocketmq.service.GMQTopicService;
 import com.google.common.collect.Maps;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

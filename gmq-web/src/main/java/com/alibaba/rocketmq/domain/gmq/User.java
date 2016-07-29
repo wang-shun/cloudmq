@@ -2,7 +2,7 @@
  * Copyright (c) 2015 wish.com All rights reserved.
  * 本软件源代码版权归----所有,未经许可不得任意复制与传播.
  */
-package com.alibaba.rocketmq.domain;
+package com.alibaba.rocketmq.domain.gmq;
 
 
 import com.alibaba.rocketmq.common.FieldMeta;

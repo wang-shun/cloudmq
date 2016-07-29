@@ -1,9 +1,10 @@
-package com.alibaba.rocketmq.domain;
+package com.alibaba.rocketmq.domain.gmq;
 
 import java.util.List;
 
 /**
- * Created by dell on 2016/7/18.
+ * @author: tianyuliang
+ * @since: 2016/7/19
  */
 public class Cluster {
     private String name;

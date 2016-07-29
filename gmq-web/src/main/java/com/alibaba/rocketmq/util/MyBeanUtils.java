@@ -5,6 +5,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaProperty;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
@@ -23,6 +25,8 @@ import java.util.Map;
  */
 
 public final class MyBeanUtils extends BeanUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(MyBeanUtils.class);
 
     private static void convert(Object dest, Object orig)
             throws IllegalAccessException, InvocationTargetException {
@@ -217,21 +221,22 @@ public final class MyBeanUtils extends BeanUtils {
      * @throws IllegalAccessException
      * @throws java.lang.reflect.InvocationTargetException
      */
-    public static void copyMap2Bean(Object bean, Map properties)
+    public static void copyMap2Bean(Object bean, Map<String, Object> properties)
             throws IllegalAccessException, InvocationTargetException {
         // Do nothing unless both arguments have been specified
         if ((bean == null) || (properties == null)) {
             return;
         }
         // Loop through the property name/value pairs to be set
-        Iterator names = properties.keySet().iterator();
+        Iterator<Map.Entry<String, Object>> names = properties.entrySet().iterator();
         while (names.hasNext()) {
-            String name = (String) names.next();
+            Map.Entry<String, Object> entry = names.next();
+            String name = entry.getKey();
             // Identify the property name and value(s) to be assigned
             if (name == null) {
                 continue;
             }
-            Object value = properties.get(name);
+            Object value = entry.getValue();
             try {
                 Class clazz = PropertyUtils.getPropertyType(bean, name);
                 if (null == clazz) {
@@ -246,6 +251,7 @@ public final class MyBeanUtils extends BeanUtils {
                 setProperty(bean, name, value);
             }
             catch (NoSuchMethodException e) {
+                logger.info("copyMap2Bean error. {}", e.getMessage());
                 continue;
             }
         }
@@ -253,7 +259,7 @@ public final class MyBeanUtils extends BeanUtils {
 
 
     /**
-     * 自动转Map key值大写 将Map内的key与Bean中属性相同的内容复制到BEAN中
+     * 自动转Map key值大写 将Map内的key与Bean中属性相同的内容复制到Bean中
      *
      * @param bean
      *            Object

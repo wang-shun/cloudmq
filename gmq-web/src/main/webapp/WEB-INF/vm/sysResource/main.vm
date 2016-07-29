@@ -1,0 +1,358 @@
+<div class="main-content">
+
+    <ul class="nav nav-tabs" id="ulBrokerAddr">
+        #foreach($brokerIp in ${tbodyData.brokerAddrs})
+            <li #if($velocityCount==1) class="active" #end ip="$brokerIp">
+                <a href="#$brokerIp" data-toggle="tab" name="liBroker" addr="$brokerIp">$brokerIp</a>
+            </li>
+        #end
+    </ul>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="myTabContent" class="tab-content">
+
+                <div class="tab-pane active in" id="home">
+
+                    <div class="row"> <!-- pie start -->
+                        <div class="col-md-14">
+                            <div id="jvmChartEl" class="col-md-7 pull-left" style="width: 400px;height: 400px;float: left;"></div>
+                            <div id="memoryChartEl" class="col-md-7 pull-right" style="width: 400px;height: 400px;"></div>
+                        </div>
+
+
+
+                    #*<div class="col-md-4">
+                        <div class="widget">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <div id="main2" style="width: 320px;height: 320px"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>*#
+
+                    </div> <!-- pie end -->
+
+
+                    <div class="row"> <!-- cpu List start-->
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><strong>CPU</strong></div>
+                                <table class="table table-bordered table-first-column-check table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="col-md-2"><i class="icon-star-empty">index</i></th>
+                                        <th class="col-md-2">vendor</th>
+                                        <th class="col-md-2">mhz</th>
+                                        <th class="col-md-2">model</th>
+                                        <th class="col-md-2">user</th>
+                                        <th class="col-md-2">system</th>
+                                        <th class="col-md-2">idle</th>
+                                        <th class="col-md-2">combined</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($cpu in $tbodyData.allStats.cpuInfo)
+                                        <tr>
+                                            <td class="col-md-2">$velocityCount</td>
+                                            <td class="col-md-2">$cpu.vendor</td>
+                                            <td class="col-md-2">$cpu.mhz</td>
+                                            <td class="col-md-2">$cpu.model</td>
+                                            <td class="col-md-2">$cpu.user</td>
+                                            <td class="col-md-2">$cpu.system</td>
+                                            <td class="col-md-2">$cpu.idle</td>
+                                            <td class="col-md-2">$cpu.combined</td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- cpu List end-->
+
+                    <div class="row">
+
+                        #*<div class="col-md-3"> <!-- ip Info start -->
+                            <div class="panel panel-default fadeInDown animation-delay2">
+                                <div class="panel-heading">
+                                    ip Info
+                                </div>
+                                <div class="panel-body">
+                                    <p class="text-sm"><span><span
+                                            class="fa fa-calendar"></span> Updated 6 hours ago</span></p>
+
+                                    <p>I am a student at University of Southern California studying lorem ipsum dolor
+                                        sit amet, consectetur
+                                        adipiscing elit. Nullam eros nibh, viverra a dui a, gravida varius velit.
+                                        Vivamus tristique est non
+                                        ipsum dapibus lacinia sed nec metus.
+                                    </p>
+                                </div>
+                            </div>
+                        </div> <!-- ip Info end -->*#
+
+
+                        <div class="col-md-5"> <!-- Java Info start-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">JDK</div>
+                                <div class="panel-body">
+                                    <ul class="list-unstyled list-info">
+                                        <li>
+                                            version&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.version
+                                        </li>
+                                        <li>
+                                            vendor&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.vendor
+                                        </li>
+                                        <li>
+                                            home&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.home
+                                        </li>
+                                        <li>
+                                            specificationVersion&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.specificationVersion
+                                        </li>
+                                        <li>
+                                            specificationName&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.specificationName
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div> <!-- Java Info end-->
+
+
+                        <div class="col-md-5"> <!-- OS Info start -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">OS</div>
+                                <div class="panel-body">
+                                    <ul class="list-unstyled list-info">
+                                        <li>
+                                            osVendorName&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osVendorName
+                                        </li>
+                                        <li>
+                                            osArch&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osArch
+                                        </li>
+                                        <li>
+                                            osDataModel&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osDataModel
+                                        </li>
+                                        <li>
+                                            osDescription&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osDescription
+                                        </li>
+                                        <li>
+                                            osVendorVersion&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osVendorVersion
+                                        </li>
+                                        <li>
+                                            osVersion&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osVersion
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- OS Info end-->
+
+                    </div>  <!-- OS java Ip info end -->
+
+                    <div class="row"> <!-- netWork start -->
+                        #*<div class="col-md-12">
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    netWork
+                                </div>
+                                <table class="table table-bordered table-first-column-check table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="col-md-1"><i class="icon-star-empty"></i></th>
+                                        <th class="col-md-2">From</th>
+                                        <th class="col-md-8">Subject</th>
+                                        <th class="col-md-3">Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                                        <td><strong>John Doe</strong></td>
+                                        <td><strong>Message body goes in here</strong> <span
+                                                class="label label-success pull-right"
+                                                style="margin-left: .5em;">Follow Up </span>
+                                            <span class="label label-info pull-right">Work</span></td>
+                                        <td><strong>11:23 PM</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                                        <td>John Doe</td>
+                                        <td>Message body goes in here <span class="label label-success pull-right">Follow Up</span>
+                                        </td>
+                                        <td>Sept4</td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#"><i class="fa fa-star"></i></a></td>
+                                        <td>John Doe</td>
+                                        <td>Message body goes in here <span class="label label-important pull-right">Spam</span>
+                                        </td>
+                                        <td><strong>Sept3</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                                        <td>John Doe</td>
+                                        <td>Message body goes in here <span class="label pull-right">Personal</span>
+                                        </td>
+                                        <td><strong>Sept3</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#"><i class="fa fa-star"></i></a></td>
+                                        <td><strong>John Doe</strong></td>
+                                        <td><strong>Message body goes in here</strong> <span class="label pull-right">Personal</span>
+                                        </td>
+                                        <td><strong>Sept3</strong></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>*#
+                    </div> <!-- netWork end -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="$root/js/echarts/echarts-all.js"></script>
+<script type="text/javascript" src="$root/js/common/echarts.js"></script>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        $("#ulBrokerAddr li[class='active']").children().css("background-color", "#D0D2EB");
+
+        $("#ulBrokerAddr li").on("click", "a", function () {
+            var addr = $(this).attr("addr");
+            $("#ulBrokerAddr li a[name='liBroker']").each(function (i, el) {
+                var tmpAddr = $(el).attr("addr");
+                if (addr === tmpAddr) {
+                    $(el).css("background-color", "#D0D2EB");
+                } else {
+                    $(el).css("background-color", "#FFFFFF");
+                }
+            });
+        });
+
+
+        function buildJVM() {
+            var jvm = {};
+            jvm.domEl = $("#jvmChartEl")[0];
+            jvm.title = "JVM";
+            jvm.brokerAddr = ""; // $("#ulBrokerAddr li[class='active']").attr("ip");
+            jvm.subTitle = "";
+            jvm.legendData = new Array();
+            jvm.seriesData = new Array();
+            jvm.yName = "单位(M)";
+
+            var tmpArray = initJVMData();
+            $(tmpArray).each(function (index, el) {
+                jvm.legendData.push(el.name);
+                var data = {};
+                data.name = el.name;
+                data.value = el.value;
+                jvm.seriesData.push(data);
+            });
+
+            return jvm;
+        }
+
+        function buildMemory() {
+            var memory = {};
+            memory.domEl = $("#memoryChartEl")[0];
+            memory.title = "Memory";
+            memory.brokerAddr = ""; // $("#ulBrokerAddr li[class='active']").attr("ip");
+            memory.subTitle = "";
+            memory.legendData = new Array();
+            memory.seriesData = new Array();
+            memory.yName = "单位(M)";
+
+            var tmpArray = initMemoryData();
+            $(tmpArray).each(function (index, el) {
+                memory.legendData.push(el.name);
+                var data = {};
+                data.name = el.name;
+                data.value = el.value;
+                memory.seriesData.push(data);
+            });
+
+            return memory;
+        }
+
+
+        function initJVMData() {
+            var dataArray = new Array();
+            var data = {};
+            data.key = "init";
+            data.name = "初始化";
+            data.value = $!tbodyData.allStats.jvm.init;
+            dataArray.push(data);
+
+            data = {};
+            data.key = "used";
+            data.name = "已使用";
+            data.value = $!tbodyData.allStats.jvm.used;
+            dataArray.push(data);
+
+            data = {};
+            data.key = "committed";
+            data.name = "已申请";
+            data.value = $!tbodyData.allStats.jvm.committed;
+            dataArray.push(data);
+
+            data = {};
+            data.key = "max";
+            data.name = "最大值";
+            data.value = $!tbodyData.allStats.jvm.max;
+            dataArray.push(data);
+
+            return dataArray;
+        }
+
+        function initMemoryData() {
+            var dataArray = new Array();
+            var data = {};
+            data.key = "total";
+            data.name = "总内存";
+            data.value = $!tbodyData.allStats.memory.total;
+            dataArray.push(data);
+
+            data = {};
+            data.key = "used";
+            data.name = "已用内存";
+            data.value = $!tbodyData.allStats.memory.used;
+            dataArray.push(data);
+
+            data = {};
+            data.key = "free";
+            data.name = "空闲内存";
+            data.value = $!tbodyData.allStats.memory.free;
+            dataArray.push(data);
+
+            return dataArray;
+        }
+
+        var jvm = buildJVM();
+        buildEchart(jvm.domEl, jvm.title, jvm.subTitle, jvm.legendData, null, jvm.yName, null, jvm.seriesData, jvm.brokerAddr);
+
+        var memory = buildMemory();
+        buildEchart(memory.domEl, memory.title, memory.subTitle, memory.legendData, null, memory.yName, null, memory.seriesData, memory.brokerAddr);
+    });
+
+</script>

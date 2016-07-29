@@ -17,14 +17,13 @@ import lombok.RequiredArgsConstructor;
  * @author gaoyanlei
  * @since 2016/7/25
  */
-
 @RequiredArgsConstructor
 @Service
 public class TenantIdRestTemplate extends RestTemplate implements TenantIdRestOperations {
 
     @Override
     public <T> T getForObjectWithQuery(String url, Class<T> responseType, Map<String, Object> queryMap,
-            Pageable pageable, Object... uriVariables) throws RestClientException {
+                                       Pageable pageable, Object... uriVariables) throws RestClientException {
         url = this.urlQueryAndPage(url, queryMap, pageable);
         return super.getForObject(url, responseType, uriVariables);
     }
@@ -32,7 +31,7 @@ public class TenantIdRestTemplate extends RestTemplate implements TenantIdRestOp
 
     @Override
     public <T> T getForObjectWithQuery(String url, Class<T> responseType, Map<String, Object> queryMap,
-            Pageable pageable, Map<String, ?> uriVariables) throws RestClientException {
+                                       Pageable pageable, Map<String, ?> uriVariables) throws RestClientException {
         url = this.urlQueryAndPage(url, queryMap, pageable);
         return super.getForObject(url, responseType, uriVariables);
     }
@@ -40,7 +39,7 @@ public class TenantIdRestTemplate extends RestTemplate implements TenantIdRestOp
 
     @Override
     public <T> ResponseEntity<T> getForEntityWithQuery(String url, Class<T> responseType,
-            Map<String, Object> queryMap, Pageable pageable, Object... uriVariables)
+                                                       Map<String, Object> queryMap, Pageable pageable, Object... uriVariables)
             throws RestClientException {
         url = this.urlQueryAndPage(url, queryMap, pageable);
         return super.getForEntity(url, responseType, queryMap, pageable, uriVariables);
@@ -49,7 +48,7 @@ public class TenantIdRestTemplate extends RestTemplate implements TenantIdRestOp
 
     @Override
     public <T> ResponseEntity<T> getForEntityWithQuery(String url, Class<T> responseType,
-            Map<String, Object> queryMap, Pageable pageable, Map<String, ?> uriVariables)
+                                                       Map<String, Object> queryMap, Pageable pageable, Map<String, ?> uriVariables)
             throws RestClientException {
         url = this.urlQueryAndPage(url, queryMap, pageable);
         return super.getForEntity(url, responseType, uriVariables);

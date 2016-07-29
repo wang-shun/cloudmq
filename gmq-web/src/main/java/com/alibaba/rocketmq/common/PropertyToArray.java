@@ -1,6 +1,6 @@
 package com.alibaba.rocketmq.common;
 
-import com.alibaba.rocketmq.domain.User;
+import com.alibaba.rocketmq.domain.gmq.User;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -20,7 +20,6 @@ public class PropertyToArray {
         for (Field f : fields) {
             FieldMeta meta = f.getAnnotation(FieldMeta.class);
             if (meta != null) {
-//                System.out.printf(meta.name());
                 fieldList.add(f.getName());
             }
         }

@@ -1,30 +1,30 @@
-package com.alibaba.rocketmq.util.restful.domian;
+package com.alibaba.rocketmq.domain.system;
 
 /**
- * @author gaoyanlei
- * @since 2016/7/25
+ * @author: tianyuliang
+ * @since: 2016/7/27
  */
-public class AbstractEntity<E> {
-    private Status status;
-    private Object data;
+public class ResponseInfo {
 
+    private Status status;
+
+    private ResponseData data;
 
     public Status getStatus() {
         return status;
     }
 
-
     public void setStatus(Status status) {
         this.status = status;
     }
 
-
-    public Object getData() {
+    public ResponseData getData() {
         return data;
     }
 
-
-    public void setData(Object data) {
+    public void setData(ResponseData data) {
         this.data = data;
     }
+
+
 }

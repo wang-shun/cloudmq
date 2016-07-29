@@ -3,7 +3,8 @@ package com.alibaba.rocketmq.service;
 import com.alibaba.rocketmq.common.TopicConfig;
 import com.alibaba.rocketmq.common.protocol.body.TopicList;
 import com.alibaba.rocketmq.common.protocol.route.QueueData;
-import com.alibaba.rocketmq.domain.Cluster;
+import com.alibaba.rocketmq.domain.gmq.Broker;
+import com.alibaba.rocketmq.domain.gmq.Cluster;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.tools.command.CommandUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -126,6 +127,20 @@ public class GMQTopicService extends AbstractService {
         throw t;
     }
 
+    public List<String> getBrokerAddrs() throws Throwable {
+        List<String> brokers = new ArrayList<String>();
+        List<Cluster> clusters = clusterService.list();
+        if (clusters != null && clusters.size() > 0) {
+            for (Cluster cluster : clusters) {
+                if (CollectionUtils.isNotEmpty((cluster.getBrokerList())) && cluster.getBrokerList().size() > 0) {
+                    for (Broker broker : cluster.getBrokerList()) {
+                        brokers.add(broker.getAddr());
+                    }
+                }
+            }
+        }
+        return brokers;
+    }
 
     public List<String> getClusterNames() throws Throwable {
         List<String> clusterNames = new ArrayList<String>();
