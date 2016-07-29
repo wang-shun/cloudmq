@@ -1,4 +1,4 @@
-package com.alibaba.rocketmq.domain;
+package com.alibaba.rocketmq.domain.gmq;
 
 import com.alibaba.rocketmq.common.message.MessageQueue;
 

@@ -53,8 +53,8 @@
                 </a>
             </li>
 
-            <li #if($systemResource_flag) class="$systemResource_flag" #end>
-                <a href="$root/SystemResource/memoryStats.do?ipAndPort=127.0.0.1:8080" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+            <li #if($sysResource_flag) class="$sysResource_flag" #end>
+                <a href="$root/sysResource/allStats.do?brokerAddr=10.128.31.109" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
                     <i class="fa fa-fw fa-dashboard"></i> Main
                 </a>
             </li>
@@ -140,7 +140,6 @@
                     <i class="fa fa-fw fa-inbox"></i> Consumer<i class="fa fa-collapse"></i>
                 </a>
                 <ul class="consumer-menu nav nav-list collapse">
-                    <li><a href="$root/consumer/consumerProgress.do"><span class="fa fa-caret-right"></span> ConsumerProgress</a></li>
                     <li><a href="$root/consumer/deleteSubGroup.do"><span class="fa fa-caret-right"></span> DeleteSubGroup</a></li>
                     <li><a href="$root/consumer/updateSubGroup.do"><span class="fa fa-caret-right"></span> UpdateSubGroup</a></li>
                 </ul>

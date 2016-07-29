@@ -24,8 +24,7 @@
         </encoder>
     </appender>
 
-    <logger name="java.sql" level="ERROR"/>
-    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework" level="ERROR"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

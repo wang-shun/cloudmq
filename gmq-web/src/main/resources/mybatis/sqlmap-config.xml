@@ -15,7 +15,7 @@
 
     <!--&lt;!&ndash; 全局别名设置，在映射文件中只需写别名，而不必写出整个类路径 &ndash;&gt;-->
     <typeAliases>
-        <typeAlias type="com.alibaba.rocketmq.domain.User" alias="user"/>
+        <typeAlias type="com.alibaba.rocketmq.domain.gmq.User" alias="user"/>
     </typeAliases>
 
     <!-- 映射文件路径 -->

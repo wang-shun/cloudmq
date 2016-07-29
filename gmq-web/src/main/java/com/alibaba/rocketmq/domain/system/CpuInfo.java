@@ -1,10 +1,10 @@
-package com.alibaba.rocketmq.domain;
+package com.alibaba.rocketmq.domain.system;
 
 /**
  * @author gaoyanlei
  * @since 2016/7/25
  */
-public class Cpu {
+public class CpuInfo {
     private String vendor;
     private String mhz;
     private String model;

@@ -4,19 +4,16 @@ import static com.alibaba.rocketmq.common.Tool.str;
 
 import java.util.*;
 
-import com.alibaba.rocketmq.domain.Broker;
-import com.alibaba.rocketmq.domain.Cluster;
+import com.alibaba.rocketmq.domain.gmq.Broker;
+import com.alibaba.rocketmq.domain.gmq.Cluster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.rocketmq.common.Table;
 import com.alibaba.rocketmq.common.protocol.body.ClusterInfo;
 import com.alibaba.rocketmq.common.protocol.body.KVTable;
 import com.alibaba.rocketmq.common.protocol.route.BrokerData;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
-import com.alibaba.rocketmq.tools.command.cluster.ClusterListSubCommand;
-import com.alibaba.rocketmq.validate.CmdTrace;
 
 
 /**

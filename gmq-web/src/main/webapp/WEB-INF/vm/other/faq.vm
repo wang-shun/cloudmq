@@ -43,7 +43,7 @@
                 class="fa fa-arrow-circle-up"></i> Top</a>
         <h3 id="q3">如何申请Topic?</h3>
         <p>
-            阅读开发文档的第二章节“接入申请流程”，并填写附件一的表格，邮件抄送至 tantexian@gome.com.cn 即可</a>
+            阅读开发文档的第二章节“接入申请流程”，并填写附件一的表格，邮件抄送至 tianyuliang@gome.com.cn 即可</a>
         </p> <br/>
 
         <a href="#" style="float: right; line-height: 1.25em; display: inline-block; padding: .75em 0em;"><i
@@ -60,7 +60,7 @@
                 class="fa fa-arrow-circle-up"></i> Top</a>
         <h3 id="q6">如何寻求帮助?</h3>
         <p>
-            所有问题均可通过邮件（tantexian@gome.com.cn）反馈，如有任何关于GMQ的问题，欢迎骚扰。
+            所有问题均可通过邮件<span class="text-info fa fa-envelope fa-fw"></span>tianyuliang@gome.com.cn 反馈，如有任何关于GMQ的问题，欢迎骚扰。
         </p> <br/>
 
         #*<a href="#" style="float: right; line-height: 1.25em; display: inline-block; padding: .75em 0em;"><i

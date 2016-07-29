@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.rocketmq.dao.UserDao;
-import com.alibaba.rocketmq.domain.User;
+import com.alibaba.rocketmq.domain.gmq.User;
 import com.alibaba.rocketmq.util.MyBeanUtils;
 
 

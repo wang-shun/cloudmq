@@ -1,7 +1,8 @@
-package com.alibaba.rocketmq.domain;
+package com.alibaba.rocketmq.domain.gmq;
 
 /**
- * Created by dell on 2016/7/18.
+ * @author: tianyuliang
+ * @since: 2016/7/19
  */
 public class Broker {
     private long brokerID;

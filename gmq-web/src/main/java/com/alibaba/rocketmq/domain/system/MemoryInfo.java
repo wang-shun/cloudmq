@@ -1,14 +1,15 @@
-package com.alibaba.rocketmq.domain;
+package com.alibaba.rocketmq.domain.system;
 
 /**
- * @author gaoyanlei
+ * @author tianyuliang
  * @since 2016/7/22
  */
-public class Memory {
-    long total;
-    long used;
-    long free;
+public class MemoryInfo {
 
+
+    private long total;
+    private long used;
+    private long free;
 
     public long getTotal() {
         return total;
