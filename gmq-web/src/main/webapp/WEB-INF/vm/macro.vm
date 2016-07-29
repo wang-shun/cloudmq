@@ -70,11 +70,6 @@
 </div>
 #end
 
-<!-- 动态生成form表单 -->
-#macro ( add)
-
-#end
-
 <!-- 解析title字段 -->
 #macro(parseTitleToLink)
     #set ($myTitle = $title.split(":"))

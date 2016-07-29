@@ -10,6 +10,6 @@
     	#table($table)
         #parse("foot.vm")
     </div>
-	#parse("js.vm")
+	#parse("body-js.vm")
   </body>
 </html>
