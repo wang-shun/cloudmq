@@ -52,8 +52,9 @@ public class UserFilter implements Filter {
                 currentURL.indexOf(".gif") > 0 ||
                 currentURL.indexOf(".css") > 0 ||
                 ".js".equals(StringUtils.right(currentURL, 3)) ||
-                currentURL.indexOf("index.do") > 0 ||// TODO: 2016/7/29 tomcat和jetty路径不一样 
+                currentURL.indexOf("index.do") > 0 ||// TODO: 2016/7/29 tomcat和jetty路径不一样
                 currentURL.indexOf("login.do") > 0 ||// TODO: 2016/7/29 tomcat和jetty路径不一样
+                currentURL.indexOf(".map") > 0 ||
                 currentURL.indexOf(".png") > 0) {
             chain.doFilter(request, response);
             return;

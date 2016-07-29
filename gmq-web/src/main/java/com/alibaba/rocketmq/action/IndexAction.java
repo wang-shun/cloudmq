@@ -1,6 +1,7 @@
 package com.alibaba.rocketmq.action;
 
 import com.alibaba.rocketmq.common.Table;
+import com.alibaba.rocketmq.domain.gmq.User;
 import com.alibaba.rocketmq.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,9 +42,10 @@ public class IndexAction extends AbstractAction {
     @RequestMapping(value = "/login.do")
     public String login(ModelMap map, HttpServletRequest httpServletRequest, @RequestParam(required = false) String userName,
                         @RequestParam(required = false) String password) {
-        boolean userExist = userService.checkUserTest(userName, password);
-        if (userExist) {
+        User user = userService.loginUser(userName, password);
+        if (null != user) {
             HttpSession session = httpServletRequest.getSession();
+            session.setAttribute("userId", user.getId());
             session.setAttribute("userName", userName);
             session.setAttribute("isLoginSuccess", true);
             return "redirect:/cluster/list.do";

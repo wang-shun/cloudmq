@@ -25,7 +25,7 @@ public class UserService extends AbstractService {
 
     /**
      * login test
-     * 
+     *
      * @author gaoyanlei
      * @since 2016/7/19
      */
@@ -40,6 +40,19 @@ public class UserService extends AbstractService {
         return false;
     }
 
+    /**
+     * login test
+     *
+     * @author gaoyanlei
+     * @since 2016/7/19
+     */
+    public User loginUser(String userName, String password) {
+        User user = new User();
+        user.setUserName(userName);
+        user.setPassword(password);
+        List<User> users = userDao.selectEntryList(user);
+        return users.isEmpty() ? null : users.get(0);
+    }
 
     /**
      * 查找全部用户
@@ -65,8 +78,7 @@ public class UserService extends AbstractService {
     public int saveOrUpdate(User user) throws Exception {
         if (user.getId() == null) {
             return userDao.insertEntry(user);
-        }
-        else {
+        } else {
             User u = this.findById(user.getId());
             MyBeanUtils.copyBeanNotNull2Bean(user, u);
             return userDao.updateByKey(u);

@@ -11,16 +11,13 @@
                     <label>Password</label>
                     <input type="password" name="password" required="" class="form-control span12 form-control">
                 </div>
-            ##                <a href="#" class="btn btn-primary pull-right">Sign In</a>
                 <button type="submit" class="btn btn-primary pull-right">Sign In</button>
                 <label class="remember-me" style="color: red;">$!errorInfo</label>
                 <div class="clearfix"></div>
-            ##                <label class="remember-me"><input type="checkbox"> Remember me</label>
             </form>
         </div>
     </div>
     <p class="pull-right" style=""></p>
-##    <p><a href="reset-password.html">Forgot your password?</a></p>
 </div>
 <script type="text/javascript">
     $(function () {
