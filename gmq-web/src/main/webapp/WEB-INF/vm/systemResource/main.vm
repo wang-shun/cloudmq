@@ -1,0 +1,272 @@
+<div class="main-content">
+
+<ul class="nav nav-tabs">
+    <li class="active"><a href="#home" data-toggle="tab">10.128.31.109</a></li>
+    <li><a href="#profile" data-toggle="tab">10.128.31.103</a></li>
+</ul>
+
+<div class="row">
+<div class="col-md-12">
+<br>
+
+<div id="myTabContent" class="tab-content">
+<div class="tab-pane active in" id="home">
+<div class="row">
+    <div class="col-md-3">
+        <div class="panel panel-default fadeInDown animation-delay2">
+            <div class="panel-heading">
+                ipInfo
+            </div>
+            <div class="panel-body">
+                <p class="text-sm"><span><span class="fa fa-calendar"></span> Updated 6 hours ago</span></p>
+
+                <p>I am a student at University of Southern California studying lorem ipsum dolor sit amet, consectetur
+                    adipiscing elit. Nullam eros nibh, viverra a dui a, gravida varius velit. Vivamus tristique est non
+                    ipsum dapibus lacinia sed nec metus.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Java Info</div>
+                <div class="panel-body">
+                    <ul class="list-unstyled list-info">
+                        <li>
+                            <span class="text-info fa fa-user fa-fw"></span>
+                            Breanna Hayward
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-envelope fa-fw"></span>
+                            breanna@example.com
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-home fa-fw"></span>
+                            26071 Broadway St. New York, NY 10011
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-phone fa-fw"></span>
+                            +1-555-233-2293
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-university fa-fw"></span>
+                            New York, NY
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-comment fa-fw"></span>
+                            Online
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">操作系统 Info1</div>
+                <div class="panel-body">
+                    <ul class="list-unstyled list-info">
+                        <li>
+                            <span class="text-info fa fa-user fa-fw"></span>
+                            Breanna Hayward
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-envelope fa-fw"></span>
+                            breanna@example.com
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-home fa-fw"></span>
+                            26071 Broadway St. New York, NY 10011
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-phone fa-fw"></span>
+                            +1-555-233-2293
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-university fa-fw"></span>
+                            New York, NY
+                        </li>
+                        <li>
+                            <span class="text-info fa fa-comment fa-fw"></span>
+                            Online
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="widget">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div id="main" style="height:318px;width: 316px"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="widget">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div id="main1" style="height:318px;width: 316px"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="widget">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <div id="main2" style="height:318px;width: 316px"></div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="three-summaries" class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                cpuList
+            </div>
+            <table class="table table-bordered table-first-column-check table-hover">
+                <thead>
+                <tr>
+                    <th class="col-md-1"><i class="icon-star-empty"></i></th>
+                    <th class="col-md-2">From</th>
+                    <th class="col-md-8">Subject</th>
+                    <th class="col-md-3">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                    <td><strong>John Doe</strong></td>
+                    <td><strong>Message body goes in here</strong> <span class="label label-success pull-right"
+                                                                         style="margin-left: .5em;">Follow Up </span>
+                        <span class="label label-info pull-right">Work</span></td>
+                    <td><strong>11:23 PM</strong></td>
+                </tr>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                    <td>John Doe</td>
+                    <td>Message body goes in here <span class="label label-success pull-right">Follow Up</span></td>
+                    <td>Sept4</td>
+                </tr>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star"></i></a></td>
+                    <td>John Doe</td>
+                    <td>Message body goes in here <span class="label label-important pull-right">Spam</span></td>
+                    <td><strong>Sept3</strong></td>
+                </tr>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                    <td>John Doe</td>
+                    <td>Message body goes in here <span class="label pull-right">Personal</span></td>
+                    <td><strong>Sept3</strong></td>
+                </tr>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star"></i></a></td>
+                    <td><strong>John Doe</strong></td>
+                    <td><strong>Message body goes in here</strong> <span class="label pull-right">Personal</span></td>
+                    <td><strong>Sept3</strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="three-summaries" class="row">
+    <div class="col-md-12">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                netWork
+            </div>
+            <table class="table table-bordered table-first-column-check table-hover">
+                <thead>
+                <tr>
+                    <th class="col-md-1"><i class="icon-star-empty"></i></th>
+                    <th class="col-md-2">From</th>
+                    <th class="col-md-8">Subject</th>
+                    <th class="col-md-3">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                    <td><strong>John Doe</strong></td>
+                    <td><strong>Message body goes in here</strong> <span class="label label-success pull-right"
+                                                                         style="margin-left: .5em;">Follow Up </span>
+                        <span class="label label-info pull-right">Work</span></td>
+                    <td><strong>11:23 PM</strong></td>
+                </tr>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                    <td>John Doe</td>
+                    <td>Message body goes in here <span class="label label-success pull-right">Follow Up</span></td>
+                    <td>Sept4</td>
+                </tr>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star"></i></a></td>
+                    <td>John Doe</td>
+                    <td>Message body goes in here <span class="label label-important pull-right">Spam</span></td>
+                    <td><strong>Sept3</strong></td>
+                </tr>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                    <td>John Doe</td>
+                    <td>Message body goes in here <span class="label pull-right">Personal</span></td>
+                    <td><strong>Sept3</strong></td>
+                </tr>
+                <tr>
+                    <td><a href="#"><i class="fa fa-star"></i></a></td>
+                    <td><strong>John Doe</strong></td>
+                    <td><strong>Message body goes in here</strong> <span class="label pull-right">Personal</span></td>
+                    <td><strong>Sept3</strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+</div>
+
+##<div id="main" style="height:400px"></div>
+<!-- ECharts单文件引入 -->
+<script src="$root/js/echarts/echarts-all.js"></script>
+<script src="$root/js/common/echarts.js"></script>
+<script type="text/javascript">
+    //    var arr=getJson();
+    var containerId = 'main';
+    var titleText = '各部门目录状态统计';
+    var subtext = '';
+    var subTitleText = '';
+    //    var xArray=arr[0].slice(0,9);
+    var yName = '数量';
+    //    var colorArray=['#DD127B','#23B829','#6D2D83','#2CAFE7'];
+    var dataArray = [
+        {value: 335, name: '直接访问'},
+        {value: 310, name: '邮件营销'},
+        {value: 234, name: '联盟广告'},
+        {value: 135, name: '视频广告'},
+        {value: 1548, name: '搜索引擎'}
+    ]
+    var nameArray = ['待注册', '待审核', '待发布', '已发布'];
+    initEcharts(containerId, "内存", subTitleText, null, null, yName, null, dataArray, nameArray);
+    initEcharts('main1', "CPU", subTitleText, null, null, yName, null, dataArray, nameArray);
+    initEcharts('main2', "JVM", subTitleText, null, null, yName, null, dataArray, nameArray);
+</script>
