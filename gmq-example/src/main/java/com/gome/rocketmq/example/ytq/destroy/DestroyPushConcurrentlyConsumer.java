@@ -17,8 +17,8 @@ import static java.lang.Thread.currentThread;
  * Created by yintongjiang on 2016/7/18.
  */
 public class DestroyPushConcurrentlyConsumer {
-    private final static String group = "destroyConsumerGroup";
-    private final static String topicName = "destroyTopic_18";
+    private final static String group = "destroyConsumerConGroup";
+    private final static String topicName = "flow_topic_9";
     private final static String tags = "A";
     private final static AtomicLong msgCount = new AtomicLong(0L);
 

@@ -77,6 +77,18 @@ public class UserAction extends AbstractAction {
         return TEMPLATE;
     }
 
+    @RequestMapping(value = "/resetPassword.do", method = RequestMethod.POST)
+    public String resetPassword(ModelMap map, Integer userId,
+                                String resetPassword) {
+        try {
+            User user = new User(userId);
+            user.setPassword(resetPassword);
+            userService.saveOrUpdate(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/user/list.do";
+    }
 
     @RequestMapping(value = "/delete.do", method = {RequestMethod.DELETE})
     public String delete(ModelMap map, HttpServletRequest request, @RequestBody User user) {
