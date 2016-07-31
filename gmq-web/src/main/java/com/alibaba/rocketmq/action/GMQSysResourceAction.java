@@ -1,5 +1,6 @@
 package com.alibaba.rocketmq.action;
 
+import com.alibaba.rocketmq.domain.gmq.Broker;
 import com.alibaba.rocketmq.domain.system.MemoryInfo;
 import com.alibaba.rocketmq.util.BaseUtil;
 import com.google.common.collect.Maps;
@@ -23,6 +24,7 @@ import java.util.Map;
 
 /**
  * 系统监控
+ *
  * @author tianyuliang
  * @since 2016/7/29
  */
@@ -92,12 +94,23 @@ public class GMQSysResourceAction extends AbstractAction {
         return TEMPLATE;
     }
 
+    /*@RequestMapping(value = "brokerList", method = {RequestMethod.GET, RequestMethod.POST})
+    public String brokerList(ModelMap map, HttpServletRequest request, @RequestParam(required = true) String brokerAddr) {
+        putPublicAttribute(map, "list");
+        try {
+            List<Broker> brokers = sysResourceService.doBrokerList();
+            putNavigation(map, brokers);
+        } catch (Throwable t) {
+            logger.error("get broker list error. msg={}", t.getMessage(), t);
+            putAlertMsg(t, map);
+        }
+        return TEMPLATE;
+    }*/
 
     @Override
     protected String getFlag() {
         return "sysResource_flag";
     }
-
 
     @Override
     protected String getName() {

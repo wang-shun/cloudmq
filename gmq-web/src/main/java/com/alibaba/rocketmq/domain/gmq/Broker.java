@@ -5,7 +5,10 @@ package com.alibaba.rocketmq.domain.gmq;
  * @since: 2016/7/19
  */
 public class Broker {
+    private static final long serialVersionUID = 1L;
+    private String clusterName;
     private long brokerID;
+    private String brokerName;
     private String addr;
     private String version;
     private double inTPS;
@@ -14,7 +17,7 @@ public class Broker {
     private double inTotalToday;
     private double outTotalYest;
     private double outTotalTodtay;
-    private String brokerName;
+
 
     public long getBrokerID() {
         return brokerID;
@@ -94,5 +97,13 @@ public class Broker {
 
     public void setBrokerName(String brokerName) {
         this.brokerName = brokerName;
+    }
+
+    public String getClusterName() {
+        return clusterName;
+    }
+
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
     }
 }

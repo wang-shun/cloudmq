@@ -1,13 +1,11 @@
 package com.alibaba.rocketmq.action;
 
-import com.alibaba.rocketmq.common.Table;
 import com.alibaba.rocketmq.domain.gmq.User;
-import com.alibaba.rocketmq.service.UserService;
+import com.alibaba.rocketmq.service.gmq.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;

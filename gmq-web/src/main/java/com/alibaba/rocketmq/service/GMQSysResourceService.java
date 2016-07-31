@@ -1,8 +1,13 @@
 package com.alibaba.rocketmq.service;
 
+import com.alibaba.rocketmq.common.BrokerConst;
+import com.alibaba.rocketmq.common.protocol.body.ClusterInfo;
+import com.alibaba.rocketmq.common.protocol.body.KVTable;
+import com.alibaba.rocketmq.common.protocol.route.BrokerData;
 import com.alibaba.rocketmq.domain.gmq.Broker;
 import com.alibaba.rocketmq.domain.gmq.Cluster;
 import com.alibaba.rocketmq.domain.system.MemoryInfo;
+import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.util.restful.domian.AbstractEntity;
 import com.alibaba.rocketmq.util.restful.handle.ObjectHandle;
 import com.alibaba.rocketmq.util.restful.restTemplate.TenantIdRestOperations;
@@ -87,5 +92,99 @@ public class GMQSysResourceService extends AbstractService {
         }
     }
 
+
+    /**
+     * 获取brokerList
+     *
+     * @return
+     * @throws Throwable
+     */
+    public List<Broker> doBrokerList() throws Throwable {
+        List<Broker> brokers = null;
+        DefaultMQAdminExt defaultMQAdminExt = getDefaultMQAdminExt();
+        try {
+            defaultMQAdminExt.start();
+            brokers = getBrokerList(defaultMQAdminExt);
+            return brokers;
+        } catch (Throwable e) {
+            logger.error(e.getMessage(), e);
+            throw e;
+        } finally {
+            shutdownDefaultMQAdminExt(defaultMQAdminExt);
+        }
+    }
+
+    public List<Broker> getBrokerList(DefaultMQAdminExt defaultMQAdminExt) throws Exception {
+        List<Broker> brokers = new ArrayList();
+        ClusterInfo clusterInfoSerializeWrapper = defaultMQAdminExt.examineBrokerClusterInfo();
+        Iterator<Map.Entry<String, Set<String>>> itCluster = clusterInfoSerializeWrapper.getClusterAddrTable().entrySet().iterator();
+        Broker broker = null;
+        KVTable kvTable = null;
+        while (itCluster.hasNext()) {
+            Map.Entry<String, Set<String>> clusterEntry = itCluster.next();
+            String clusterName = clusterEntry.getKey();
+            Set<String> brokerNameSet = new HashSet<String>();
+            brokerNameSet.addAll(clusterEntry.getValue());
+            for (String brokerName : brokerNameSet) {
+                BrokerData brokerData = clusterInfoSerializeWrapper.getBrokerAddrTable().get(brokerName);
+                if (brokerData == null) {
+                    continue;
+                }
+                Iterator<Map.Entry<Long, String>> itAddr = brokerData.getBrokerAddrs().entrySet().iterator();
+                while (itAddr.hasNext()) {
+                    Map.Entry<Long, String> brokerEntry = itAddr.next();
+                    kvTable = defaultMQAdminExt.fetchBrokerRuntimeStats(brokerEntry.getValue());
+                    broker = setBrokerField(kvTable, brokerEntry);
+                    broker.setClusterName(clusterName);
+                    broker.setBrokerName(brokerName);
+                    brokers.add(broker);
+                }
+            }
+        }
+        return brokers;
+    }
+
+    private Broker setBrokerField(KVTable kvTable, Map.Entry<Long, String> brokerEntry) {
+        Broker broker = new Broker();
+        try {
+            long brokerId = brokerEntry.getKey().longValue();
+            String brokerAddr = brokerEntry.getValue();
+            String putTps = kvTable.getTable().get(BrokerConst.PUT_TPS);
+            String getTransferedTps = kvTable.getTable().get(BrokerConst.TRANSFERED_TPS);
+            String version = kvTable.getTable().get(BrokerConst.BROKER_VERSION);
+
+            String[] inTpsValues = putTps.split(" ");
+            double in = inTpsValues != null && inTpsValues.length > 0 ? Double.parseDouble(inTpsValues[0]) : 0D;
+
+            String[] outTpsValues = getTransferedTps.split(" ");
+            double out = outTpsValues != null && outTpsValues.length > 0 ? Double.parseDouble(outTpsValues[0]) : 0D;
+
+            String msgPutTotalYesterdayMorning = kvTable.getTable().get(BrokerConst.PUT_TOTAL_YESTERDAY_MORNING);
+            String msgPutTotalTodayMorning = kvTable.getTable().get(BrokerConst.PUT_TOTAL_TODAY_MORNING);
+            String msgPutTotalTodayNow = kvTable.getTable().get(BrokerConst.PUT_TOTAL_TODAY_NOW);
+            String msgGetTotalYesterdayMorning = kvTable.getTable().get(BrokerConst.TOTAL_YESTERDAY_MORNING);
+            String msgGetTotalTodayMorning = kvTable.getTable().get(BrokerConst.TOTAL_TODAY_MORNING);
+            String msgGetTotalTodayNow = kvTable.getTable().get(BrokerConst.TOTAL_TODAY_NOW);
+
+            long InTotalYest = Long.parseLong(msgPutTotalTodayMorning) - Long.parseLong(msgPutTotalYesterdayMorning);
+            long OutTotalYest = Long.parseLong(msgGetTotalTodayMorning) - Long.parseLong(msgGetTotalYesterdayMorning);
+            long InTotalToday = Long.parseLong(msgPutTotalTodayNow) - Long.parseLong(msgPutTotalTodayMorning);
+            long OutTotalToday = Long.parseLong(msgGetTotalTodayNow) - Long.parseLong(msgGetTotalTodayMorning);
+
+            broker.setBrokerID(brokerId);
+            broker.setAddr(brokerAddr);
+            broker.setVersion(version);
+            broker.setInTPS(in);
+            broker.setOutTPS(out);
+            broker.setInTotalYest(InTotalYest);
+            broker.setOutTotalYest(OutTotalYest);
+            broker.setInTotalToday(InTotalToday);
+            broker.setOutTotalTodtay(OutTotalToday);
+            return broker;
+        } catch (Exception e) {
+            logger.error("get broker detail error. msg={}", e.getMessage(), e);
+            throw e;
+        }
+    }
 
 }
