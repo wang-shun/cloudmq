@@ -3,7 +3,9 @@ package com.alibaba.rocketmq.dao;
 
 import com.alibaba.rocketmq.dao.base.BaseDaoImpl;
 import com.alibaba.rocketmq.domain.gmq.Broker;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BrokerDao extends BaseDaoImpl<Broker, Integer> {
 
     @Override

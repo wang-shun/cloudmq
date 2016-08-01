@@ -13,6 +13,7 @@
         <property name="locations">
             <list>
                 <value>classpath:conf/urlConfig.properties</value>
+                <value>classpath:conf/brokerSchedule.properties</value>
             </list>
         </property>
     </bean>

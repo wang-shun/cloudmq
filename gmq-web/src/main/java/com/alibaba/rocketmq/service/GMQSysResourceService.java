@@ -137,6 +137,7 @@ public class GMQSysResourceService extends AbstractService {
                     broker = setBrokerField(kvTable, brokerEntry);
                     broker.setClusterName(clusterName);
                     broker.setBrokerName(brokerName);
+                    broker.setRuntimeDate(System.currentTimeMillis());
                     brokers.add(broker);
                 }
             }

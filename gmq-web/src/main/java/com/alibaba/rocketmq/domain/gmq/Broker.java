@@ -17,7 +17,15 @@ public class Broker {
     private double inTotalToday;
     private double outTotalYest;
     private double outTotalTodtay;
+    private long runtimeDate;
 
+    public long getRuntimeDate() {
+        return runtimeDate;
+    }
+
+    public void setRuntimeDate(long runtimeDate) {
+        this.runtimeDate = runtimeDate;
+    }
 
     public long getBrokerID() {
         return brokerID;

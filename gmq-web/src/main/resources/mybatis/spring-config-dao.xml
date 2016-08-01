@@ -8,45 +8,46 @@
      		http://www.springframework.org/schema/context/spring-context.xsd"
        default-autowire="byName">
 
-    <context:component-scan base-package="com.alibaba.rocketmq.service.*"/>
+    <!--<context:component-scan base-package="com.alibaba.rocketmq.service.*"/>-->
 
     <!-- BoneCP configuration -->
     <bean id="abstractDataSource" abstract="true" class="com.jolbox.bonecp.BoneCPDataSource" destroy-method="close">
-        <property name="driverClass" value="${jdbc.driverClass}" />
-        <property name="idleConnectionTestPeriodInMinutes" value="${jdbc.idleConnectionTestPeriod}" />
-        <property name="idleMaxAgeInMinutes" value="${jdbc.idleMaxAge}" />
-        <property name="maxConnectionsPerPartition" value="${jdbc.maxConnectionsPerPartition}" />
-        <property name="minConnectionsPerPartition" value="${jdbc.minConnectionsPerPartition}" />
-        <property name="partitionCount" value="${jdbc.partitionCount}" />
-        <property name="acquireIncrement" value="${jdbc.acquireIncrement}" />
-        <property name="statementsCacheSize" value="${jdbc.statementsCacheSize}" />
-        <property name="releaseHelperThreads" value="${jdbc.releaseHelperThreads}" />
+        <property name="driverClass" value="${jdbc.driverClass}"/>
+        <property name="idleConnectionTestPeriodInMinutes" value="${jdbc.idleConnectionTestPeriod}"/>
+        <property name="idleMaxAgeInMinutes" value="${jdbc.idleMaxAge}"/>
+        <property name="maxConnectionsPerPartition" value="${jdbc.maxConnectionsPerPartition}"/>
+        <property name="minConnectionsPerPartition" value="${jdbc.minConnectionsPerPartition}"/>
+        <property name="partitionCount" value="${jdbc.partitionCount}"/>
+        <property name="acquireIncrement" value="${jdbc.acquireIncrement}"/>
+        <property name="statementsCacheSize" value="${jdbc.statementsCacheSize}"/>
+        <property name="releaseHelperThreads" value="${jdbc.releaseHelperThreads}"/>
     </bean>
     <bean id="masterDataSource" parent="abstractDataSource">
-        <property name="jdbcUrl" value="${jdbc.jdbcUrl}" />
-        <property name="username" value="${jdbc.username}" />
-        <property name="password" value="${jdbc.password}" />
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
     </bean>
 
     <!-- 配置事务管理器 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="masterDataSource" />
+        <property name="dataSource" ref="masterDataSource"/>
     </bean>
 
     <!-- 集成Mybatis -->
     <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="masterDataSource" />
-        <property name="configLocation" value="classpath:/mybatis/sqlmap-config.xml" />
+        <property name="dataSource" ref="masterDataSource"/>
+        <property name="configLocation" value="classpath:/mybatis/sqlmap-config.xml"/>
     </bean>
 
     <bean id="sqlTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg index="0" ref="sessionFactory" />
+        <constructor-arg index="0" ref="sessionFactory"/>
     </bean>
     <bean id="batchSqlTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg index="0" ref="sessionFactory" />
-        <constructor-arg index="1" value="BATCH" />
+        <constructor-arg index="0" ref="sessionFactory"/>
+        <constructor-arg index="1" value="BATCH"/>
     </bean>
-
+    <bean class="com.alibaba.rocketmq.service.gmq.GMQBrokerService" id="gmqBrokerService"
+          init-method="init" destroy-method="shutdown"/>
     <!-- Automatically configure the package basePackage all path marked with
         the @Mapper interface to generate the proxy Dao layer to replace the original implementation of our Dao.
         集成Mybatis自动映射dao层接口到xml(例如：User.xml)映射-->
@@ -56,29 +57,29 @@
     </bean>-->
 
     <!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
-        <!--<property name="dataSource" ref="masterDataSource"/>-->
-        <!--&lt;!&ndash; 自动扫描entity目录, 省掉Configuration.xml里的手工配置 &ndash;&gt;-->
-        <!--<property name="mapperLocations" value="classpath*:**/*Mapper.xml"/>-->
-        <!--<property name="configurationProperties">-->
-            <!--<props>-->
-                <!--<prop key="cacheEnabled">true</prop>-->
-                <!--&lt;!&ndash; 查询时，关闭关联对象即时加载以提高性能 &ndash;&gt;-->
-                <!--<prop key="lazyLoadingEnabled">false</prop>-->
-                <!--&lt;!&ndash; 设置关联对象加载的形态，此处为按需加载字段(加载字段由SQL指定)，不会加载关联表的所有字段，以提高性能 &ndash;&gt;-->
-                <!--<prop key="aggressiveLazyLoading">true</prop>-->
-                <!--&lt;!&ndash; 对于未知的SQL查询，允许返回不同的结果集以达到通用的效果 &ndash;&gt;-->
-                <!--<prop key="multipleResultSetsEnabled">true</prop>-->
-                <!--&lt;!&ndash; 允许使用列标签代替列名 &ndash;&gt;-->
-                <!--<prop key="useColumnLabel">true</prop>-->
-                <!--&lt;!&ndash; 允许使用自定义的主键值(比如由程序生成的UUID 32位编码作为键值)，数据表的PK生成策略将被覆盖 &ndash;&gt;-->
-                <!--<prop key="useGeneratedKeys">true</prop>-->
-                <!--&lt;!&ndash; 给予被嵌套的resultMap以字段-属性的映射支持 &ndash;&gt;-->
-                <!--<prop key="autoMappingBehavior">FULL</prop>-->
-                <!--&lt;!&ndash; 对于批量更新操作缓存SQL以提高性能  &ndash;&gt;-->
-                <!--<prop key="defaultExecutorType">BATCH</prop>-->
-                <!--&lt;!&ndash; 数据库超过25000秒仍未响应则超时 &ndash;&gt;-->
-                <!--<prop key="defaultStatementTimeout">25000</prop>-->
-            <!--</props>-->
-        <!--</property>-->
+    <!--<property name="dataSource" ref="masterDataSource"/>-->
+    <!--&lt;!&ndash; 自动扫描entity目录, 省掉Configuration.xml里的手工配置 &ndash;&gt;-->
+    <!--<property name="mapperLocations" value="classpath*:**/*Mapper.xml"/>-->
+    <!--<property name="configurationProperties">-->
+    <!--<props>-->
+    <!--<prop key="cacheEnabled">true</prop>-->
+    <!--&lt;!&ndash; 查询时，关闭关联对象即时加载以提高性能 &ndash;&gt;-->
+    <!--<prop key="lazyLoadingEnabled">false</prop>-->
+    <!--&lt;!&ndash; 设置关联对象加载的形态，此处为按需加载字段(加载字段由SQL指定)，不会加载关联表的所有字段，以提高性能 &ndash;&gt;-->
+    <!--<prop key="aggressiveLazyLoading">true</prop>-->
+    <!--&lt;!&ndash; 对于未知的SQL查询，允许返回不同的结果集以达到通用的效果 &ndash;&gt;-->
+    <!--<prop key="multipleResultSetsEnabled">true</prop>-->
+    <!--&lt;!&ndash; 允许使用列标签代替列名 &ndash;&gt;-->
+    <!--<prop key="useColumnLabel">true</prop>-->
+    <!--&lt;!&ndash; 允许使用自定义的主键值(比如由程序生成的UUID 32位编码作为键值)，数据表的PK生成策略将被覆盖 &ndash;&gt;-->
+    <!--<prop key="useGeneratedKeys">true</prop>-->
+    <!--&lt;!&ndash; 给予被嵌套的resultMap以字段-属性的映射支持 &ndash;&gt;-->
+    <!--<prop key="autoMappingBehavior">FULL</prop>-->
+    <!--&lt;!&ndash; 对于批量更新操作缓存SQL以提高性能  &ndash;&gt;-->
+    <!--<prop key="defaultExecutorType">BATCH</prop>-->
+    <!--&lt;!&ndash; 数据库超过25000秒仍未响应则超时 &ndash;&gt;-->
+    <!--<prop key="defaultStatementTimeout">25000</prop>-->
+    <!--</props>-->
+    <!--</property>-->
     <!--</bean>-->
 </beans>
