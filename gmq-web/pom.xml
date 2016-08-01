@@ -16,6 +16,11 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>3.1.0.RELEASE</spring.version>
+		<!-- 添加 quartz依赖 2016/8/1 Add by tianyuliang
+			注意: Spring 3.0版本中内置的Quartz版本是<2.0的，在使用最新的Quartz包(>2.0)之后，接口不兼容,所以降低Quartz版本到1.x
+			修复异常：Found interface org.quartz.JobExecutionContext, but class was expected
+		-->
+		<quartz.version>1.8.6</quartz.version>
         <!--添加mybatis依赖 start  2016/7/12 Add by gaoyanlei -->
         <org.mybatis.spring.version>1.2.0</org.mybatis.spring.version>
         <org.mybatis.version>3.2.1</org.mybatis.version>
@@ -213,6 +218,12 @@
             <artifactId>spring-data-commons</artifactId>
             <version>1.9.0.RELEASE</version>
         </dependency>
+		<!--添加quartz依赖 2016/8/1 Add by tianyuliang -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
         <!--添加mybatis依赖 start  2016/7/12 Add by gaoyanlei -->
         <dependency>
             <groupId>org.mybatis</groupId>

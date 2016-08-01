@@ -193,7 +193,7 @@ public class DateUtils {
 
 
     /**
-     * 获取日期字符串的日期风格。失敗返回null。
+     * 获取日期字符串的日期风格。失败返回null。
      *
      * @param date
      *            日期字符串

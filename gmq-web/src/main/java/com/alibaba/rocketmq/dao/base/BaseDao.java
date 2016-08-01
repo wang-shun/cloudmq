@@ -6,6 +6,7 @@ package com.alibaba.rocketmq.dao.base;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * dao基类<实体,主键>
@@ -17,19 +18,26 @@ import java.util.List;
 public interface BaseDao<T,KEY extends Serializable> {
 
 	/**
-	 * 添加对象
+	 * 添加对象,并返回自增类型的主键id
 	 * @param t
 	 * @return 影响条数
 	 */
 	@SuppressWarnings("unchecked")
-	int insertEntry(T... t);
-	
+	Integer insertEntry(T... t);
+
+	/**
+	 * 添加对象，并返回自增类型的主键id
+	 * @param params
+	 * @return
+	 */
+	Integer insertEntryMap(Map<String, Object> params);
+
 	/**
 	 * 添加对象并设置ID到对象上(需开启事务)
 	 * @param t
 	 * @return 影响条数
 	 */
-	int insertEntryCreateId(T t);
+	Integer insertEntryCreateId(T t);
 	
 	/**
 	 * 删除对象,主键

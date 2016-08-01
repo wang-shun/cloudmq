@@ -9,7 +9,9 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath:spring/applicationContext.xml,classpath:mybatis/spring-config-dao.xml
+            classpath:spring/applicationContext.xml,
+            classpath:mybatis/spring-config-dao.xml,
+            classpath:mybatis/spring-quartz.xml
         </param-value>
     </context-param>
 

@@ -46,8 +46,8 @@
         <constructor-arg index="0" ref="sessionFactory"/>
         <constructor-arg index="1" value="BATCH"/>
     </bean>
-    <bean class="com.alibaba.rocketmq.service.gmq.GMQBrokerService" id="gmqBrokerService"
-          init-method="init" destroy-method="shutdown"/>
+
+
     <!-- Automatically configure the package basePackage all path marked with
         the @Mapper interface to generate the proxy Dao layer to replace the original implementation of our Dao.
         集成Mybatis自动映射dao层接口到xml(例如：User.xml)映射-->

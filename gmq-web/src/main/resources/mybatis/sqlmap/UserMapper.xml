@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.alibaba.rocketmq.dao.UserDao">
 
 	<!-- `user` 所有查询列 -->
@@ -49,7 +50,7 @@
 	</sql>
 
 	<!-- 插入`user`记录 -->
-	<insert id="insertEntry" parameterType="user" >
+	<insert id="insertEntry" parameterType="user" useGeneratedKeys="true" keyProperty="id">
 		<![CDATA[
 			INSERT INTO `user` (id,real_name,user_name,password,mobile,email,created_time,updated_time,deleted_time,state)
 			VALUES (#{id},#{realName},#{userName},#{password},#{mobile},#{email},#{createdTime},#{updatedTime},#{deletedTime},#{state})

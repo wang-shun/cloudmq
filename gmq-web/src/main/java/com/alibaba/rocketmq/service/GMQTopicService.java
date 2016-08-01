@@ -127,20 +127,6 @@ public class GMQTopicService extends AbstractService {
         throw t;
     }
 
-    public List<String> getBrokerAddrs() throws Throwable {
-        List<String> brokers = new ArrayList<String>();
-        List<Cluster> clusters = clusterService.list();
-        if (clusters != null && clusters.size() > 0) {
-            for (Cluster cluster : clusters) {
-                if (CollectionUtils.isNotEmpty((cluster.getBrokerList())) && cluster.getBrokerList().size() > 0) {
-                    for (Broker broker : cluster.getBrokerList()) {
-                        brokers.add(broker.getAddr());
-                    }
-                }
-            }
-        }
-        return brokers;
-    }
 
     public List<String> getClusterNames() throws Throwable {
         List<String> clusterNames = new ArrayList<String>();

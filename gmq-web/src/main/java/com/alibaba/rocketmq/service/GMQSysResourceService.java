@@ -5,9 +5,12 @@ import com.alibaba.rocketmq.common.protocol.body.ClusterInfo;
 import com.alibaba.rocketmq.common.protocol.body.KVTable;
 import com.alibaba.rocketmq.common.protocol.route.BrokerData;
 import com.alibaba.rocketmq.domain.gmq.Broker;
+import com.alibaba.rocketmq.domain.gmq.BrokerExt;
 import com.alibaba.rocketmq.domain.gmq.Cluster;
 import com.alibaba.rocketmq.domain.system.MemoryInfo;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
+import com.alibaba.rocketmq.util.DateUtils;
+import com.alibaba.rocketmq.util.date.DateStyle;
 import com.alibaba.rocketmq.util.restful.domian.AbstractEntity;
 import com.alibaba.rocketmq.util.restful.handle.ObjectHandle;
 import com.alibaba.rocketmq.util.restful.restTemplate.TenantIdRestOperations;
@@ -94,13 +97,13 @@ public class GMQSysResourceService extends AbstractService {
 
 
     /**
-     * 获取brokerList
+     * 获取broker里面的inTps、outTps、msgTotal等参数
      *
      * @return
      * @throws Throwable
      */
-    public List<Broker> doBrokerList() throws Throwable {
-        List<Broker> brokers = null;
+    public List<BrokerExt> doBrokerList() throws Throwable {
+        List<BrokerExt> brokers = null;
         DefaultMQAdminExt defaultMQAdminExt = getDefaultMQAdminExt();
         try {
             defaultMQAdminExt.start();
@@ -114,11 +117,11 @@ public class GMQSysResourceService extends AbstractService {
         }
     }
 
-    public List<Broker> getBrokerList(DefaultMQAdminExt defaultMQAdminExt) throws Exception {
-        List<Broker> brokers = new ArrayList();
+    public List<BrokerExt> getBrokerList(DefaultMQAdminExt defaultMQAdminExt) throws Exception {
+        List<BrokerExt> brokers = new ArrayList();
         ClusterInfo clusterInfoSerializeWrapper = defaultMQAdminExt.examineBrokerClusterInfo();
         Iterator<Map.Entry<String, Set<String>>> itCluster = clusterInfoSerializeWrapper.getClusterAddrTable().entrySet().iterator();
-        Broker broker = null;
+        BrokerExt broker = null;
         KVTable kvTable = null;
         while (itCluster.hasNext()) {
             Map.Entry<String, Set<String>> clusterEntry = itCluster.next();
@@ -137,7 +140,6 @@ public class GMQSysResourceService extends AbstractService {
                     broker = setBrokerField(kvTable, brokerEntry);
                     broker.setClusterName(clusterName);
                     broker.setBrokerName(brokerName);
-                    broker.setRuntimeDate(System.currentTimeMillis());
                     brokers.add(broker);
                 }
             }
@@ -145,8 +147,9 @@ public class GMQSysResourceService extends AbstractService {
         return brokers;
     }
 
-    private Broker setBrokerField(KVTable kvTable, Map.Entry<Long, String> brokerEntry) {
-        Broker broker = new Broker();
+    private BrokerExt setBrokerField(KVTable kvTable, Map.Entry<Long, String> brokerEntry) {
+        BrokerExt broker = new BrokerExt();
+        String strDate = null;
         try {
             long brokerId = brokerEntry.getKey().longValue();
             String brokerAddr = brokerEntry.getValue();
@@ -175,12 +178,17 @@ public class GMQSysResourceService extends AbstractService {
             broker.setBrokerID(brokerId);
             broker.setAddr(brokerAddr);
             broker.setVersion(version);
-            broker.setInTPS(in);
-            broker.setOutTPS(out);
+            broker.setBrokerIp(brokerAddr.substring(0, brokerAddr.indexOf(":")));
+            broker.setBrokerPort(brokerAddr.substring(brokerAddr.indexOf(":") + 1, brokerAddr.length()));
+            broker.setInTps(in);
+            broker.setInTps(out);
             broker.setInTotalYest(InTotalYest);
             broker.setOutTotalYest(OutTotalYest);
             broker.setInTotalToday(InTotalToday);
             broker.setOutTotalTodtay(OutTotalToday);
+            broker.setRuntimeDate(System.currentTimeMillis());
+            strDate = DateUtils.DateToString(new Date(), DateStyle.YYYY_MM_DD_HH_MM_SS_SSS);
+            broker.setCreateDate(DateUtils.StringToDate(strDate, DateStyle.YYYY_MM_DD_HH_MM_SS_SSS));
             return broker;
         } catch (Exception e) {
             logger.error("get broker detail error. msg={}", e.getMessage(), e);

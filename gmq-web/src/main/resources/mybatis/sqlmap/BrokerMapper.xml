@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
 <mapper namespace="com.alibaba.rocketmq.dao.BrokerDao">
-    <insert id="insertEntry" parameterType="broker">
-		<![CDATA[
-			INSERT INTO `broker` (BrokerName,brokerId,ClusterName,BrokerAddr,Version,InTPS,OutTPS,InTotalYest,
-			InTotalToday,OutTotalYest,OutTotalToday,RuntimeDate,CreateDate)
-			VALUES (#{brokerName},#{brokerID},#{clusterName},#{addr},#{version},#{inTPS},#{outTPS},#{inTotalYest},
-			#{inTotalToday},#{outTotalYest},#{outTotalTodtay},#{runtimeDate},now())
-        ]]>
-	</insert>
+
+    <insert id="insertEntry" parameterType="broker" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `broker`
+        (BrokerName,brokerId,ClusterName,BrokerIp,BrokerPort,Version,InTPS,OutTPS,InTotalYest,
+        InTotalToday,OutTotalYest,OutTotalToday,RuntimeDate,CreateDate)
+        VALUES
+        (#{brokerName},#{brokerID},#{clusterName},#{brokerIp},#{brokerPort},#{version},#{inTps},#{outTps},#{inTotalYest},
+        #{inTotalToday},#{outTotalYest},#{outTotalTodtay},#{runtimeDate},#{createDate})
+    </insert>
+
 </mapper>

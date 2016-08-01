@@ -1,10 +1,9 @@
 package com.alibaba.rocketmq.service;
 
-import static com.alibaba.rocketmq.common.Tool.str;
-
 import java.util.*;
 
 import com.alibaba.rocketmq.domain.gmq.Broker;
+import com.alibaba.rocketmq.domain.gmq.BrokerExt;
 import com.alibaba.rocketmq.domain.gmq.Cluster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,8 +103,7 @@ public class GMQClusterService extends AbstractService {
                     Map.Entry<Long, String> addr = itAddr.next();
                     broker.setAddr(addr.getValue());
                     broker.setBrokerID(addr.getKey().longValue());
-                    brokerList
-                        .add(broker(broker, defaultMQAdminExt.fetchBrokerRuntimeStats(addr.getValue())));
+                    brokerList.add(broker(broker, defaultMQAdminExt.fetchBrokerRuntimeStats(addr.getValue())));
                 }
             }
         }
@@ -121,21 +119,18 @@ public class GMQClusterService extends AbstractService {
      */
     public Broker broker(Broker broker, KVTable kvTable) {
         broker.setVersion(kvTable.getTable().get("brokerVersionDesc"));
-        broker.setInTPS(split(kvTable.getTable().get("putTps")));
-        broker.setOutTPS(split(kvTable.getTable().get("getTransferedTps")));
+        broker.setInTps(split(kvTable.getTable().get("putTps")));
+        broker.setOutTps(split(kvTable.getTable().get("getTransferedTps")));
         String msgPutTotalYesterdayMorning = kvTable.getTable().get("msgPutTotalYesterdayMorning");
         String msgPutTotalTodayMorning = kvTable.getTable().get("msgPutTotalTodayMorning");
         String msgPutTotalTodayNow = kvTable.getTable().get("msgPutTotalTodayNow");
         String msgGetTotalYesterdayMorning = kvTable.getTable().get("msgGetTotalYesterdayMorning");
         String msgGetTotalTodayMorning = kvTable.getTable().get("msgGetTotalTodayMorning");
         String msgGetTotalTodayNow = kvTable.getTable().get("msgGetTotalTodayNow");
-        broker.setInTotalYest(
-            Long.parseLong(msgPutTotalTodayMorning) - Long.parseLong(msgPutTotalYesterdayMorning));
-        broker.setOutTotalYest(
-            Long.parseLong(msgGetTotalTodayMorning) - Long.parseLong(msgGetTotalYesterdayMorning));
+        broker.setInTotalYest(Long.parseLong(msgPutTotalTodayMorning) - Long.parseLong(msgPutTotalYesterdayMorning));
+        broker.setOutTotalYest(Long.parseLong(msgGetTotalTodayMorning) - Long.parseLong(msgGetTotalYesterdayMorning));
         broker.setInTotalToday(Long.parseLong(msgPutTotalTodayNow) - Long.parseLong(msgPutTotalTodayMorning));
-        broker
-            .setOutTotalTodtay(Long.parseLong(msgGetTotalTodayNow) - Long.parseLong(msgGetTotalTodayMorning));
+        broker.setOutTotalTodtay(Long.parseLong(msgGetTotalTodayNow) - Long.parseLong(msgGetTotalTodayMorning));
         return broker;
     }
 
