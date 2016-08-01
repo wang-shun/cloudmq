@@ -15,9 +15,9 @@
             <span class="icon-bar"></span>
         </button>
         <a href="index.html">
-                <span class="navbar-brand">
-                    <img alt="" src="$root/images/gome_logo.png" class="img-rounded">&nbsp;&nbsp;GMQ Consonle
-                </span>
+            <span class="navbar-brand">
+                <img alt="" src="$root/images/gome_logo.png" class="img-rounded">&nbsp;&nbsp;GMQ Consonle
+            </span>
         </a>
     </div>
 </div>
