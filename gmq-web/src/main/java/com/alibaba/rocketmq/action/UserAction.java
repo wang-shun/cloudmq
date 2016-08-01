@@ -90,15 +90,18 @@ public class UserAction extends AbstractAction {
         return "redirect:/user/list.do";
     }
 
-    @RequestMapping(value = "/delete.do", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/delete.do", produces = {"application/json;charset=UTF-8"}, method = {RequestMethod.DELETE})
+    @ResponseBody
     public String delete(ModelMap map, HttpServletRequest request, @RequestBody User user) {
+        Integer result = 0;
+
         try {
             putPublicAttribute(map, "list");
-            userService.delete(user.getId());
+            result = userService.delete(user.getId());
         } catch (Throwable t) {
             putAlertMsg(t, map);
         }
-        return TEMPLATE;
+        return "{\"result\":" + result + "}";
     }
 
 }
