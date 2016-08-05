@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 
+    <property name="USER_LOG_HOME" value="${user.home}/logs/gmq"/>
     <property name="JETTY_LOG_HOME" value="${jetty.home}/logs/gmq"/>
     <property name="TOMCAT_LOG_HOME" value="${CATALINA_HOME}/logs/gmq"/>
 
