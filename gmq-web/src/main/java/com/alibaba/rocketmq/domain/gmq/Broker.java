@@ -14,7 +14,7 @@ public class Broker extends BaseDomain {
 
     private String clusterName;
 
-    private long brokerID;
+    private Long brokerId;
 
     private String brokerName;
 
@@ -22,17 +22,17 @@ public class Broker extends BaseDomain {
 
     private String version;
 
-    private double inTps;
+    private Double inTps;
 
-    private double outTps;
+    private Double outTps;
 
-    private double inTotalYest;
+    private Long inTotalYest;
 
-    private double inTotalToday;
+    private Long inTotalToday;
 
-    private double outTotalYest;
+    private Long outTotalYest;
 
-    private double outTotalTodtay;
+    private Long outTotalTodtay;
 
     public String getClusterName() {
         return clusterName;
@@ -42,12 +42,12 @@ public class Broker extends BaseDomain {
         this.clusterName = clusterName;
     }
 
-    public long getBrokerID() {
-        return brokerID;
+    public Long getBrokerId() {
+        return brokerId;
     }
 
-    public void setBrokerID(long brokerID) {
-        this.brokerID = brokerID;
+    public void setBrokerId(Long brokerId) {
+        this.brokerId = brokerId;
     }
 
     public String getBrokerName() {
@@ -74,51 +74,51 @@ public class Broker extends BaseDomain {
         this.version = version;
     }
 
-    public double getInTps() {
+    public Double getInTps() {
         return inTps;
     }
 
-    public void setInTps(double inTps) {
+    public void setInTps(Double inTps) {
         this.inTps = inTps;
     }
 
-    public double getOutTps() {
+    public Double getOutTps() {
         return outTps;
     }
 
-    public void setOutTps(double outTps) {
+    public void setOutTps(Double outTps) {
         this.outTps = outTps;
     }
 
-    public double getInTotalYest() {
+    public Long getInTotalYest() {
         return inTotalYest;
     }
 
-    public void setInTotalYest(double inTotalYest) {
+    public void setInTotalYest(Long inTotalYest) {
         this.inTotalYest = inTotalYest;
     }
 
-    public double getInTotalToday() {
+    public Long getInTotalToday() {
         return inTotalToday;
     }
 
-    public void setInTotalToday(double inTotalToday) {
+    public void setInTotalToday(Long inTotalToday) {
         this.inTotalToday = inTotalToday;
     }
 
-    public double getOutTotalYest() {
+    public Long getOutTotalYest() {
         return outTotalYest;
     }
 
-    public void setOutTotalYest(double outTotalYest) {
+    public void setOutTotalYest(Long outTotalYest) {
         this.outTotalYest = outTotalYest;
     }
 
-    public double getOutTotalTodtay() {
+    public Long getOutTotalTodtay() {
         return outTotalTodtay;
     }
 
-    public void setOutTotalTodtay(double outTotalTodtay) {
+    public void setOutTotalTodtay(Long outTotalTodtay) {
         this.outTotalTodtay = outTotalTodtay;
     }
 }

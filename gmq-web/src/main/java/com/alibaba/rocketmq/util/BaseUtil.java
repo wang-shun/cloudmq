@@ -1,6 +1,9 @@
 package com.alibaba.rocketmq.util;
 
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 
 /**
@@ -9,6 +12,7 @@ import java.util.Map;
  */
 public class BaseUtil {
 
+    static final Logger LOGGER = LoggerFactory.getLogger(BaseUtil.class);
 
     public static String readMemoryForJVM() {
         Integer one = 1024 * 1024; // 1M=1024*1024 byte
@@ -29,6 +33,14 @@ public class BaseUtil {
         params.put("total", total);
         params.put("used", total - free);
         return params;
-
     }
+
+    public static void threadSleep(long sleepTime) {
+        try {
+            Thread.sleep(sleepTime);
+        } catch (InterruptedException e) {
+            LOGGER.error("thread sleep error. sleepTime={}ms", sleepTime, e);
+        }
+    }
+
 }

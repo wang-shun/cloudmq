@@ -81,16 +81,16 @@
             </ul>
         </li>
 
-##        <li #if($account_flag) class="$!account_flag" #end data-popover="true" rel="popover" data-placement="right">
-##            <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".account-menu">
-##                <i class="fa fa-fw fa-briefcase"></i> Account<i class="fa fa-collapse"></i>
-##            </a>
-##            <ul class="account-menu nav nav-list collapse">
-##                <li><a href="#"><span class="fa fa-caret-right"></span> Sign In</a></li>
-##                <li><a href="#"><span class="fa fa-caret-right"></span> Sign Up</a></li>
-##                <li><a href="#"><span class="fa fa-caret-right"></span> Reset Password</a></li>
-##            </ul>
-##        </li>
+    #*<li #if($account_flag) class="$!account_flag" #end data-popover="true" rel="popover" data-placement="right">
+        <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".account-menu">
+            <i class="fa fa-fw fa-briefcase"></i> Account<i class="fa fa-collapse"></i>
+        </a>
+        <ul class="account-menu nav nav-list collapse">
+            <li><a href="#"><span class="fa fa-caret-right"></span> Sign In</a></li>
+            <li><a href="#"><span class="fa fa-caret-right"></span> Sign Up</a></li>
+            <li><a href="#"><span class="fa fa-caret-right"></span> Reset Password</a></li>
+        </ul>
+    </li>*#
 
 
         <li #if($namesrv_flag) class="$!namesrv_flag" #end>

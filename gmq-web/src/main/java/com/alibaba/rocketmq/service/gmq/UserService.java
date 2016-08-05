@@ -19,8 +19,10 @@ import com.alibaba.rocketmq.util.MyBeanUtils;
  */
 @Service
 public class UserService extends AbstractService {
+
     @Autowired
     UserDao userDao;
+
     static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
 

@@ -1,6 +1,6 @@
 function ajaxDataController(requestUrl, params, gotoUrl, callback, async, method) {
     if (!method) {
-        throw 'method 参数未设置'
+        throw 'method 参数未设置.'
     }
 
     params = params || {};
@@ -9,6 +9,7 @@ function ajaxDataController(requestUrl, params, gotoUrl, callback, async, method
     $.ajax({
         async: async,
         url: requestUrl,
+        timeout: 3000,
         dataType: 'json',
         data: params,
         type: method,
@@ -23,6 +24,9 @@ function ajaxDataController(requestUrl, params, gotoUrl, callback, async, method
         error: function (xhr) {
             try {
                 console.log("httpStatus=" + xhr.status + ",descition=" + xhr.responseText);
+                if (xhr.status == 'timeout') {
+                    $(this).abort();
+                }
             } catch (e) {
             }
         }

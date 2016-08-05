@@ -1,4 +1,4 @@
-package com.alibaba.rocketmq.service;
+package com.alibaba.rocketmq.service.gmq;
 
 import com.alibaba.rocketmq.common.UtilAll;
 import com.alibaba.rocketmq.common.admin.ConsumeStats;
@@ -9,6 +9,7 @@ import com.alibaba.rocketmq.common.message.MessageQueue;
 import com.alibaba.rocketmq.common.protocol.route.TopicRouteData;
 import com.alibaba.rocketmq.domain.gmq.ConsumerGroup;
 import com.alibaba.rocketmq.domain.gmq.TopicStats;
+import com.alibaba.rocketmq.service.AbstractService;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;

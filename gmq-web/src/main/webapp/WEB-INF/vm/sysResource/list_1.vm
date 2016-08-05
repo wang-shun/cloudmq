@@ -1,0 +1,625 @@
+<div class="main-content">
+    <div style="display:none;" id="currBrokerAddr">$!tbodyData.currBrokerAddr</div>
+    <ul class="nav nav-tabs" id="ulBrokerAddr">
+        #foreach($brokerIp in $!tbodyData.brokerAddrs)
+            <li #if($!tbodyData.currBrokerAddr == $brokerIp) class="active" #end ip="$brokerIp">
+                <a href="#$brokerIp" data-toggle="tab" name="liBroker" addr="$brokerIp">$brokerIp</a>
+            </li>
+        #end
+    </ul>
+
+    <br/>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div id="myTabContent" class="tab-content">
+
+                <div class="tab-pane active in" id="home">
+
+                    <div class="row"> <!-- pie start -->
+                        <div class="col-md-14">
+                            <div id="jvmChartEl" class="col-md-7 pull-left"
+                                 style="width: 400px;height: 400px;float: left;"></div>
+                            <div id="memoryChartEl" class="col-md-7 pull-right"
+                                 style="width: 400px;height: 400px;"></div>
+                        </div>
+
+                        <br/>
+                        <br/>
+                        <hr/>
+                        <br/>
+                        <br/>
+
+                        <div class="col-md-14">
+                            <div id="divInTps" style="display: none;">$!tbodyData.inTps</div>
+                            <div id="inTpsChartEl" class="col-md-7 pull-left"
+                                 style="width: 800px;height: 400px;float: left;">
+                            </div>
+                        </div>
+
+                        <div style="display: none;">
+                            <div id="jvmInit">$!tbodyData.allStats.jvm.init</div>
+                            <div id="jvmUsed">$!tbodyData.allStats.jvm.used</div>
+                            <div id="jvmCommittedd">$!tbodyData.allStats.jvm.committed</div>
+                            <div id="jvmMax">$!tbodyData.allStats.jvm.max</div>
+                            <div id="memoryUsed">$!tbodyData.allStats.memory.used</div>
+                            <div id="memoryTotal">$!tbodyData.allStats.memory.total</div>
+                            <div id="memoryFree">$!tbodyData.allStats.memory.free</div>
+                        </div>
+
+                    #*<div class="col-md-14">
+                        <div class="widget">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <div id="inTpsChartEl" style="width: 400px;height: 400px;"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>*#
+
+                    #**#
+
+                    </div> <!-- pie end -->
+
+                    <br/>
+                    <hr/>
+                    <br/>
+
+                    <div class="row"> <!-- cpu List start-->
+                        <div class="col-md-12">
+                            <div class="panel panel-default">
+                                <div class="panel-heading"><strong>CPU</strong></div>
+                                <table class="table table-bordered table-first-column-check table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th class="col-md-2"><i class="icon-star-empty">index</i></th>
+                                        <th class="col-md-2">vendor</th>
+                                        <th class="col-md-2">mhz</th>
+                                        <th class="col-md-2">model</th>
+                                        <th class="col-md-2">user</th>
+                                        <th class="col-md-2">system</th>
+                                        <th class="col-md-2">idle</th>
+                                        <th class="col-md-2">combined</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($cpu in $tbodyData.allStats.cpuInfo)
+                                        <tr>
+                                            <td class="col-md-2">$velocityCount</td>
+                                            <td class="col-md-2">$cpu.vendor</td>
+                                            <td class="col-md-2">$cpu.mhz</td>
+                                            <td class="col-md-2">$cpu.model</td>
+                                            <td class="col-md-2">$cpu.user</td>
+                                            <td class="col-md-2">$cpu.system</td>
+                                            <td class="col-md-2">$cpu.idle</td>
+                                            <td class="col-md-2">$cpu.combined</td>
+                                        </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div><!-- cpu List end-->
+
+
+                    <br/>
+                    <hr/>
+                    <br/>
+
+                    <div class="row">
+
+                    #*<div class="col-md-3"> <!-- ip Info start -->
+                        <div class="panel panel-default fadeInDown animation-delay2">
+                            <div class="panel-heading">
+                                ip Info
+                            </div>
+                            <div class="panel-body">
+                                <p class="text-sm"><span><span
+                                        class="fa fa-calendar"></span> Updated 6 hours ago</span></p>
+
+                                <p>I am a student at University of Southern California studying lorem ipsum dolor
+                                    sit amet, consectetur
+                                    adipiscing elit. Nullam eros nibh, viverra a dui a, gravida varius velit.
+                                    Vivamus tristique est non
+                                    ipsum dapibus lacinia sed nec metus.
+                                </p>
+                            </div>
+                        </div>
+                    </div> <!-- ip Info end -->*#
+
+
+                        <div class="col-md-5"> <!-- Java Info start-->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">JDK</div>
+                                <div class="panel-body">
+                                    <ul class="list-unstyled list-info">
+                                        <li>
+                                            version&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.version
+                                        </li>
+                                        <li>
+                                            vendor&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.vendor
+                                        </li>
+                                        <li>
+                                            home&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.home
+                                        </li>
+                                        <li>
+                                            specificationVersion&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.specificationVersion
+                                        </li>
+                                        <li>
+                                            specificationName&nbsp;&nbsp;
+                                            $tbodyData.allStats.java.specificationName
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div> <!-- Java Info end-->
+
+
+                        <div class="col-md-5"> <!-- OS Info start -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">OS</div>
+                                <div class="panel-body">
+                                    <ul class="list-unstyled list-info">
+                                        <li>
+                                            osVendorName&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osVendorName
+                                        </li>
+                                        <li>
+                                            osArch&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osArch
+                                        </li>
+                                        <li>
+                                            osDataModel&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osDataModel
+                                        </li>
+                                        <li>
+                                            osDescription&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osDescription
+                                        </li>
+                                        <li>
+                                            osVendorVersion&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osVendorVersion
+                                        </li>
+                                        <li>
+                                            osVersion&nbsp;&nbsp;
+                                            $tbodyData.allStats.os.osVersion
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- OS Info end-->
+
+                    </div>  <!-- OS java Ip info end -->
+
+
+                    <br/>
+                    <hr/>
+                    <br/>
+
+
+                    <div class="row"> <!-- netWork start -->
+                    #*<div class="col-md-12">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                netWork
+                            </div>
+                            <table class="table table-bordered table-first-column-check table-hover">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-1"><i class="icon-star-empty"></i></th>
+                                    <th class="col-md-2">From</th>
+                                    <th class="col-md-8">Subject</th>
+                                    <th class="col-md-3">Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                                    <td><strong>John Doe</strong></td>
+                                    <td><strong>Message body goes in here</strong> <span
+                                            class="label label-success pull-right"
+                                            style="margin-left: .5em;">Follow Up </span>
+                                        <span class="label label-info pull-right">Work</span></td>
+                                    <td><strong>11:23 PM</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                                    <td>John Doe</td>
+                                    <td>Message body goes in here <span class="label label-success pull-right">Follow Up</span>
+                                    </td>
+                                    <td>Sept4</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#"><i class="fa fa-star"></i></a></td>
+                                    <td>John Doe</td>
+                                    <td>Message body goes in here <span class="label label-important pull-right">Spam</span>
+                                    </td>
+                                    <td><strong>Sept3</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#"><i class="fa fa-star-o"></i></a></td>
+                                    <td>John Doe</td>
+                                    <td>Message body goes in here <span class="label pull-right">Personal</span>
+                                    </td>
+                                    <td><strong>Sept3</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="#"><i class="fa fa-star"></i></a></td>
+                                    <td><strong>John Doe</strong></td>
+                                    <td><strong>Message body goes in here</strong> <span class="label pull-right">Personal</span>
+                                    </td>
+                                    <td><strong>Sept3</strong></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>*#
+                    </div> <!-- netWork end -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="$root/js/echarts/echarts-all.js"></script>
+<script type="text/javascript" src="$root/js/common/gmq-echarts.js"></script>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        var bgColor = "#D0D2EB";
+        var currBrokerAddr = $("#currBrokerAddr").html();
+        $("#ulBrokerAddr li a[addr='" + currBrokerAddr + "']").css("background-color", bgColor);
+
+        /*$("#ulBrokerAddr li").on("click", "a", function () {
+            var addr = $(this).attr("addr");
+            $("#ulBrokerAddr li a[name='liBroker']").each(function (i, el) {
+                var tmpAddr = $(el).attr("addr");
+                if (addr === tmpAddr) {
+                    $(el).css("background-color", bgColor);
+                } else {
+                    $(el).css("background-color", "#FFFFFF");
+                }
+            });
+        });*/
+
+        $("#ulBrokerAddr a").click(function (e) {
+            e.preventDefault();
+            var currBrokerAddr = $(this).attr("addr");
+            var allStatsUrl = "$root/sysResource/allStats.do?brokerAddr=" + currBrokerAddr;
+            XUI.gotoPageHref(allStatsUrl);
+        })
+
+
+        function buildJVM() {
+            var jvm = {};
+            jvm.domEl = $("#jvmChartEl")[0];
+            jvm.title = "JVM";
+            jvm.brokerAddr = "";
+            jvm.subTitle = "";
+            jvm.legendData = new Array();
+            jvm.seriesData = new Array();
+            jvm.yName = "单位(M)";
+
+            var tmpArray = initJVMData();
+            $(tmpArray).each(function (index, el) {
+                jvm.legendData.push(el.name);
+                var data = {};
+                data.name = el.name;
+                data.value = el.value;
+                jvm.seriesData.push(data);
+            });
+
+            return jvm;
+        }
+
+        function buildMemory() {
+            var memory = {};
+            memory.domEl = $("#memoryChartEl")[0];
+            memory.title = "Memory";
+            memory.brokerAddr = ""; // $("#ulBrokerAddr li[class='active']").attr("ip");
+            memory.subTitle = "";
+            memory.legendData = new Array();
+            memory.seriesData = new Array();
+            memory.yName = "单位(M)";
+
+            var tmpArray = initMemoryData();
+            $(tmpArray).each(function (index, el) {
+                memory.legendData.push(el.name);
+                var data = {};
+                data.name = el.name;
+                data.value = el.value;
+                memory.seriesData.push(data);
+            });
+
+            return memory;
+        }
+
+        function initJVMData() {
+            var dataArray = new Array();
+            try {
+                var data = {};
+                data.key = "init";
+                data.name = "初始化";
+                data.value = $("#jvmInit").html();
+                dataArray.push(data);
+
+                data = {};
+                data.key = "used";
+                data.name = "已使用";
+                data.value = $("#jvmUsed").html();
+                dataArray.push(data);
+
+                data = {};
+                data.key = "committed";
+                data.name = "已申请";
+                data.value = $("#jvmCommitted").html();
+                dataArray.push(data);
+
+                data = {};
+                data.key = "max";
+                data.name = "最大值";
+                data.value = $("#jvmMax").html();
+                dataArray.push(data);
+            } catch (e) {
+                console.log(e);
+            }
+            return dataArray;
+        }
+
+        function initMemoryData() {
+            var dataArray = new Array();
+            try {
+                var data = {};
+                data.key = "total";
+                data.name = "总内存";
+                data.value = $("#memoryTotal").html();
+                dataArray.push(data);
+
+                data = {};
+                data.key = "used";
+                data.name = "已用内存";
+                data.value = $("#memoryTotal").html();
+                dataArray.push(data);
+
+                data = {};
+                data.key = "free";
+                data.name = "空闲内存";
+                data.value = $("#memoryFree").html();
+                dataArray.push(data);
+            } catch (e) {
+                console.log(e);
+            }
+
+
+            return dataArray;
+        }
+
+        function initInTps() {
+            var dataArray = new Array();
+            var data = {};
+            var tpsHtml = $("#divInTps").html();
+            var tpsJson = jQuery.parseJSON(tpsHtml);
+            $.each(tpsJson.inTps, function (index, el) {
+                data = {};
+                data.name = el.name;
+                data.value = el.value;
+                dataArray.push(data);
+            });
+            return dataArray;
+        }
+
+        function buildInTps() {
+            var inTps = {};
+            inTps.domEl = $("#inTpsChartEl")[0];
+            inTps.title = "Broker动态TPS";
+            inTps.brokerAddr = "";
+            inTps.subTitle = "";
+            inTps.legendData = new Array();
+            inTps.legendData.push("发送TPS");
+            inTps.seriesData = initInTps();
+            return inTps;
+        }
+
+
+        var jvm = buildJVM();
+        buildPieEchart(jvm.domEl, jvm.title, jvm.subTitle, jvm.legendData, null, jvm.yName, null, jvm.seriesData, jvm.brokerAddr);
+
+        var memory = buildMemory();
+        buildPieEchart(memory.domEl, memory.title, memory.subTitle, memory.legendData, null, memory.yName, null, memory.seriesData, memory.brokerAddr);
+
+        // localhost/sysResource/queryBrokerTps.do?brokerAddr=10.128.31.103
+        /*var brokerTpsAction = "/sysResource/queryBrokerTps.do?brokerAddr=" + currBrokerAddr;
+        console.log("brokerTpsAction=" + brokerTpsAction);
+        var data = new Object();
+        var ajaxHandler = new ajaxDataController(brokerTpsAction, JSON.stringify(data), null, inTpsCallBack, false, "get");
+        var inTpsDataArray = new Array();*/
+
+        /* var inTps = buildInTps();
+         buildLineEchart(inTps.domEl, inTps.title, inTps.seriesData);*/
+
+
+        var tmpLength = 20;
+
+        var option = {
+            title: {
+                text: 'Broker动态TPS'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['消息发送TPS']
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: true,
+                    /* data:function () {
+                        return addXAxisData;
+                     }*/
+                    data: function () {
+                        return lastDataList;
+                        /*var now = new Date();
+                        var res = [];
+                        var len = tmpLength;
+                        while (len--) {
+                            res.unshift(now.toLocaleTimeString().replace(/^\D*!/, ''));
+                            now = new Date(now - 2000);
+                        }
+                        return res;*/
+                    }
+                    /* data: (function () {
+                         var now = new Date();
+                         var res = [];
+                         var len = 20;
+                         while (len--) {
+                             res.unshift(now.toLocaleTimeString().replace(/^\D*!/, ''));
+                             now = new Date(now - 2000);
+                         }
+                         return res;
+                     })()*/
+                }
+                /* ,
+                 {
+                     type : 'category',
+                     boundaryGap : true,
+                     data : (function (){
+                         var res = [];
+                         var len = 10;
+                         while (len--) {
+                             res.push(len + 1);
+                         }
+                         return res;
+                     })()
+                 }*/
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    scale: true,
+                    name: "条/秒",
+                    boundaryGap: [0.2, 0.2]
+                }
+                /*,
+                {
+                    type : 'value',
+                    scale: true,
+                    name : '每秒/条',
+                    boundaryGap: [0.3, 0.3]
+                }*/
+            ],
+            series: [
+                {
+                    name: '发送端TPS',
+                    type: 'line',
+                    data: (function () {
+                        return axisDataList;
+                        /*var res = [];
+                        var len = tmpLength;
+                        while (len--) {
+                            res.push(Math.round(Math.random() * 1000));
+                        }
+                        return res;*/
+                    })()
+                }
+                /* ,
+                 {
+                     name:'消费端TPS',
+                     type:'line',
+                     data:(function (){
+                         var res = [];
+                         var len = 10;
+                         while (len--) {
+                             res.push((Math.random()*10 + 5).toFixed(1) - 0);
+                         }
+                         return res;
+                     })()
+                 }*/
+            ]
+        };
+
+        //初始化显示图形的Dom元素
+        var myChart = echarts.init($("#inTpsChartEl")[0]);
+
+        //显示图形
+        myChart.setOption(option);
+
+        var lastData = 0;
+        var axisData = 0;
+
+        clearInterval(timeTicket);
+
+        var timeTicket = setInterval(timeTicketCallBack, 5000);
+
+        var ajaxHandler = null;
+
+        function timeTicketCallBack() {
+            var brokerAddr = $("#currBrokerAddr").html();
+            if (brokerAddr && brokerAddr.length > 0) {
+                var tpsUrl = "$root/sysResource/queryBrokerTps.do?brokerAddr=" + brokerAddr + "&random=" + Math.random();
+                console.log("tpsUrl=" + tpsUrl);
+                ajaxHandler = new ajaxDataController(tpsUrl, JSON.stringify(new Object()), null, ajaxCallBack, false, 'get');
+            }
+        }
+
+        var lastDataList = new Array();
+        var axisDataList = new Array();
+
+        function addXAxisData(timeData) {
+            //var res = [];
+            lastDataList.push(timeData);
+            while (lastDataList.length > tmpLength) {
+                lastDataList.shift();
+            }
+            // return res;
+        }
+
+        function addYAxisData(inTps) {
+            axisDataList.push(inTps);
+            while (axisDataList.length > tmpLength) {
+                axisDataList.shift();
+            }
+        }
+
+        function ajaxCallBack(data) {
+
+            lastData = data.tps.inTps[0].name; //时间戳
+            axisData = data.tps.inTps[0].value;//inTps
+
+            addXAxisData(lastData);
+            addYAxisData(axisData);
+
+            // seriesIdx, data, isHead, dataGrow, additionData
+            // 动态数据接口 addData
+            myChart.addData(axisData, lastData);
+            /*myChart.addData([
+                [
+                    0,        // 系列索引
+                    axisData, // 新增数据 Math.round(Math.random() * 1000)
+                    true,     // 新增数据是否从队列头部插入
+                    false     // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+                ],
+                [
+                    1,        // 系列索引
+                    lastData, // 新增数据
+                    false,    // 新增数据是否从队列头部插入
+                    false,    // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+                    axisData  // 坐标轴标签
+                ]
+            ]);*/
+        }
+    });
+
+</script>

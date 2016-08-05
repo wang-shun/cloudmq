@@ -17,6 +17,7 @@ import java.util.Date;
  * @since 2015-06-16
  */
 public class BaseDomain extends BaseQuery {
+
     private static final long serialVersionUID = 1L;
 
     private Integer id;// 编号id可以保存uuid也可以保存id，get如果id为空，则取uuid

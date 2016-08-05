@@ -3,11 +3,11 @@ package com.alibaba.rocketmq.service.gmq;
 import com.alibaba.rocketmq.dao.BrokerDao;
 import com.alibaba.rocketmq.domain.gmq.BrokerExt;
 import com.alibaba.rocketmq.service.AbstractService;
-import com.alibaba.rocketmq.service.GMQSysResourceService;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ import java.util.List;
  * @author: tianyuliang
  * @since: 2016/8/1
  */
+@Service
 public class BrokerTaskService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BrokerTaskService.class);

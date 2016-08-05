@@ -28,7 +28,7 @@
     </bean>
 
     <bean id="cmdValidator" class="com.alibaba.rocketmq.validate.CmdValidator">
-        <property name="throwDone" value="${throwDone}"/>
+        <property name="throwDone" value="${gmq.cmdValidator.throwDone}"/>
     </bean>
 
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">

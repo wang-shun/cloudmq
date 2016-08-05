@@ -1,7 +1,7 @@
 package com.alibaba.rocketmq.action;
 
 import com.alibaba.rocketmq.domain.gmq.TopicStats;
-import com.alibaba.rocketmq.service.GMQGroupService;
+import com.alibaba.rocketmq.service.gmq.GMQGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

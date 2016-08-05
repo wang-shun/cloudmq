@@ -35,12 +35,12 @@
                 <tbody>
                     #foreach($broker in $!cluster.brokerList)
                     <tr>
-                        <td>$!{broker.brokerID}</td>
+                        <td>$!{broker.brokerId}</td>
                         <td>$!{broker.addr}</td>
                         <td>$!{broker.brokerName}</td>
                         <td>$!{broker.version}</td>
-                        <td>$!{broker.inTPS}</td>
-                        <td>$!{broker.outTPS}</td>
+                        <td>$!{broker.inTps}</td>
+                        <td>$!{broker.outTps}</td>
                         <td>$!{broker.inTotalToday}</td>
                         <td>$!{broker.outTotalTodtay}</td>
                         <td>$!{broker.inTotalYest}</td>
@@ -66,21 +66,4 @@
         function add() {
             window.location.href = "broker/brokerStats.do";
         }
-
-        function showModal(userId) {
-            console.log("userId=" + userId);
-            alert("userId=" + userId);
-            $("#myModalBodySpan").text("userId=" + userId);
-            $("#btnDelUser").attr("data-value", userId);
-            $("#myModal").modal("show");
-        }
-
-        function delUser() {
-            var id = $("#btnDelUser").attr("data-value");
-            var data = new Object();
-            data.id = Number(id);
-            var returnUrl = "list.do";
-            var ajaxHandler = new ajaxDataController("$root/user/delete.do", JSON.stringify(data), returnUrl, null, false, 'delete');
-        }
-
     </script>

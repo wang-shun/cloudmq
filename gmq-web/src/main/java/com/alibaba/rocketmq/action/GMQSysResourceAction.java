@@ -1,6 +1,6 @@
 package com.alibaba.rocketmq.action;
 
-import com.alibaba.rocketmq.domain.gmq.Broker;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.domain.system.MemoryInfo;
 import com.alibaba.rocketmq.util.BaseUtil;
 import com.google.common.collect.Maps;
@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.alibaba.rocketmq.service.GMQSysResourceService;
+import com.alibaba.rocketmq.service.gmq.GMQSysResourceService;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -62,13 +63,25 @@ public class GMQSysResourceAction extends AbstractAction {
         putPublicAttribute(map, "list");
         try {
             Map<String, Object> params = Maps.newHashMap();
-            List<String> brokerAddrs = sysResourceService.getBrokerAddrs();
+            List<String> brokerAddrs = getBrokerAddrList("allStats");
             params.put("brokerAddrs", brokerAddrs);
-            logger.info("broker ip list: {}", StringUtils.join(brokerAddrs, ","));
 
             Map<String, Object> allStats = sysResourceService.getAllStats(brokerAddr.trim());
             params.put("allStats", allStats);
             params.put("currBrokerAddr", brokerAddr.trim());
+
+            Map<String, Object> tps = sysResourceService.queryBrokers(brokerAddr.trim());
+            List<Map<String, Object>> inTps = (List<Map<String, Object>>) tps.get("inTps");
+            JSONObject inTpsObj = new JSONObject();
+            inTpsObj.put("inTps", inTps);
+
+            List<Map<String, Object>> outTps = (List<Map<String, Object>>) tps.get("outTps");
+            JSONObject outTpsObj = new JSONObject();
+            outTpsObj.put("outTpsObj", outTps);
+
+            params.put("inTps", inTpsObj.toJSONString());
+            params.put("outTps", outTpsObj.toJSONString());
+
             putTable(map, params);
         } catch (Throwable t) {
             logger.error("get all stats error. ", t);
@@ -79,10 +92,10 @@ public class GMQSysResourceAction extends AbstractAction {
 
 
     @RequestMapping(value = "/main.do", method = {RequestMethod.GET, RequestMethod.POST})
-    public String main(ModelMap map, HttpServletRequest request) {
+    public String main(ModelMap map) {
         putPublicAttribute(map, "main");
         try {
-            List<String> brokerAddrs = sysResourceService.getBrokerAddrs();
+            List<String> brokerAddrs = getBrokerAddrList("main");
             Map<String, Object> navigation = Maps.newHashMap();
             String firstBroker = CollectionUtils.isNotEmpty(brokerAddrs) ? brokerAddrs.get(0) : "";
             navigation.put("firstBroker", firstBroker);
@@ -94,18 +107,54 @@ public class GMQSysResourceAction extends AbstractAction {
         return TEMPLATE;
     }
 
-    /*@RequestMapping(value = "brokerList", method = {RequestMethod.GET, RequestMethod.POST})
-    public String brokerList(ModelMap map, HttpServletRequest request, @RequestParam(required = true) String brokerAddr) {
-        putPublicAttribute(map, "list");
+    @RequestMapping(value = "queryBrokerTps", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String brokerList(ModelMap map, HttpServletRequest request,
+                             @RequestParam(required = true) String brokerAddr,
+                             @RequestParam(required = false) String random) {
         try {
-            List<Broker> brokers = sysResourceService.doBrokerList();
-            putNavigation(map, brokers);
+            Map<String, Object> params = Maps.newHashMap();
+            Map<String, Object> tps = sysResourceService.queryBrokers(brokerAddr.trim());
+            List<Map<String, Object>> inTps = (List<Map<String, Object>>) tps.get("inTps");
+            JSONObject inTpsObj = new JSONObject();
+            inTpsObj.put("inTps", inTps);
+
+            List<Map<String, Object>> outTps = (List<Map<String, Object>>) tps.get("outTps");
+            JSONObject outTpsObj = new JSONObject();
+            outTpsObj.put("outTpsObj", outTps);
+
+            params.put("inTps", inTpsObj.toJSONString());
+            params.put("outTps", outTpsObj.toJSONString());
+
+            JSONObject tpsObj = new JSONObject();
+            tpsObj.put("tps", params);
+            //logger.info("tps=" + tpsObj.toJSONString());
+            return tpsObj.toJSONString();
         } catch (Throwable t) {
-            logger.error("get broker list error. msg={}", t.getMessage(), t);
-            putAlertMsg(t, map);
+            logger.error("query broker tps error. msg={}", t.getMessage(), t);
+            return "{\"result\":\"" + t.getMessage() + "\"}";
         }
-        return TEMPLATE;
-    }*/
+    }
+
+
+    /**
+     * 最多重复10次获取brokerAddrs列表，以防止UI页面无数据
+     *
+     * @author tianyuliang
+     * @since 2016/8/4
+     */
+    private List<String> getBrokerAddrList(String methodName) throws Throwable {
+        List<String> brokerAddrs = sysResourceService.getBrokerAddrs();
+        int repeat = 0;
+        while (CollectionUtils.isEmpty(brokerAddrs) && repeat < 10) {
+            BaseUtil.threadSleep(20);
+            brokerAddrs = sysResourceService.getBrokerAddrs();
+            repeat++;
+        }
+        logger.info("repeat {} times in {}() method to get brokerAddrs {}", repeat, methodName, brokerAddrs);
+        return brokerAddrs;
+    }
+
 
     @Override
     protected String getFlag() {

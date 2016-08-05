@@ -1,10 +1,12 @@
-package com.alibaba.rocketmq.service;
+package com.alibaba.rocketmq.service.gmq;
 
 import java.util.*;
 
 import com.alibaba.rocketmq.domain.gmq.Broker;
 import com.alibaba.rocketmq.domain.gmq.BrokerExt;
 import com.alibaba.rocketmq.domain.gmq.Cluster;
+import com.alibaba.rocketmq.service.AbstractService;
+import com.alibaba.rocketmq.service.ClusterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -102,7 +104,7 @@ public class GMQClusterService extends AbstractService {
                     broker.setBrokerName(brokerName);
                     Map.Entry<Long, String> addr = itAddr.next();
                     broker.setAddr(addr.getValue());
-                    broker.setBrokerID(addr.getKey().longValue());
+                    broker.setBrokerId(addr.getKey().longValue());
                     brokerList.add(broker(broker, defaultMQAdminExt.fetchBrokerRuntimeStats(addr.getValue())));
                 }
             }

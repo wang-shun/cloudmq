@@ -1,10 +1,11 @@
-package com.alibaba.rocketmq.service;
+package com.alibaba.rocketmq.service.gmq;
 
 import com.alibaba.rocketmq.common.TopicConfig;
 import com.alibaba.rocketmq.common.protocol.body.TopicList;
 import com.alibaba.rocketmq.common.protocol.route.QueueData;
-import com.alibaba.rocketmq.domain.gmq.Broker;
+import com.alibaba.rocketmq.config.ConfigureInitializer;
 import com.alibaba.rocketmq.domain.gmq.Cluster;
+import com.alibaba.rocketmq.service.AbstractService;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.tools.command.CommandUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -24,7 +25,10 @@ import java.util.*;
 @Service
 public class GMQTopicService extends AbstractService {
 
-    static final Logger logger = LoggerFactory.getLogger(GMQTopicService.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(GMQTopicService.class);
+
+    @Autowired
+    ConfigureInitializer configureInitializer;
 
     @Autowired
     GMQClusterService clusterService;
@@ -58,12 +62,12 @@ public class GMQTopicService extends AbstractService {
             defaultMQAdminExt.start();
             Set<String> masterSet = CommandUtil.fetchMasterAddrByClusterName(defaultMQAdminExt, clusterName);
             for (String addr : masterSet) {
-                logger.info(operation + " topic. topic=" + topicName + ",masterAddr=" + addr);
+                LOGGER.info(operation + " topic. topic=" + topicName + ",masterAddr=" + addr);
                 defaultMQAdminExt.createAndUpdateTopicConfig(addr, topicConfig);
             }
             return true;
         } catch (Throwable e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             t = e;
         } finally {
             shutdownDefaultMQAdminExt(defaultMQAdminExt);
@@ -83,10 +87,10 @@ public class GMQTopicService extends AbstractService {
                 throw new IllegalStateException("defaultMQAdminExt.fetchAllTopicList() is blank.");
             }
             topics.addAll(topicList.getTopicList());
-            logger.info("all topic size=" + topics.size());
+            LOGGER.info("all topic size=" + topics.size());
             return topics;
         } catch (Throwable e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             t = e;
         } finally {
             shutdownDefaultMQAdminExt(defaultMQAdminExt);
@@ -107,7 +111,7 @@ public class GMQTopicService extends AbstractService {
 
             adminExt.start();
             Set<String> masterSet = CommandUtil.fetchMasterAddrByClusterName(adminExt, clusterName);
-            logger.info("delete topic in broker. topic=" + topicName + ",clusterName=" + clusterName);
+            LOGGER.info("delete topic in broker. topic=" + topicName + ",clusterName=" + clusterName);
             adminExt.deleteTopicInBroker(masterSet, topicName);
 
             Set<String> nameServerSet = null;
@@ -115,11 +119,11 @@ public class GMQTopicService extends AbstractService {
                 String[] ns = configureInitializer.getNamesrvAddr().split(";");
                 nameServerSet = new HashSet<String>(Arrays.asList(ns));
             }
-            logger.info("delete topic in nameServer. topic=" + topicName + ",clusterName=" + clusterName);
+            LOGGER.info("delete topic in nameServer. topic=" + topicName + ",clusterName=" + clusterName);
             adminExt.deleteTopicInNameServer(nameServerSet, topicName);
             return true;
         } catch (Throwable e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             t = e;
         } finally {
             shutdownDefaultMQAdminExt(adminExt);
@@ -147,7 +151,7 @@ public class GMQTopicService extends AbstractService {
             List<QueueData> queueDatas = adminExt.examineTopicRouteInfo(topicName).getQueueDatas();
             return CollectionUtils.isEmpty(queueDatas) ? null : queueDatas.get(0);
         } catch (Throwable e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             t = e;
         } finally {
             shutdownDefaultMQAdminExt(adminExt);
