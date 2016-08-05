@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 
-    <property name="LOG_HOME" value="${user.home}/logs/consolelogs"/>
+    <property name="LOG_HOME" value="${CATALINA_HOME}/logs/gmq"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder charset="UTF-8" class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
