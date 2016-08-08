@@ -22,10 +22,11 @@ import java.util.concurrent.Executors;
  */
 public class BenchmarkProducer {
 
-    static final String topic = "BenchmarkTopicTest";
+    static final String topic = "TopicTestMQ";
+    static final String producerGroupId = "BenchmarkTpsGroupId";
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 6400;
+        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 10;
         final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
         final boolean keyEnable = args.length >= 3 ? Boolean.parseBoolean(args[2]) : false;
 
@@ -78,7 +79,7 @@ public class BenchmarkProducer {
             }
         }, 10000, 10000);
 
-        final DefaultMQProducer producer = new DefaultMQProducer("benchmark_test_producer");  // MyUtils.getDefaultCluster()
+        final DefaultMQProducer producer = new DefaultMQProducer(producerGroupId);  // MyUtils.getDefaultCluster()
         producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         producer.setCompressMsgBodyOverHowmuch(Integer.MAX_VALUE);
         producer.start();

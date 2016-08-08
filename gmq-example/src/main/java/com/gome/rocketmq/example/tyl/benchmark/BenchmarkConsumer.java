@@ -23,7 +23,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class BenchmarkConsumer {
 
-    static final String topic = "BenchmarkTopicTest";
+    static final String topic = "TopicTestMQ";
+    static final String producerGroupId = "BenchmarkTpsGroupId";
 
     public static void main(String[] args) throws MQClientException {
         final DecimalFormat df = new DecimalFormat("0000.000");
@@ -75,7 +76,7 @@ public class BenchmarkConsumer {
         }, 10000, 10000);
 
 
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("benchmark_test_consumer");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(producerGroupId);
         consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         consumer.subscribe(topic, "*");
         consumer.registerMessageListener(new MessageListenerConcurrently() {

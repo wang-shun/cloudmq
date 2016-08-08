@@ -20,13 +20,14 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2016/6/24
  */
 public class PullProducer {
-    final static int nThread = 30;
-    final static int sendOneTime = 20000;
-    final static String topicName = "pullTest";
+    final static int nThread = 2;
+    final static int sendOneTime = 20;
+    final static String topicName = "pullTopicTest";  //  BenchmarkTest    pullTopicTest ? why not work in dev ??
 
     public static void main(String[] args) throws MQClientException {
         final AtomicLong success = new AtomicLong(0);
-        final DefaultMQProducer producer = new DefaultMQProducer(MyUtils.getDefaultCluster());
+        final DefaultMQProducer producer = new DefaultMQProducer("PROJECT_test123");
+        System.out.println("namesrv=" + MyUtils.getNamesrvAddr());
         producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         producer.start();
 
