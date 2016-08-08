@@ -10,6 +10,7 @@ import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.gome.rocketmq.common.MyUtils;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author: tianyuliang
@@ -18,24 +19,24 @@ import java.util.List;
 public class BroadCastConsumer1 {
     public static void main(String[] args) throws InterruptedException, MQClientException {
         try {
-            final DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(MyUtils.getDefaultCluster());
+            final AtomicLong success = new AtomicLong(0L);
+            final DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("destroyConsumerGroup_5");
             consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
-            consumer.subscribe("broadcastTopicTest", "*");
+            consumer.subscribe("flow_topic", "*");
             consumer.setMessageModel(MessageModel.BROADCASTING);
-            consumer.setInstanceName("instanceName1111");
             consumer.registerMessageListener(new MessageListenerConcurrently() {
                 @Override
                 public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                     for (MessageExt msg : msgs) {
                         System.out.println("consumer=" + consumer.getConsumerGroup()
-                                + ", instanceName=" + consumer.getInstanceName() + ", msgId=" + new String(msg.getMsgId())
+                                + ", success=" + success.incrementAndGet() + ", msgId=" + new String(msg.getMsgId())
                                 + ", queueId=" + msg.getQueueId() + ",offset=" + msg.getQueueOffset());
                     }
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
             });
             consumer.start();
-            System.out.println("PullConsumer Started.");
+            System.out.println("PushConsumer Started.");
         } catch (Exception e) {
             e.printStackTrace();
         }

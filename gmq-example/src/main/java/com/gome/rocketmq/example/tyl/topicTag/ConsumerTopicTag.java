@@ -1,9 +1,7 @@
 package com.gome.rocketmq.example.tyl.topicTag;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
-import com.alibaba.rocketmq.client.consumer.listener.MessageListenerOrderly;
+import com.alibaba.rocketmq.client.consumer.listener.*;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
@@ -20,21 +18,18 @@ import java.util.List;
 public class ConsumerTopicTag {
 
     public static void main(String[] args) throws MQClientException {
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(MyUtils.getDefaultCluster());
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("destroyConsumerGroup_3");
         consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
-        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-        consumer.subscribe("orderTopic001", "tagA || tagC");
-        consumer.subscribe("orderTopicTest", "*");
-        consumer.subscribe("topicMaxNumTest24", "orderId-900");
+        consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
+        consumer.subscribe("flow_topic", "*");
 
-        consumer.registerMessageListener(new MessageListenerOrderly() {
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
             @Override
-            public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
-                //System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs.toString());
+            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                 for (MessageExt msg : msgs) {
-                    System.out.println(Thread.currentThread().getName()+" topic:"+msg.getTopic()+",body:" + new String(msg.getBody()) + ",tags=" + msg.getTags());
+                    System.out.println(Thread.currentThread().getName() + " topic:" + msg.getTopic() + ",body:" + new String(msg.getBody()) + ",tags=" + msg.getTags());
                 }
-                return ConsumeOrderlyStatus.SUCCESS;
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
         consumer.start();
