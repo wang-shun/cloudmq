@@ -1,20 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    #set($root=$link.getContextPath())
+  <head>
+	#set($root=$link.getContextPath())
 	#parse("head.vm")
-	#parse("head-js.vm")
-</head>
-<body class="theme-blue" role="document">
+  </head>
+  <body role="document">
     #parse("navbar.vm")
-    <div class="content" role="main">
-        #parse("content-head.vm")
-        #parse("msg.vm")
-        <!--changed part begin-->
-        #parse($bodyPage)
-        <!--changed part end -->
+    <div class="container theme-showcase" role="main">
+    	#parse("msg.vm")
+    	<!--changed part begin-->
+		#parse($bodyPage)
+		<!--changed part end -->
         #parse("foot.vm")
     </div>
-    #parse("body-js.vm")
-</body>
+	#parse("js.vm")
+  </body>
 </html>

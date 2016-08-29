@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="1564.0771743712467" y="1757.993286855575">com.alibaba.rocketmq.namesrv.routeinfo.BrokerLiveInfo</node>
+    <node x="801.4982602430505" y="1281.4864258401435">com.alibaba.rocketmq.namesrv.NamesrvStartup</node>
+    <node x="683.1125235638006" y="696.2713905713662">com.alibaba.rocketmq.namesrv.kvconfig.KVConfigManager</node>
+    <node x="1709.615519261782" y="1045.8075962719727">com.alibaba.rocketmq.namesrv.routeinfo.BrokerHousekeepingService</node>
+    <node x="786.2330286979607" y="1548.6819600164663">com.alibaba.rocketmq.namesrv.routeinfo.RouteInfoManager</node>
+    <node x="739.9999999999995" y="494.96106831646125">com.alibaba.rocketmq.namesrv.kvconfig.KVConfigSerializeWrapper</node>
+    <node x="1166.8059970965403" y="940.5423552141076">com.alibaba.rocketmq.namesrv.NamesrvController</node>
+    <node x="1321.4666213059434" y="254.99999999999977">com.alibaba.rocketmq.namesrv.processor.DefaultRequestProcessor</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.alibaba.rocketmq.namesrv.routeinfo.BrokerHousekeepingService" target="com.alibaba.rocketmq.namesrv.NamesrvController">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.NamesrvStartup" target="com.alibaba.rocketmq.namesrv.NamesrvController">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.NamesrvController" target="com.alibaba.rocketmq.namesrv.routeinfo.BrokerHousekeepingService">
+      <point x="0.0" y="-10.008991432373485" />
+      <point x="0.0" y="-10.008991432373485" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.NamesrvController" target="com.alibaba.rocketmq.namesrv.routeinfo.RouteInfoManager">
+      <point x="4.878594747173878" y="-1.0951316326576668" />
+      <point x="4.878594747173878" y="-1.0951316326576261" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.routeinfo.RouteInfoManager" target="com.alibaba.rocketmq.namesrv.routeinfo.BrokerLiveInfo">
+      <point x="-5.124426457943116" y="0.0" />
+      <point x="-5.124426457943116" y="0.0" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.kvconfig.KVConfigManager" target="com.alibaba.rocketmq.namesrv.kvconfig.KVConfigSerializeWrapper">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.NamesrvController" target="com.alibaba.rocketmq.namesrv.processor.DefaultRequestProcessor">
+      <point x="-5.427015857068677" y="0.0" />
+      <point x="-5.427015857068682" y="0.0" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.kvconfig.KVConfigManager" target="com.alibaba.rocketmq.namesrv.NamesrvController">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.NamesrvController" target="com.alibaba.rocketmq.namesrv.kvconfig.KVConfigManager">
+      <point x="0.0" y="11.99442909527852" />
+      <point x="0.0" y="11.994429095278463" />
+    </edge>
+    <edge source="com.alibaba.rocketmq.namesrv.processor.DefaultRequestProcessor" target="com.alibaba.rocketmq.namesrv.NamesrvController">
+      <point x="4.606583186492344" y="1.944065674283138" />
+      <point x="4.606583186492353" y="1.944065674283142" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5000000000000001" x="1686.9999999999998" y="1258.9999999999998" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Properties</Category>
+    <Category>Methods</Category>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

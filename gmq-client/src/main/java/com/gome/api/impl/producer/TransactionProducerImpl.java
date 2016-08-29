@@ -93,7 +93,7 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
             sendResultRMQ = this.transactionMQProducer.sendMessageInTransaction(msgRMQ, new com.alibaba.rocketmq.client.producer.LocalTransactionExecuter() {
                 public LocalTransactionState executeLocalTransactionBranch(com.alibaba.rocketmq.common.message.Message msg, Object arg) {
                     String msgId = msg.getProperty("__transactionId__");
-                    message.setTransactionMsgId(msgId);
+                    message.setMsgID(msgId);
                     TransactionStatus transactionStatus = executer.execute(message, arg);
                     return TransactionStatus.CommitTransaction == transactionStatus?LocalTransactionState.COMMIT_MESSAGE:(TransactionStatus.RollbackTransaction == transactionStatus?LocalTransactionState.ROLLBACK_MESSAGE:LocalTransactionState.UNKNOW);
                 }

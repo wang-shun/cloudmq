@@ -142,18 +142,30 @@ public class BrokerController {
         this.nettyServerConfig = nettyServerConfig;
         this.nettyClientConfig = nettyClientConfig;
         this.messageStoreConfig = messageStoreConfig;
+        // 消费者消费进度offset管理
         this.consumerOffsetManager = new ConsumerOffsetManager(this);
+        // topic配置管理
         this.topicConfigManager = new TopicConfigManager(this);
+        // 拉消息请求处理
         this.pullMessageProcessor = new PullMessageProcessor(this);
+        // 拉消息请求管理，如果拉不到消息，则在这里Hold住，等待消息到来
         this.pullRequestHoldService = new PullRequestHoldService(this);
         this.defaultTransactionCheckExecuter = new DefaultTransactionCheckExecuter(this);
+        // ConsumerId列表变化，通知所有Consumer
         this.consumerIdsChangeListener = new DefaultConsumerIdsChangeListener(this);
+        // Consumer连接、订阅关系管理
         this.consumerManager = new ConsumerManager(this.consumerIdsChangeListener);
+        // 管理Producer组及各个Producer连接
         this.producerManager = new ProducerManager();
+        // 定期检测客户端连接，清除不活动的连接
         this.clientHousekeepingService = new ClientHousekeepingService(this);
+        // Broker主动调用客户端接口
         this.broker2Client = new Broker2Client(this);
+        // 用来管理订阅组，包括订阅权限等
         this.subscriptionGroupManager = new SubscriptionGroupManager(this);
+        // Broker对外调用的API封装
         this.brokerOuterAPI = new BrokerOuterAPI(nettyClientConfig);
+        // filterServer过滤管理
         this.filterServerManager = new FilterServerManager(this);
 
         if (this.brokerConfig.getNamesrvAddr() != null) {
@@ -161,14 +173,18 @@ public class BrokerController {
             log.info("user specfied name server address: {}", this.brokerConfig.getNamesrvAddr());
         }
 
+        // Slave从Master同步信息（非消息）
         this.slaveSynchronize = new SlaveSynchronize(this);
 
+        // 发送消息对应的线程池阻塞队列size默认10w个
         this.sendThreadPoolQueue =
                 new LinkedBlockingQueue<Runnable>(this.brokerConfig.getSendThreadPoolQueueCapacity());
 
+        // 拉取消息对应的线程池阻塞队列size默认10w个
         this.pullThreadPoolQueue =
                 new LinkedBlockingQueue<Runnable>(this.brokerConfig.getPullThreadPoolQueueCapacity());
 
+        // broker状态管理包括topic、及group数量
         this.brokerStatsManager = new BrokerStatsManager(this.brokerConfig.getBrokerClusterName());
         this.setStoreHost(new InetSocketAddress(this.getBrokerConfig().getBrokerIP1(), this
             .getNettyServerConfig().getListenPort()));
@@ -178,10 +194,10 @@ public class BrokerController {
     public boolean initialize() {
         boolean result = true;
 
-        result = result && this.topicConfigManager.load();
+        result = result && this.topicConfigManager.load(); // 从{user.home}/strore/config/目录下面加载topics.json配置文件
 
-        result = result && this.consumerOffsetManager.load();
-        result = result && this.subscriptionGroupManager.load();
+        result = result && this.consumerOffsetManager.load(); // 从{user.home}/strore/config/目录下面加载consumerOffset.json配置文件
+        result = result && this.subscriptionGroupManager.load(); // 从{user.home}/strore/config/目录下面加载subscriptionGroup.json配置文件
 
         if (result) {
             try {

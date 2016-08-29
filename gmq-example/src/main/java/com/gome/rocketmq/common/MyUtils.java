@@ -4,7 +4,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class MyUtils {
 
-    private static String namesrvAddr = "10.128.46.69:9876;10.128.46.70:9876;10.128.46.71:9876;10.128.46.72:9876";
+    private static String namesrvAddr =
+            "10.128.31.103:9876;10.128.31.104:9876;10.128.31.105:9876;10.128.31.106:9876";
 
     public static ClassPathXmlApplicationContext applicationContext = null;
 

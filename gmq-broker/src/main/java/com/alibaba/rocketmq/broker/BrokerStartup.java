@@ -234,6 +234,7 @@ public class BrokerStartup {
                 System.exit(-3);
             }
 
+            // 增加jvm退出，清理broker资源勾子
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
                 private volatile boolean hasShutdown = false;
                 private AtomicInteger shutdownTimes = new AtomicInteger(0);

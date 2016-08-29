@@ -65,9 +65,9 @@ public class NamesrvStartup {
         return options;
     }
 
-
+    // 此处为Namesrv启动的入口函数 2016/7/6 Add by tantexixan
     public static void main(String[] args) {
-        main0(args);
+        main0(args);// 调用main0函数
     }
 
 
@@ -85,10 +85,10 @@ public class NamesrvStartup {
         }
 
         try {
-            // 检测包冲突
+            // 检测包冲突（fastjson包冲突检查）
             PackageConflictDetect.detectFastjson();
 
-            // 解析命令行
+            // 解析命令行（/home/MyRocketMQ/target/gmq-1.0.0-gmq/gmq/bin/mqnamesrv命令执行相关）
             Options options = ServerUtil.buildCommandlineOptions(new Options());
             commandLine =
                     ServerUtil.parseCmdLine("mqnamesrv", args, buildCommandlineOptions(options),
@@ -99,8 +99,11 @@ public class NamesrvStartup {
             }
 
             // 初始化配置文件
-            final NamesrvConfig namesrvConfig = new NamesrvConfig();
+            final NamesrvConfig namesrvConfig = new NamesrvConfig();// 加载namesrv的相关配置项
+            // 加载nettyServerConfig配置项( Netty是一个高性能、异步事件驱动的NIO框架，用来与其他模块通信交互，例如broker模块通信）
+            // netty具体的启动工作为后续函数controller.start();
             final NettyServerConfig nettyServerConfig = new NettyServerConfig();
+            // 设置netty监听端口为9876
             nettyServerConfig.setListenPort(9876);
             if (commandLine.hasOption('c')) {
                 String file = commandLine.getOptionValue('c');
@@ -130,7 +133,7 @@ public class NamesrvStartup {
                 System.exit(-2);
             }
 
-            // 初始化Logback
+            // 初始化Logback（日志打印配置，类似于log4j）
             LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
             JoranConfigurator configurator = new JoranConfigurator();
             configurator.setContext(lc);
@@ -142,14 +145,20 @@ public class NamesrvStartup {
             MixAll.printObjectProperties(log, namesrvConfig);
             MixAll.printObjectProperties(log, nettyServerConfig);
 
-            // 初始化服务控制对象
+            // 初始化服务控制对象（NamesrvController为核心类，保存了大量的namesrv需要的信息）
             final NamesrvController controller = new NamesrvController(namesrvConfig, nettyServerConfig);
+            // initialize核心函数，其中主要作用为：
+            // 1、初始化netty相关配置
+            // 2、定义broker与namesrv通过netty进行通信，的通信协议（即请求中带上code，来代表对应调用哪个方法函数）
+            // 3、定时每10s扫描broker信息，如果过期则移除
+            // 4、定时每10s将configTable的信息记录到日志文件中
             boolean initResult = controller.initialize();
             if (!initResult) {
                 controller.shutdown();
                 System.exit(-3);
             }
 
+            // 设置一个jvm退出勾子函数，即jvm退出时，此处线程调用controller.shutdown()，清理controller相关资源
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
                 private volatile boolean hasShutdown = false;
                 private AtomicInteger shutdownTimes = new AtomicInteger(0);
@@ -170,7 +179,7 @@ public class NamesrvStartup {
                 }
             }, "ShutdownHook"));
 
-            // 启动服务
+            // 启动服务（主要就是启动netty监听网络通信请求，即初始化netty启动异步通信server）
             controller.start();
 
             String tip = "The Name Server boot success.";

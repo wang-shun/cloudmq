@@ -1,65 +1,28 @@
-<div class="main-content">
-    <h2>test producer group has connection</h2><br/>
-    <table class="table table-bordered table-hover">
-        <tbody>
-        <form action="$action" method="post">
-            <tr>
-                <th style="text-align: center;width: 20%;">
-                    <center>
-                        producerGroupID&nbsp;<font color="red">*</font>
-                    </center>
-                </th>
-                <td style="width: 25%;" class="text-center">
-                    <input type="hidden" id="spTopicName" name="topic" value="TopicTestMQ">
-                    <input id="txtGroupId" name="producerGroup" type="text" class="form-control" style="width: 240px;"
-                           value="$!tbodyData.producerGroup"/>
-                </td>
-                <td style="width: 15%;" class="text-center">
-                    <center>
-                        <button class="btn btn-sm btn-info" type="submit">Submit</button>
-                    </center>
-                </td>
-                <td style="width: 40%;"></td>
-            </tr>
-        </form>
-        </tbody>
-    </table>
-
-    #if($pc)
-        <div class="container theme-showcase">
-            <table class="table table-bordered table-hover">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>ClientId</th>
-                    <th>ClientAddr</th>
-                    <th>Language</th>
-                    <th>Version</th>
-                </tr>
-                </thead>
-                <tbody>
-                    #foreach($conn in $pc.connectionSet)
-                    <tr>
+   #form($options $action)
+   #if($pc)
+   <div class="container theme-showcase">
+		<table class="table table-bordered table-hover">  
+              <thead>  
+                <tr>  
+                  <th>id</th>
+				  <th>ClientId</th>
+				  <th>ClientAddr</th>
+				  <th>Language</th>
+				  <th>Version</th>
+                </tr>  
+              </thead>  
+              <tbody> 
+				#foreach($conn in $pc.connectionSet)
+					<tr>
                         <td>$!{velocityCount}</td>
-                        <td>$conn.clientId</td>
-                        <td>$conn.ClientAddr</td>
-                        <td>$conn.language</td>
-                        <td>$conn.version</td>
-                    </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
-    #end
-</div>
-
-
-<script language="javascript">
-
-    function submit() {
-        var groupId = $("#hdGroupId").html();
-        var gotoAction = "$root/group/topicStats.do?";
-        XUI.gotoPageHref(gotoAction + "topicName=" + topicName + "&groupId=" + groupId);
-    }
-
-</script>
+						<td>$conn.clientId</td>
+						<td>$conn.ClientAddr</td>
+						<td>$conn.language</td>
+						<td>$conn.version</td>
+					</tr>
+				#end
+              </tbody>
+        </table>
+   </div>
+   #end
+ 

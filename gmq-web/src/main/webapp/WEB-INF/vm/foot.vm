@@ -1,14 +1,1 @@
-
-<footer>
-    <script type="text/javascript">
-        $(function () {
-            $("#copyrightYear").html(new Date().getFullYear());
-        });
-    </script>
-
-    <hr>
-    <p class="pull-right">
-        Copyright ©<span id="copyrightYear"></span> Powered by <a href="http://www.gome.com.cn" target="_blank"> Gome</a>
-    </p>
-
-</footer>
+<p>Powered by Gome</p>

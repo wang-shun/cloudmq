@@ -1,181 +1,59 @@
-<!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
-<!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
-<!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
-
-<div class="navbar navbar-default" role="navigation">
-    <!-- start logo navbar -->
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="index.html">
-                <span class="navbar-brand">
-                    <img alt="" src="$root/images/gome_logo.png" class="img-rounded">&nbsp;&nbsp;GMQ Consonle
-                </span>
-        ## <span class="navbar-brand"><span class="fa fa-paper-plane"></span>&nbsp;&nbsp;GMQ Consonle</span>
-        </a>
+ <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+          <div class="container">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="/">RocketMQ Console</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                      <ul class="nav navbar-nav">
+                            <li #if($cluster_flag)class="$cluster_flag"#end><a href="$root/cluster/list.do">Cluster</a></li>
+                            <li #if($topic_flag)class="$topic_flag"#end><a href="$root/topic/list.do">Topic</a></li>
+                            <li class="dropdown $!connection_flag" >
+                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Connection<b class="caret"></b></a>
+                                 <ul class="dropdown-menu">
+                                    <li><a href="$root/connection/consumerConnection.do">ConsumerConnection</a></li>
+                                    <li><a href="$root/connection/producerConnection.do">ProducerConnection</a></li>
+                                 </ul>
+                            </li>
+                			<li class="dropdown $!namesrv_flag" >
+        							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Nameserv<b class="caret"></b></a>
+        							<ul class="dropdown-menu">
+        								<li><a href="$root/namesrv/updateKvConfig.do">UpdateKvConfig</a></li>
+                                        <li><a href="$root/namesrv/deleteKvConfig.do">DeleteKvConfig</a></li>
+        								<li><a href="$root/namesrv/getProjectGroup.do">GetProjectGroup</a></li>
+        								<li><a href="$root/namesrv/updateProjectGroup.do">UpdateProjectGroup</a></li>
+        								<li><a href="$root/namesrv/deleteProjectGroup.do">DeleteProjectGroup</a></li>
+        								<li><a href="$root/namesrv/wipeWritePerm.do">WipeWritePerm</a></li>
+        							 </ul>
+        					</li>
+    						
+                			<li class="dropdown $!message_flag" >
+        							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Message<b class="caret"></b></a>
+        							<ul class="dropdown-menu">
+        								<li><a href="$root/msg/queryMsgById.do">QueryMsgById</a></li>
+                                        <li><a href="$root/msg/queryMsgByKey.do">QueryMsgByKey</a></li>
+        								<li><a href="$root/msg/queryMsgByOffset.do">QueryMsgByOffset</a></li>
+        							 </ul>
+        					</li>
+        					<li class="dropdown $!broker_flag">
+                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Broker <b class="caret"></b></a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="$root/broker/brokerStats.do">BrokerStats</a></li>
+                                    <li><a href="$root/broker/updateBrokerConfig.do">UpdateBrokerConfig</a></li>
+                                  </ul>
+                            </li>
+                            <li class="dropdown $!offset_flag">
+                                 <a href="$root/offset/resetOffsetByTime.do">Offset</a>
+                            </li>
+							<li class="dropdown $!consumer_flag">
+                                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Consumer <b class="caret"></b></a>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="$root/consumer/consumerProgress.do">ConsumerProgress</a></li>
+                                    <li><a href="$root/consumer/deleteSubGroup.do">DeleteSubGroup</a></li>
+									<li><a href="$root/consumer/updateSubGroup.do">UpdateSubGroup</a></li>
+                                  </ul>
+                            </li>
+                      </ul>
+                </div><!--/.nav-collapse -->
+          </div>
     </div>
-    <!-- end logo navbar -->
-
-    <!-- start user info -->
-    <div class="navbar-collapse collapse" style="height: 1px;">
-        <ul id="main-menu" class="nav navbar-nav navbar-right">
-            <li class="dropdown hidden-xs">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-user padding-right-small" style="position:relative;top: 3px;"/>&nbsp;
-                    $!userName <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu"> <!-- 下拉菜单class样式 -->
-                    <li><a href="$root/user/saveOrUpdate.do?id=$!userId">My Account</a></li>
-                    <li class="divider"></li>
-                    <li><a tabindex="-1" href="$root/gmq/logout.do">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <!-- end user info -->
-</div>
-
-<div class="sidebar-nav">
-    <ul id="navbarEl">
-
-        <li #if($cluster_flag) class="$cluster_flag" #end>
-            <a href="$root/cluster/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
-                <i class="fa fa-fw fa-dashboard"></i> Cluster
-            </a>
-        </li>
-
-        <li #if($sysResource_flag) class="$sysResource_flag" #end>
-            <a href="$root/sysResource/main.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
-                <i class="fa fa-fw fa-dashboard"></i> Main
-            </a>
-        </li>
-
-        <li #if($user_flag) class="$user_flag" #end>
-            <a href="$root/user/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
-                <i class="fa fa-fw fa-question-circle"></i> User
-            </a>
-        </li>
-
-        <li #if($topic_flag) class="$topic_flag" #end>
-            <a href="$root/gmq/topic/list.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
-                <i class="fa fa-fw fa-paragraph"></i> Topic
-            </a>
-        </li>
-
-
-        <li #if($group_flag) class="$!group_flag" #end data-popover="true" rel="popover" data-placement="right">
-            <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".group-menu">
-                <i class="fa fa-fw fa-outdent"></i> Group<i class="fa fa-collapse"></i>
-            </a>
-            <ul class="group-menu nav nav-list collapse">
-                <li><a href="$root/group/consumerGroup.do"><span class="fa fa-caret-right"></span> ConsumerGroup</a>
-                </li>
-                <li><a href="$root/connection/consumerConnection.do"><span class="fa fa-caret-right"></span>
-                    ConsumerConnection</a></li>
-                <li><a href="$root/connection/producerConnection.do"><span class="fa fa-caret-right"></span>
-                    ProducerConnection</a></li>
-            </ul>
-        </li>
-
-    #*<li #if($account_flag) class="$!account_flag" #end data-popover="true" rel="popover" data-placement="right">
-        <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".account-menu">
-            <i class="fa fa-fw fa-briefcase"></i> Account<i class="fa fa-collapse"></i>
-        </a>
-        <ul class="account-menu nav nav-list collapse">
-            <li><a href="#"><span class="fa fa-caret-right"></span> Sign In</a></li>
-            <li><a href="#"><span class="fa fa-caret-right"></span> Sign Up</a></li>
-            <li><a href="#"><span class="fa fa-caret-right"></span> Reset Password</a></li>
-        </ul>
-    </li>*#
-
-
-        <li #if($namesrv_flag) class="$!namesrv_flag" #end>
-            <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".namesrv-menu">
-                <i class="fa fa-fw fa-tags"></i> NameSrv<i class="fa fa-collapse"></i>
-            </a>
-            <ul class="namesrv-menu nav nav-list collapse">
-                <li><a href="$root/gmq/namesrv/getNameSrvAddr.do"><span class="fa fa-caret-right"></span> GetNameSrvAddr</a>
-                </li>
-                <li><a href="$root/namesrv/updateKvConfig.do"><span class="fa fa-caret-right"></span> UpdateKvConfig</a>
-                </li>
-                <li><a href="$root/namesrv/updateKvConfig.do"><span class="fa fa-caret-right"></span> DeleteKvConfig</a>
-                </li>
-                <li><a href="$root/namesrv/getProjectGroup.do"><span class="fa fa-caret-right"></span>
-                    GetProjectGroup</a></li>
-                <li><a href="$root/namesrv/updateProjectGroup.do"><span class="fa fa-caret-right"></span>
-                    UpdateProjectGroup</a></li>
-                <li><a href="$root/namesrv/deleteProjectGroup.do"><span class="fa fa-caret-right"></span>
-                    DeleteProjectGroup</a></li>
-                <li><a href="$root/namesrv/wipeWritePerm.do"><span class="fa fa-caret-right"></span> WipeWritePerm</a>
-                </li>
-            </ul>
-        </li>
-
-
-        <li #if($message_flag) class="$!message_flag" #end>
-            <a href="#navbarEl_message" class="nav-header collapsed" data-toggle="collapse" data-target=".message-menu"
-               id="navbarEl_message">
-                <i class="fa fa-fw fa-legal"></i> Message<i class="fa fa-collapse"></i>
-            </a>
-            <ul class="message-menu nav nav-list collapse">
-                <li><a href="$root/msg/queryMsgById.do"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
-                <li><a href="$root/msg/queryMsgByKey.do"><span class="fa fa-caret-right"></span> QueryMsgByKey</a></li>
-                <li><a href="$root/msg/queryMsgByOffset.do"><span class="fa fa-caret-right"></span> QueryMsgByOffset</a>
-                </li>
-            </ul>
-        </li>
-
-
-        <li #if($broker_flag) class="$!broker_flag" #end>
-            <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".broker-menu">
-                <i class="fa fa-fw fa-book"></i> Broker<i class="fa fa-collapse"></i>
-            </a>
-            <ul class="broker-menu nav nav-list collapse">
-                <li><a href="$root/gmq/broker/brokerList.do"><span class="fa fa-caret-right"></span> BrokerList</a></li>
-                <li><a href="$root/broker/brokerStats.do"><span class="fa fa-caret-right"></span> BrokerStats</a></li>
-                <li><a href="$root/broker/updateBrokerConfig.do"><span class="fa fa-caret-right"></span>
-                    UpdateBrokerConfig</a></li>
-            </ul>
-        </li>
-
-
-        <li class="$!consumer_flag">
-            <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".consumer-menu">
-                <i class="fa fa-fw fa-inbox"></i> Consumer<i class="fa fa-collapse"></i>
-            </a>
-            <ul class="consumer-menu nav nav-list collapse">
-                <li><a href="$root/consumer/deleteSubGroup.do"><span class="fa fa-caret-right"></span>
-                    DeleteSubGroup</a></li>
-                <li><a href="$root/consumer/updateSubGroup.do"><span class="fa fa-caret-right"></span>
-                    UpdateSubGroup</a></li>
-            </ul>
-        </li>
-
-
-    #*<li #if($offset_flag) class="$!offset_flag" #end >
-        <a href="$root/offset/resetOffsetByTime.do" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
-            <i class="fa fa-fw fa-paragraph"></i> Offset
-        </a>
-    </li>*#
-
-
-        <li #if($faq_flag) class="$!faq_flag" #end>
-            <a href="$root/gmq/other/faq.do" class="nav-header collapsed" data-toggle="collapse"
-               data-target=".dashboard-menu">
-                <i class="fa fa-fw fa-comment"></i> FAQ
-            </a>
-        </li>
-
-
-    #* <li #if($help_flag) class="$!help_flag" #end >
-         <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".dashboard-menu">
-             <i class="fa fa-fw fa-question-circle"></i> Help
-         </a>
-     </li>*#
-
-    </ul>
-</div> <!-- end of navigation  -->

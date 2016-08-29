@@ -49,22 +49,14 @@ public class MQFactoryImpl implements MQFactoryAPI {
         return consumer;
     }
 
-    /**
-     * 当前版本目前还不支持事务
-     *
-     * @author tantexian
-     * @since 2016/7/12
-     * @params
-     */
-    @Deprecated
     public TransactionProducer createTransactionProducer(Properties properties, final LocalTransactionChecker checker) {
         TransactionProducerImpl transactionProducer = new TransactionProducerImpl(properties, new TransactionCheckListener() {
             public LocalTransactionState checkLocalTransactionState(MessageExt msg) {
                 String msgId = msg.getProperty("__transactionId__");
-                Msg message = MyUtils.msgConvert(msg, msgId);
-                message.setTransactionMsgId(msgId);
+                Msg message = MyUtils.msgConvert(msg);
+                message.setMsgID(msgId);
                 TransactionStatus check = checker.check(message);
-                return TransactionStatus.CommitTransaction == check ? LocalTransactionState.COMMIT_MESSAGE : (TransactionStatus.RollbackTransaction == check ? LocalTransactionState.ROLLBACK_MESSAGE : LocalTransactionState.UNKNOW);
+                return TransactionStatus.CommitTransaction == check?LocalTransactionState.COMMIT_MESSAGE:(TransactionStatus.RollbackTransaction == check?LocalTransactionState.ROLLBACK_MESSAGE:LocalTransactionState.UNKNOW);
             }
         });
         return transactionProducer;

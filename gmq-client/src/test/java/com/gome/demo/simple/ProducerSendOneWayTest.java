@@ -7,6 +7,7 @@ import com.gome.api.open.base.Producer;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.PropertiesConst;
 
+
 /**
  * sendOneway模式：只管单边发送。由于没有返回消息状态结果逻辑，因此吞吐量及性能相对于send有较大提高。
  * 因此适用于可靠性要求不高，但是吞吐量性能要求很高的业务场景（例如：日志收集处理场景）
@@ -35,12 +36,10 @@ public class ProducerSendOneWayTest {
                 // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，
                 // 需要Producer与Consumer协商好一致的序列化和反序列化方式
                 ("Hello MQ " + i).getBytes());
-
             // 设置代表消息的业务关键属性，请尽可能全局唯一。（例如订单ID）。
             // 以方便您在无法正常收到消息情况下，可通过MQ控制台查询消息并补发。
             // 注意：不设置也不会影响消息正常收发
             msg.setKey("ORDERID_" + i);
-
             // 发送消息，只要不抛异常就是成功
             // 建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
             // sendOneway模式：适用于可靠性要求不高，但是吞吐量性能要求很高的业务场景（例如：日志收集处理场景）

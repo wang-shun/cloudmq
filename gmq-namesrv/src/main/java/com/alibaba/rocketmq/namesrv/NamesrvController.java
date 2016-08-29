@@ -55,8 +55,8 @@ public class NamesrvController {
     private ExecutorService remotingExecutor;
 
     // 定时线程
-    private final ScheduledExecutorService scheduledExecutorService = Executors
-        .newSingleThreadScheduledExecutor(new ThreadFactoryImpl("NSScheduledThread"));
+    private final ScheduledExecutorService scheduledExecutorService =
+            Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl("NSScheduledThread"));
 
     /**
      * 核心数据结构
@@ -66,11 +66,11 @@ public class NamesrvController {
 
 
     public NamesrvController(NamesrvConfig namesrvConfig, NettyServerConfig nettyServerConfig) {
-        this.namesrvConfig = namesrvConfig;
-        this.nettyServerConfig = nettyServerConfig;
-        this.kvConfigManager = new KVConfigManager(this);
-        this.routeInfoManager = new RouteInfoManager();
-        this.brokerHousekeepingService = new BrokerHousekeepingService(this);
+        this.namesrvConfig = namesrvConfig; // namesrv相关配置
+        this.nettyServerConfig = nettyServerConfig; // netty相关配置
+        this.kvConfigManager = new KVConfigManager(this); // KV配置管理
+        this.routeInfoManager = new RouteInfoManager(); // 路由信息、topic信息管理
+        this.brokerHousekeepingService = new BrokerHousekeepingService(this); // broker管理服务
     }
 
 
@@ -81,26 +81,34 @@ public class NamesrvController {
         // 初始化通信层
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig, this.brokerHousekeepingService);
 
-        // 初始化线程池
-        this.remotingExecutor =
-                Executors.newFixedThreadPool(nettyServerConfig.getServerWorkerThreads(),
-                    new ThreadFactoryImpl("RemotingExecutorThread_"));
+        // 初始化线程池（根据getServerWorkerThreads值，启动相应数量线程）
+        this.remotingExecutor = Executors.newFixedThreadPool(nettyServerConfig.getServerWorkerThreads(),
+            new ThreadFactoryImpl("RemotingExecutorThread_"));
 
+        // 此注册函数主要作用就是，定义RequestCode，用来作为netty的通信协议字段
+        // 即：如果broker通过netty发送通信请求，其中请求信息中带有code == RequestCode.REGISTER_BROKER，
+        //那么在namesrv的netty端接收到该通信连接时候，
+        // 则对应调用namesrv的DefaultRequestProcessor类下面的registerBroker方法，从而完成broker向namesrv注册
+        // 具体请参考com.alibaba.rocketmq.namesrv.processor.DefaultRequestProcessor类
+        // 更多关于netty在gmq中的通信机制及原理，请关注后续博文(博客地址为：http://my.oschina.net/tantexian)
         this.registerProcessor();
 
-        // 增加定时任务
+        // 增加定时任务（延时5秒，每间隔10s钟，定时扫描一次）
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
             public void run() {
+                // 定时扫描notActive的broker（若发现broker过期，则清除该broker与namesrv之间的socketChanel通道）
                 NamesrvController.this.routeInfoManager.scanNotActiveBroker();
             }
         }, 5, 10, TimeUnit.SECONDS);
 
+        // 增加定时任务（延时1秒，每间隔10s钟，定时扫描一次）
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
 
             @Override
             public void run() {
+                // 定时将configTable相关信息记录到日志文件中
                 NamesrvController.this.kvConfigManager.printAllPeriodically();
             }
         }, 1, 10, TimeUnit.MINUTES);
@@ -118,8 +126,8 @@ public class NamesrvController {
 
 
     private void registerProcessor() {
-        this.remotingServer
-            .registerDefaultProcessor(new DefaultRequestProcessor(this), this.remotingExecutor);
+        this.remotingServer.registerDefaultProcessor(new DefaultRequestProcessor(this),
+            this.remotingExecutor);
     }
 
 

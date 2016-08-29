@@ -1,0 +1,35 @@
+@startuml
+/'启动入口main()'/
+NamesrvStartup -> NamesrvStartup: 启动入口main()
+NamesrvStartup -> NamesrvStartup: main0()
+
+/'获取配置文件'/
+NamesrvStartup -> NamesrvConfig: new NamesrvConfig()
+NamesrvStartup -> NettyServerConfig: new NettyServerConfig()
+
+/'创建NamesrvController对象'/
+NamesrvStartup -> NamesrvController: new NamesrvController()
+    /'NamesrvController构造函数'/
+    NamesrvController -> KVConfigManager: new KVConfigManager()
+    NamesrvController -> RouteInfoManager: new RouteInfoManager()
+    NamesrvController -> brokerHousekeepingService: new brokerHousekeepingService()
+NamesrvStartup <-- NamesrvController: 返回namesrvController对象
+
+/'NamesrvController的initialize方法执行逻辑'/
+NamesrvStartup -> NamesrvController: 调用NamesrvController的initialize()
+    NamesrvController --> kvConfigManager: load()
+    NamesrvController -> NettyRemotingServer: new NettyRemotingServer()
+    NamesrvController <-- NettyRemotingServer: 返回NettyRemotingServer对象
+    NamesrvController --> NamesrvController:registerProcessor()
+    NamesrvController --> remotingServer:registerDefaultProcessor()
+    NamesrvController -> RouteInfoManager: 定时间隔10s调用scanNotActiveBroker()
+    NamesrvController -> KVConfigManager:定时间隔10s调用printAllPeriodically()
+
+NamesrvStartup -> NamesrvStartup: 增加addShutdownHook JVM退出勾子
+
+/'启动namesrv服务'/
+NamesrvStartup --> NamesrvController: start()
+NamesrvController --> remotingServer: start()
+remotingServer --> Netty: 调用并启动Netty异步框架进行通信监听
+
+@enduml

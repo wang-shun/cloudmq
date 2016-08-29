@@ -238,7 +238,8 @@ public class KVConfigManager {
             }
             catch (IOException e) {
                 log.error("persist kvconfig Exception, "
-                        + this.namesrvController.getNamesrvConfig().getKvConfigPath(), e);
+                        + this.namesrvController.getNamesrvConfig().getKvConfigPath(),
+                    e);
             }
             finally {
                 this.lock.readLock().unlock();
@@ -255,7 +256,6 @@ public class KVConfigManager {
         try {
             this.lock.readLock().lockInterruptibly();
             try {
-                log.info("--------------------------------------------------------");
 
                 {
                     log.info("configTable SIZE: {}", this.configTable.size());

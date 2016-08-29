@@ -26,7 +26,7 @@ public class Producer {
 
     public static void main(String[] args) throws MQClientException {
         final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 10;
-        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
+        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 50;
 
         final Message msg = buildMessage(messageSize);
         final ExecutorService sendThreadPool = Executors.newFixedThreadPool(threadCount);
@@ -82,7 +82,7 @@ public class Producer {
                     while (true) {
                         try {
                             final long beginTimestamp = System.currentTimeMillis();
-                            producer.sendOneway(msg);
+                            producer.send(msg);
                             oneWayStats.getSendRequestSuccessCount().incrementAndGet();
 
                             final long currentRT = System.currentTimeMillis() - beginTimestamp;
@@ -103,6 +103,12 @@ public class Producer {
                         } catch (MQClientException e) {
                             oneWayStats.getSendRequestFailedCount().incrementAndGet();
                             e.printStackTrace();
+                        } catch (MQBrokerException e) {
+                            oneWayStats.getSendRequestFailedCount().incrementAndGet();
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e1) {
+                            }
                         }
                     }
                 }
@@ -113,11 +119,11 @@ public class Producer {
 
     private static Message buildMessage(final int messageSize) {
         Message msg = new Message();
-        msg.setTags("tagA");
+        msg.setTags("A");
         msg.setTopic(topic);
         StringBuilder sb = new StringBuilder(messageSize + 1);
-        for (int i = 0; i < messageSize; i += 10) {
-            sb.append("hello baby.");
+        for (int i = 0; i < messageSize; i++) {
+            sb.append("w");
         }
         msg.setBody(sb.toString().getBytes());
         return msg;

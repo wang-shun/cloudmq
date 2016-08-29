@@ -7,7 +7,7 @@
             <props>
                 <prop key="OrderProducerGroupId">OrderProducerGroupId-test</prop>
                 <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
-                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+                <prop key="NAMESRV_ADDR">10.128.31.124:9876;10.128.31.125:9876;10.128.31.118:9876;10.128.31.119:9876</prop>
             </props>
         </property>
     </bean>

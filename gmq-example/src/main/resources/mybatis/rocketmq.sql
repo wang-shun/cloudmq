@@ -23,18 +23,15 @@ USE `rocketmq` ;
 -- Table structure for `user_demo`， add by ttx 2015-6-1
 -- ------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `rocketmq`.`user_demo` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `real_name` varchar(50) DEFAULT NULL COMMENT '真实姓名',
-  `user_name` varchar(50) DEFAULT NULL COMMENT '登录用户名',
-  `password` varchar(50) DEFAULT NULL COMMENT '登录密码',
-  `mobile` varchar(20) DEFAULT NULL COMMENT '电话 ',
-  `email` varchar(255) DEFAULT NULL COMMENT 'email',
-  `created_time` datetime DEFAULT NULL COMMENT '创建时间',
-  `updated_time` datetime DEFAULT NULL COMMENT '修改时间',
-  `deleted_time` datetime DEFAULT NULL COMMENT '删除时间',
-  `state` tinyint(4) DEFAULT NULL COMMENT '账户状态(0:正常,1:删除,2:禁用....)',
-  PRIMARY KEY (`id`)
-  )ENGINE = InnoDB
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `created_time` datetime DEFAULT NULL,
+  `updated_time` datetime DEFAULT NULL,
+  `deleted_time` datetime DEFAULT NULL,
+  `deleted` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
 COMMENT = '用户表DEMO';
 
 -- ------------------------------------------------

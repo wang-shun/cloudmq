@@ -7,6 +7,7 @@ import com.gome.api.open.base.SendResult;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.api.open.order.OrderProducer;
 import com.gome.common.PropertiesConst;
+import com.gome.demo.simple.MyProperties;
 
 
 /**
@@ -46,10 +47,8 @@ public class OrderProducerTest {
             // 由于是顺序消息，因此只能选择一个queue生产和消费消息
             // shardingKey用来随机获取集群中的一个queue（可以自由设置该值，建议此处尽可能唯一，便于消息队列分散到不同的queue上）
             String shardingKey = "OrderProducerTestShardingKey";
-
             // 发送消息，只要不抛异常就是成功
-            // 建议业务程序自行记录生产及消费log日志，
-            // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
+            // 建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
             SendResult sendResult = orderProducer.send(msg, shardingKey);
             System.out.println(sendResult);
         }

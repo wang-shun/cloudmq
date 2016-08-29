@@ -48,28 +48,28 @@ import com.alibaba.rocketmq.remoting.common.RemotingUtil;
 
 
 /**
- * 运行过程中的路由信息，数据只在内存，宕机后数据消失，但是Broker会定期推送最新数据
- * 
- * @author shijia.wxr<vintage.wang@gmail.com>
- * @since 2013-7-2
- */
-public class RouteInfoManager {
-    private static final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
-    private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;
-    private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;
-    private final HashMap<String/* clusterName */, Set<String/* brokerName */>> clusterAddrTable;
-    private final HashMap<String/* brokerAddr */, BrokerLiveInfo> brokerLiveTable;
-    private final HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
+     * 运行过程中的路由信息，数据只在内存，宕机后数据消失，但是Broker会定期推送最新数据
+     *
+     * @author shijia.wxr<vintage.wang@gmail.com>
+     * @since 2013-7-2
+     */
+    public class RouteInfoManager {
+        private static final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
+        private final ReadWriteLock lock = new ReentrantReadWriteLock();
+        private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;
+        private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;
+        private final HashMap<String/* clusterName */, Set<String/* brokerName */>> clusterAddrTable;
+        private final HashMap<String/* brokerAddr */, BrokerLiveInfo> brokerLiveTable;
+        private final HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
 
 
-    public RouteInfoManager() {
-        this.topicQueueTable = new HashMap<String, List<QueueData>>(1024);
-        this.brokerAddrTable = new HashMap<String, BrokerData>(128);
-        this.clusterAddrTable = new HashMap<String, Set<String>>(32);
-        this.brokerLiveTable = new HashMap<String, BrokerLiveInfo>(256);
-        this.filterServerTable = new HashMap<String, List<String>>(256);
-    }
+        public RouteInfoManager() {
+            this.topicQueueTable = new HashMap<String, List<QueueData>>(1024);
+            this.brokerAddrTable = new HashMap<String, BrokerData>(128);
+            this.clusterAddrTable = new HashMap<String, Set<String>>(32);
+            this.brokerLiveTable = new HashMap<String, BrokerLiveInfo>(256);
+            this.filterServerTable = new HashMap<String, List<String>>(256);
+        }
 
 
     public byte[] getAllClusterInfo() {
@@ -116,6 +116,16 @@ public class RouteInfoManager {
 
 
     /**
+     * broker向namesrv注册函数
+     * 主要功能步骤包括：
+     * 1、将当前请求注册的broker信息保存或者更新到clusterAddrTable、brokerAddrTable中
+     * 2、将当前请求注册的broker的topic信息，保存或者更新到topicQueueTable中
+     *  -- 其中isBrokerTopicConfigChanged用来判断当前请求broker信息是否为最新版本，如果是则替换，不是则跳过
+     *  -- createAndUpdateQueueData为具体觉得创建还是更新topicQueueTable
+     *  -- 其中topicQueueTable中保存了对应topic的queueDate，queueDate保存了broker的name、write及read的queue数量，及topicSynFlag
+     * 3、如果当前broker为master节点，则直接按照上述步骤更新，如果为slave节点，则将haServerAddr、masterAddr等信息设置到result返回值中
+     * @author tantexian
+     * @since 2016/7/6
      * @return 如果是slave，则返回master的ha地址
      */
     public RegisterBrokerResult registerBroker(//
@@ -131,10 +141,12 @@ public class RouteInfoManager {
         RegisterBrokerResult result = new RegisterBrokerResult();
         try {
             try {
+                // 加写锁
                 this.lock.writeLock().lockInterruptibly();
 
-                // 更新集群信息
+                // 更新集群信息（根据集群名字，获取当前集群下面的所有brokerName）
                 Set<String> brokerNames = this.clusterAddrTable.get(clusterName);
+                // 如果当前集群下面brokerNames为空，则将当前请求broker加入到clusterAddrTable中
                 if (null == brokerNames) {
                     brokerNames = new HashSet<String>();
                     this.clusterAddrTable.put(clusterName, brokerNames);
@@ -143,8 +155,9 @@ public class RouteInfoManager {
 
                 boolean registerFirst = false;
 
-                // 更新主备信息
+                // 更新主备信息（在brokerAddrTable中获取所有的brokerDAte）
                 BrokerData brokerData = this.brokerAddrTable.get(brokerName);
+                // 如果当前不存在brokerDate，即还没有broker向namesrv注册，则直接将当前broker信息put加入
                 if (null == brokerData) {
                     registerFirst = true;
                     brokerData = new BrokerData();
@@ -154,26 +167,31 @@ public class RouteInfoManager {
 
                     this.brokerAddrTable.put(brokerName, brokerData);
                 }
+                // 获取当前注册broker的brokerAddr地址
                 String oldAddr = brokerData.getBrokerAddrs().put(brokerId, brokerAddr);
                 registerFirst = registerFirst || (null == oldAddr);
 
                 // 更新Topic信息
-                if (null != topicConfigWrapper //
+                if (null != topicConfigWrapper //如果topicConfigWrapper不为空，且当前brokerId == 0，即为当前broker为master
                         && MixAll.MASTER_ID == brokerId) {
+                    // 如果Topic配置信息发生变更或者该broker为第一次注册
                     if (this.isBrokerTopicConfigChanged(brokerAddr, topicConfigWrapper.getDataVersion())//
                             || registerFirst) {
+                        // 获取所有topic信息
                         ConcurrentHashMap<String, TopicConfig> tcTable =
                                 topicConfigWrapper.getTopicConfigTable();
                         if (tcTable != null) {
+                            // 遍历所有Topic
                             for (String topic : tcTable.keySet()) {
                                 TopicConfig topicConfig = tcTable.get(topic);
+                                // 根据brokername及topicconfig（read、write queue数量等）新增或者更新到topicQueueTable中
                                 this.createAndUpdateQueueData(brokerName, topicConfig);
                             }
                         }
                     }
                 }
 
-                // 更新最后变更时间
+                // 更新最后变更时间（将brokerLiveTable中保存的对应的broker的更新时间戳，设置为当前时间）
                 BrokerLiveInfo prevBrokerLiveInfo = this.brokerLiveTable.put(brokerAddr, //
                     new BrokerLiveInfo(//
                         System.currentTimeMillis(), //
@@ -194,8 +212,9 @@ public class RouteInfoManager {
                     }
                 }
 
-                // 返回值
+                // 返回值（如果当前broker为slave节点）则将haServerAddr、masterAddr等信息设置到result返回值中
                 if (MixAll.MASTER_ID != brokerId) {
+                    // 通过brokename的brokedate获取当前slave节点的master节点addr
                     String masterAddr = brokerData.getBrokerAddrs().get(MixAll.MASTER_ID);
                     if (masterAddr != null) {
                         BrokerLiveInfo brokerLiveInfo = this.brokerLiveTable.get(masterAddr);
@@ -206,7 +225,7 @@ public class RouteInfoManager {
                     }
                 }
             }
-            finally {
+            finally {// 释放写锁
                 this.lock.writeLock().unlock();
             }
         }
@@ -223,6 +242,8 @@ public class RouteInfoManager {
      */
     private boolean isBrokerTopicConfigChanged(final String brokerAddr, final DataVersion dataVersion) {
         BrokerLiveInfo prev = this.brokerLiveTable.get(brokerAddr);
+        // 如果当前broker信息没有在brokerLiveTable中或者，
+        // 当前brokerLiveTable中保存的broker的版本与当前版本不一致，则返回true，表示Topic配置信息已经发生改变
         if (null == prev || !prev.getDataVersion().equals(dataVersion)) {
             return true;
         }
@@ -271,8 +292,17 @@ public class RouteInfoManager {
         return wipeTopicCnt;
     }
 
-
+    /**
+     * 如果当前brokername对应的queueDate没有在topicQueueTable中，则直接添加
+     * 如果当前brokername对应的queueDate在topicQueueTable中，如果已有的信息与当前信息一致则跳过，
+     * 如果已有queueData信息与当前信息不一致，则删除老数据，更新为新queueData数据
+     *
+     * @author tantexian
+     * @since 2016/7/6
+     * @params
+     */
     private void createAndUpdateQueueData(final String brokerName, final TopicConfig topicConfig) {
+        // 创建queueDate，queueDate保存了broker的name、write及read的queue数量，及topicSynFlag
         QueueData queueData = new QueueData();
         queueData.setBrokerName(brokerName);
         queueData.setWriteQueueNums(topicConfig.getWriteQueueNums());
@@ -280,9 +310,11 @@ public class RouteInfoManager {
         queueData.setPerm(topicConfig.getPerm());
         queueData.setTopicSynFlag(topicConfig.getTopicSysFlag());
 
+        // 根据topic name从topicQueueTable中获取queueDateList
         List<QueueData> queueDataList = this.topicQueueTable.get(topicConfig.getTopicName());
-        if (null == queueDataList) {
+        if (null == queueDataList) {// 如果为空，表示第一次新增，不为空则表示可以直接增加到老的queueDataList中
             queueDataList = new LinkedList<QueueData>();
+            // 将本次brokername对应的queueDate添加到queueDataList中，再保存到topicQueueTable
             queueDataList.add(queueData);
             this.topicQueueTable.put(topicConfig.getTopicName(), queueDataList);
             log.info("new topic registerd, {} {}", topicConfig.getTopicName(), queueData);
@@ -291,13 +323,13 @@ public class RouteInfoManager {
             boolean addNewOne = true;
 
             Iterator<QueueData> it = queueDataList.iterator();
-            while (it.hasNext()) {
+            while (it.hasNext()) {// 遍历
                 QueueData qd = it.next();
-                if (qd.getBrokerName().equals(brokerName)) {
-                    if (qd.equals(queueData)) {
+                if (qd.getBrokerName().equals(brokerName)) {// 如果当前brokername已经存在queueDataList中
+                    if (qd.equals(queueData)) {// 如果当前需要更新的queueDate与之前保存的queueData相等，则addNewOne = false;表示不需要添加
                         addNewOne = false;
                     }
-                    else {
+                    else {// 如果当前需要更新的queueDate与之前保存的queueData不相等，则将当前的老版本信息移除，然后再将新的添加进去
                         log.info("topic changed, {} OLD: {} NEW: {}", topicConfig.getTopicName(), qd,
                             queueData);
                         it.remove();
@@ -472,13 +504,17 @@ public class RouteInfoManager {
     // Broker Channel两分钟过期
     private final static long BrokerChannelExpiredTime = 1000 * 60 * 2;
 
-
+    // 扫描notActive的Broker
     public void scanNotActiveBroker() {
+        // 迭代处理liveTable里面所有broker信息
         Iterator<Entry<String, BrokerLiveInfo>> it = this.brokerLiveTable.entrySet().iterator();
         while (it.hasNext()) {
             Entry<String, BrokerLiveInfo> next = it.next();
+            // 获取当前broker的最后更新时间
             long last = next.getValue().getLastUpdateTimestamp();
+            // 判断是否过期
             if ((last + BrokerChannelExpiredTime) < System.currentTimeMillis()) {
+                // 过期则关闭该broker通道（关闭通道即关闭socketChanal,关闭了socketChanal则，broker不能通过该通道连接到namesrv）
                 RemotingUtil.closeChannel(next.getValue().getChannel());
                 it.remove();
                 log.warn("The broker channel expired, {} {}ms", next.getKey(), BrokerChannelExpiredTime);

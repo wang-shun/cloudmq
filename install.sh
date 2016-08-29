@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 git pull
 
 rm -rf target

@@ -1,36 +1,25 @@
-	<meta charset="utf-8" />
-    <title>GMQ Console</title>
-    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
-    <!-- let ico -->
-	<link rel="shortcut icon" href="$root/images/favicon.ico"/>
-	<!-- font family css -->
-    <link rel="stylesheet" type="text/css" href="$root/font/font-ext/css/family.css"/>
-	<!-- Bootstrap core CSS -->
-    <link rel="stylesheet" type="text/css" href="$root/bootstrap/css/bootstrap.min.css"/>
-	<!-- font css for web application icon -->
-    <link rel="stylesheet" type="text/css" href="$root/font/font-awesome/css/font-awesome.css"/>
-	<!-- font css theme -->
-    <link rel="stylesheet" type="text/css" href="$root/theme/theme.css"/>
-	<!-- font css premium -->
-    <link rel="stylesheet" type="text/css" href="$root/theme/premium.css"/>
+    <title>$title</title>
 
-    <style type="text/css">
-        #line-chart {
-            height:300px;
-            width:800px;
-            margin: 0px auto;
-            margin-top: 1em;
-        }
+    <!-- Bootstrap core CSS -->
+    <link href="$root/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="$root/css/bootstrap-theme.min.css" rel="stylesheet">
 
-        /*** 左上角logo区域颜色 ***/
-        .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
-            color: #fff;
-        }
-    </style>
+    <!-- Custom styles for this template -->
+    <link href="$root/css/theme.css" rel="stylesheet">
 
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
-    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->

@@ -6,6 +6,7 @@ import com.gome.api.open.base.*;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.common.PropertiesConst;
 
+
 /**
  * 集群方式订阅消息(所有消费订阅者共同消费消息(分摊)，消息队列默认为集群消费)
  * 注意：集群模式消费则ConsumerGroupId必须相同。
@@ -26,8 +27,7 @@ public class ConsumerTest {
 
         // 创建普通类型消费者
         Consumer consumer = MQFactory.createConsumer(properties);
-        // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，
-        // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
+        // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
         consumer.subscribe("TopicTestMQ", "*", new MsgListener() {
             public Action consume(Msg msg, ConsumeContext context) {
                 System.out.println("Receive Msg : " + new String(msg.getBody()));

@@ -20,11 +20,10 @@ import java.util.concurrent.Executors;
  * @date 2016/7/1
  */
 public class TpsProducer {
-    static final String topic = "TopicTestMQ";  // TopicTestMQ  BenchmarkTest  TopicSimpleTpsTest
-    static final String producerGroupId = "TopicSimpleTpsGroupId";
+    static final String topic = "simpleTpsTopic";
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 100;
+        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 1;
         final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
 
         final Message msg = buildMessage(messageSize);
@@ -69,7 +68,7 @@ public class TpsProducer {
             }
         }, 10000, 10000);
 
-        final DefaultMQProducer producer = new DefaultMQProducer(producerGroupId);
+        final DefaultMQProducer producer = new DefaultMQProducer("DefaultCluster");
         producer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         producer.setCompressMsgBodyOverHowmuch(Integer.MAX_VALUE);
         producer.start();

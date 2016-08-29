@@ -4,12 +4,12 @@
 	#parse("head.vm")
   </head>
   <body role="document">
-    #parse("navbar_bak.vm")
+    #parse("navbar.vm")
 	#parse("msg.vm")
     <div class="container theme-showcase" role="main">
     	#table($table)
         #parse("foot.vm")
     </div>
-	#parse("body-js.vm")
+	#parse("js.vm")
   </body>
 </html>

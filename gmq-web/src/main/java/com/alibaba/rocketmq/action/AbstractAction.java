@@ -2,8 +2,6 @@ package com.alibaba.rocketmq.action;
 
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +13,7 @@ import com.alibaba.rocketmq.common.Table;
 
 
 /**
+ * 
  * @author yankai913@gmail.com
  * @date 2014-2-17
  */
@@ -22,8 +21,8 @@ public abstract class AbstractAction {
 
     protected abstract String getFlag();
 
-    protected abstract String getName();
 
+    protected abstract String getName();
 
     public static final String TITLE = "title";
 
@@ -33,58 +32,22 @@ public abstract class AbstractAction {
 
     public static final String KEY_TABLE = "table";
 
-    public static final String TBODY_DATA = "tbodyData";
-
-    public static final String TEMPLATE = "template";
-
-    public static final String POST = "POST";
-
-    public static final String GET = "GET";
-
-    @SuppressWarnings("unused")
-    public static final String DELETE = "DELETE";
-
-    // 新增导航栏类型 2016/7/29 Add by tianyuliang
-    public static final String NAVIGATION = "navigation";
-
-    // 新增类型 2016/7/15 Add by gaoyanlei
     public static final String OPTIONS = "options";
 
-    // 新增 2016/7/15 Add by gaoyanlei
-    protected void putTable(ModelMap map, Object object) {
-        map.put(TBODY_DATA, object);
-    }
-
-    // 新增导航栏额外参数 2016/7/29 Add by tianyuliang
-    protected void putNavigation(ModelMap map, Object object) {
-        map.put(NAVIGATION, object);
-    }
 
     protected void putTable(ModelMap map, Table table) {
         map.put(KEY_TABLE, table);
     }
 
+
     protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options,
-                                      HttpServletRequest request) {
+            HttpServletRequest request) {
         putPublicAttribute(map, title, options);
         @SuppressWarnings("unchecked")
         Enumeration<String> enumer = request.getParameterNames();
         while (enumer.hasMoreElements()) {
             String key = enumer.nextElement();
             String value = request.getParameter(key);
-            addOptionValue(options, key, value);
-        }
-    }
-
-    protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options,
-                                      Map object) {
-        putPublicAttribute(map, title, options);
-        @SuppressWarnings("unchecked")
-        Iterator entries = object.entrySet().iterator();
-        while (entries.hasNext()) {
-            Map.Entry entry = (Map.Entry) entries.next();
-            String key = (String) entry.getKey();
-            Object value = entry.getValue();
             addOptionValue(options, key, value);
         }
     }
@@ -153,6 +116,13 @@ public abstract class AbstractAction {
     protected void putAlertTrue(ModelMap map) {
         map.put(ALERT_TRUE, true);
     }
+
+    public static final String TEMPLATE = "template";
+
+    public static final String POST = "POST";
+
+    public static final String GET = "GET";
+
 
     protected void throwUnknowRequestMethodException(HttpServletRequest request) {
         throw new IllegalStateException("unknown request method: " + request.getMethod());

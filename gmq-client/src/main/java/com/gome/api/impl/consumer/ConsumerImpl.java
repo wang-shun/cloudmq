@@ -54,9 +54,9 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
         this.defaultMQPushConsumer.setNamesrvAddr(this.getNameServerAddr());
         if (properties.containsKey("ConsumeThreadNums")) {
             this.defaultMQPushConsumer.setConsumeThreadMin(
-                    Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
+                Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
             this.defaultMQPushConsumer.setConsumeThreadMax(
-                    Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
+                Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
         }
 
         try {
@@ -69,7 +69,8 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
             e.put("InstanceName", this.buildIntanceName());
             // this.traceDispatcher.start(appender,
             // this.defaultMQPushConsumer.getInstanceName());
-        } catch (Throwable throwable) {
+        }
+        catch (Throwable throwable) {
             log.error("system mqtrace hook init failed ,maybe can\'t send msg trace data");
         }
 
@@ -84,7 +85,8 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
                 this.defaultMQPushConsumer.start();
             }
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new GomeClientException(e.getMessage());
         }
     }
@@ -101,13 +103,16 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
     public void subscribe(String topic, String subExpression, MsgListener listener) {
         if (null == topic) {
             throw new GomeClientException("topic is null");
-        } else if (null == listener) {
+        }
+        else if (null == listener) {
             throw new GomeClientException("listener is null");
-        } else {
+        }
+        else {
             try {
                 this.subscribeTable.put(topic, listener);
                 this.defaultMQPushConsumer.subscribe(topic, subExpression);
-            } catch (MQClientException var5) {
+            }
+            catch (MQClientException var5) {
                 throw new GomeClientException("defaultMQPushConsumer subscribe exception", var5);
             }
         }
@@ -137,23 +142,23 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
 
 
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgList,
-                                                        ConsumeConcurrentlyContext consumeConcurrentlyContext) {
+                ConsumeConcurrentlyContext consumeConcurrentlyContext) {
             MessageExt msg = msgList.get(0);
-            String msgId = msg.getMsgId();
             MsgListener listener = ConsumerImpl.this.subscribeTable.get(msg.getTopic());
             if (null == listener) {
                 throw new GomeClientException("MsgListener is null");
-            } else {
+            }
+            else {
                 ConsumeContext context = new ConsumeContext();
-                Action action = listener.consume(MyUtils.msgConvert(msg, msgId), context);
+                Action action = listener.consume(MyUtils.msgConvert(msg), context);
 
                 switch (action) {
-                    case CommitMessage:
-                        return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                    case ReconsumeLater:
-                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                    default:
-                        break;
+                case CommitMessage:
+                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+                case ReconsumeLater:
+                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+                default:
+                    break;
                 }
 
                 return null;

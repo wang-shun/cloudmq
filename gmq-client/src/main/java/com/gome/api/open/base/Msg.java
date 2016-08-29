@@ -4,8 +4,6 @@ import com.gome.api.open.exception.GomeClientException;
 import com.gome.common.DelayLevelConst;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Properties;
 
 /**
@@ -20,22 +18,22 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     private byte[] body;
 
     public Msg() {
-        this((String) null, (String) null, "", (byte[]) null);
+        this((String)null, (String)null, "", (byte[])null);
     }
 
-    public Msg(String topic, String tags, String key, byte[] body) {
+    public Msg(String topic, String tag, String key, byte[] body) {
         this.topic = topic;
         this.body = body;
-        this.setTags(tags);
-        this.setKey(key);
+        this.putSystemProperties("__TAG", tag);
+        this.putSystemProperties("__KEY", key);
     }
 
     void putSystemProperties(String key, String value) {
-        if (null == this.systemProperties) {
+        if(null == this.systemProperties) {
             this.systemProperties = new Properties();
         }
 
-        if (key != null && value != null) {
+        if(key != null && value != null) {
             this.systemProperties.put(key, value);
         }
 
@@ -46,18 +44,18 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     }
 
     public void putUserProperties(String key, String value) {
-        if (null == this.userProperties) {
+        if(null == this.userProperties) {
             this.userProperties = new Properties();
         }
 
-        if (key != null && value != null) {
+        if(key != null && value != null) {
             this.userProperties.put(key, value);
         }
 
     }
 
     public String getUserProperties(String key) {
-        return null != this.userProperties ? (String) this.userProperties.get(key) : null;
+        return null != this.userProperties?(String)this.userProperties.get(key):null;
     }
 
     public String getTopic() {
@@ -68,42 +66,32 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
         this.topic = topic;
     }
 
-    public String getTags() {
-        return this.getSystemProperties(SystemPropKey.TAGS);
+    public String getTag() {
+        return this.getSystemProperties("__TAG");
     }
 
     String getSystemProperties(String key) {
-        return null != this.systemProperties ? this.systemProperties.getProperty(key) : null;
+        return null != this.systemProperties?this.systemProperties.getProperty(key):null;
     }
 
-    public void setTags(String tags) {
-        this.putSystemProperties(SystemPropKey.TAGS, tags);
-        super.setTags(tags);
+    public void setTag(String tag) {
+        this.putSystemProperties("__TAG", tag);
     }
 
     public String getKey() {
-        return this.getSystemProperties(SystemPropKey.KEY);
+        return this.getSystemProperties("__KEY");
     }
 
     public void setKey(String key) {
-        this.putSystemProperties(SystemPropKey.KEY, key);
-        super.setKeys(key);
+        this.putSystemProperties("__KEY", key);
     }
 
-    public String getMsgId() {
-        return this.getSystemProperties(SystemPropKey.MSGID);
+    public String getMsgID() {
+        return this.getSystemProperties("__MSGID");
     }
 
-    public void setMsgId(String msgId) {
-        this.putSystemProperties(SystemPropKey.MSGID, msgId);
-    }
-
-    public void setTransactionMsgId(String transactionMsgId) {
-        this.putSystemProperties(SystemPropKey.TRANSATIONMSGID, transactionMsgId);
-    }
-
-    public String getTransactionMsgId() {
-        return this.getSystemProperties(SystemPropKey.TRANSATIONMSGID);
+    public void setMsgID(String msgid) {
+        this.putSystemProperties("__MSGID", msgid);
     }
 
     Properties getSystemProperties() {
@@ -131,12 +119,12 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
     }
 
     public int getReconsumeTimes() {
-        String pro = this.getSystemProperties(SystemPropKey.RECONSUMETIMES);
-        return pro != null ? Integer.parseInt(pro) : 0;
+        String pro = this.getSystemProperties("__RECONSUMETIMES");
+        return pro != null?Integer.parseInt(pro):0;
     }
 
     public void setReconsumeTimes(int value) {
-        this.putSystemProperties(SystemPropKey.RECONSUMETIMES, String.valueOf(value));
+        this.putSystemProperties("__RECONSUMETIMES", String.valueOf(value));
     }
 
     // 当前版本目前只支持固定等级的消息延时Level 2016/6/28 Add by tantexixan
@@ -151,25 +139,20 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
 
     public void setDelayTimeLevel(int level) {
         //level 必须为DelayLevelConst中的值
-        if (level < DelayLevelConst.OneSecond.val() || level > DelayLevelConst.TwoHour.val()) {
+        if(level < DelayLevelConst.OneSecond.val() || level > DelayLevelConst.TwoHour.val()){
             throw new GomeClientException("消息延迟Level值设置错误，请重新设置!!!");
         }
         super.setDelayTimeLevel(level);
     }
 
     public String toString() {
-        return "Msg [topic=" + this.topic
-                + ", systemProperties=" + this.systemProperties
-                + ", userProperties=" + this.userProperties
-                + ", body.length=" + (this.body != null ? this.body.length : 0)
-                + ", msgId=" + this.getMsgId() + "]";
+        return "Msg [topic=" + this.topic + ", systemProperties=" + this.systemProperties + ", userProperties=" + this.userProperties + ", body.length=" + (this.body != null?this.body.length:0) + "]";
     }
 
     public static class SystemPropKey {
-        public static final String TAGS = "__TAGS";
+        public static final String TAG = "__TAG";
         public static final String KEY = "__KEY";
         public static final String MSGID = "__MSGID";
-        public static final String TRANSATIONMSGID = "__TRANSATIONMSGID";
         public static final String RECONSUMETIMES = "__RECONSUMETIMES";
         public static final String STARTDELIVERTIME = "__STARTDELIVERTIME";
 

@@ -22,12 +22,12 @@ public class PullConsumer {
     private static final Map<MessageQueue, Long> offseTable = new HashMap<MessageQueue, Long>();
 
     public static void main(String[] args) throws MQClientException {
-        DefaultMQPullConsumer consumer = new DefaultMQPullConsumer("destroyConsumerGroup_1");
+        DefaultMQPullConsumer consumer = new DefaultMQPullConsumer(MyUtils.getDefaultCluster());
         consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
         consumer.start();
         System.out.println("pull consumer start.");
-        int maxNums = 10;
-        Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues("flow_topic");
+        int maxNums = 31;
+        Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues("pullTest");
         for (MessageQueue mq : mqs) {
             System.out.println("consume from the queue: " + mq);
             SINGLE_MQ: while (true) {
