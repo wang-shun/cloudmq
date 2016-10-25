@@ -70,7 +70,7 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 ### 开发IDE
 * 开发工具不做统一规定（Idea、Eclipse都可以），建议使用Idea
 * 建议使用最新版格式Idea，附下载地址：http://pan.baidu.com/s/1slMkXY1
-* 附Idea属性格式注释文件下载地址：http://pan.baidu.com/s/1nvhHAPz
+* 附Idea属性格式注释文件下载地址：http://pan.baidu.com/s/1dEZqmbB
 
 ----------
 
