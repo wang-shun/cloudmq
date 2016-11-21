@@ -31,7 +31,7 @@ MyRocketMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式�
 ----------
 
 ### 开发规范
-* 代码使用Eclipse代码样式格式化，提交代码前须格式化[gmq.java.code.style.xml](http://git.oschina.net/tantexian/MyRocketMQ/blob/gome/docs/gmq.java.code.style.xml)
+* 代码使用Eclipse代码样式格式化，提交代码前须格式化[gmq.java.code.style.xml](http://git.oschina.net/gomecode/GMQ/tree/dev/docs/gmq.java.code.style.xml)
 * Java源文件使用Unix换行、UTF-8文件编码
 * 请在git clone命令之前执行`git config --global core.autocrlf false`，确保本地代码使用Unix换行格式
 * 请在非主干分支上开发，禁止提交本地未测试运行通过代码到线上
