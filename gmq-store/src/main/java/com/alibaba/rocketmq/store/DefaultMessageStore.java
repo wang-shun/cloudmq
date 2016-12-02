@@ -35,6 +35,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.alibaba.rocketmq.store.transaction.TransactionCheckExecuter;
+import com.alibaba.rocketmq.store.transaction.TransactionStateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +63,7 @@ import com.alibaba.rocketmq.store.stats.BrokerStatsManager;
 
 /**
  * 存储层默认实现
- * 
+ *
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-21
  */
@@ -93,6 +95,12 @@ public class DefaultMessageStore implements MessageStore {
     private final HAService haService;
     // 定时服务
     private final ScheduleMessageService scheduleMessageService;
+    /***************************add 事务 begin gaoyanlei **************************************************/
+    // 分布式事务服务
+    private final TransactionStateService transactionStateService;
+    // 事务回查接口
+    private final TransactionCheckExecuter transactionCheckExecuter;
+    /***************************add 事务  end  gaoyanlei **************************************************/
     // 运行时数据统计
     private final StoreStatsService storeStatsService;
     // 运行过程标志位
@@ -115,6 +123,7 @@ public class DefaultMessageStore implements MessageStore {
             final BrokerStatsManager brokerStatsManager) throws IOException {
         this.messageStoreConfig = messageStoreConfig;
         this.brokerStatsManager = brokerStatsManager;
+        this.transactionCheckExecuter = null;;
         this.allocateMapedFileService = new AllocateMapedFileService();
         this.commitLog = new CommitLog(this);
         this.consumeQueueTable =
@@ -129,7 +138,7 @@ public class DefaultMessageStore implements MessageStore {
         this.storeStatsService = new StoreStatsService();
         this.indexService = new IndexService(this);
         this.haService = new HAService(this);
-
+        this.transactionStateService = new TransactionStateService(this);
         switch (this.messageStoreConfig.getBrokerRole()) {
         case SLAVE:
             this.reputMessageService = new ReputMessageService();
@@ -152,8 +161,57 @@ public class DefaultMessageStore implements MessageStore {
         // 因为下面的recover会分发请求到索引服务，如果不启动，分发过程会被流控
         this.indexService.start();
     }
+    /***************************add 事务 begin gaoyanlei **************************************************/
+    public DefaultMessageStore(final MessageStoreConfig messageStoreConfig,
+                               final TransactionCheckExecuter transactionCheckExecuter,
+                               final BrokerStatsManager brokerStatsManager) throws IOException {
+        this.messageStoreConfig = messageStoreConfig;
+        this.transactionCheckExecuter = transactionCheckExecuter;
+        this.brokerStatsManager = brokerStatsManager;
+        this.allocateMapedFileService = new AllocateMapedFileService();
+        this.commitLog = new CommitLog(this);
+        this.consumeQueueTable =
+                new ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>>(
+                        32);
 
+        this.flushConsumeQueueService = new FlushConsumeQueueService();
+        this.cleanCommitLogService = new CleanCommitLogService();
+        this.cleanConsumeQueueService = new CleanConsumeQueueService();
+        this.dispatchMessageService =
+                new DispatchMessageService(this.messageStoreConfig.getPutMsgIndexHightWater());
+        this.storeStatsService = new StoreStatsService();
+        this.indexService = new IndexService(this);
+        this.haService = new HAService(this);
+        this.transactionStateService = new TransactionStateService(this);
 
+        switch (this.messageStoreConfig.getBrokerRole()) {
+            case SLAVE:
+                /**
+                 *  slave模式，需要重放master的消息；但是不需要处理 定时消息， 全部由重放完成
+                 */
+                this.reputMessageService = new ReputMessageService();
+                this.scheduleMessageService = null;
+                break;
+            case ASYNC_MASTER:
+            case SYNC_MASTER:
+                /**
+                 *  master模式，需要处理定时消息，但是不需要重放功能
+                 */
+                this.reputMessageService = null;
+                this.scheduleMessageService = new ScheduleMessageService(this);
+                break;
+            default:
+                this.reputMessageService = null;
+                this.scheduleMessageService = null;
+        }
+
+        // load过程依赖此服务，所以提前启动
+        this.allocateMapedFileService.start();
+        this.dispatchMessageService.start();
+        // 因为下面的recover会分发请求到索引服务，如果不启动，分发过程会被流控
+        this.indexService.start();
+    }
+    /***************************add 事务  end  gaoyanlei **************************************************/
     public void truncateDirtyLogicFiles(long phyOffset) {
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConsumeQueue>> tables =
                 DefaultMessageStore.this.consumeQueueTable;
@@ -168,7 +226,7 @@ public class DefaultMessageStore implements MessageStore {
 
     /**
      * 加载数据
-     * 
+     *
      * @throws IOException
      */
     public boolean load() {
@@ -190,6 +248,11 @@ public class DefaultMessageStore implements MessageStore {
 
             // load Consume Queue
             result = result && this.loadConsumeQueue();
+            /***************************add 事务 begin gaoyanlei *********************************************/
+                // load 事务模块
+             result = result && this.transactionStateService.load();
+
+            /***************************add 事务  end  gaoyanlei *********************************************/
 
             if (result) {
                 this.storeCheckpoint =
@@ -294,7 +357,7 @@ public class DefaultMessageStore implements MessageStore {
 
     /**
      * 启动存储服务
-     * 
+     *
      * @throws Exception
      */
     public void start() throws Exception {
@@ -315,7 +378,10 @@ public class DefaultMessageStore implements MessageStore {
             this.reputMessageService.setReputFromOffset(this.commitLog.getMaxOffset());
             this.reputMessageService.start();
         }
+        /***************************add 事务 begin gaoyanlei *********************************************/
 
+        this.transactionStateService.start();
+        /***************************add 事务  end  gaoyanlei *********************************************/
         this.haService.start();
 
         this.createTempFile();
@@ -1031,7 +1097,7 @@ public class DefaultMessageStore implements MessageStore {
 
     /**
      * 启动服务后，在存储根目录创建临时文件，类似于 UNIX VI编辑工具
-     * 
+     *
      * @throws IOException
      */
     private void createTempFile() throws IOException {
@@ -1127,7 +1193,10 @@ public class DefaultMessageStore implements MessageStore {
             catch (InterruptedException e) {
             }
         }
-
+        /***************************add 事务 begin gaoyanlei *********************************************/
+        // 恢复事务模块
+        this.transactionStateService.recoverStateTable(lastExitOK);
+        /***************************add 事务  end  gaoyanlei ********************************************/
         this.recoverTopicQueueTable();
     }
 
@@ -1653,6 +1722,32 @@ public class DefaultMessageStore implements MessageStore {
                     case MessageSysFlag.TransactionRollbackType:
                         break;
                     }
+                    /***************************add 事务 begin gaoyanlei **************************************************/
+                    // 2、更新Transaction State Table
+                    if (req.getProducerGroup() != null) {
+                        switch (tranType) {
+                            case MessageSysFlag.TransactionNotType:
+                                break;
+                            case MessageSysFlag.TransactionPreparedType:
+                                // 将Prepared事务记录下来
+                                DefaultMessageStore.this.getTransactionStateService().appendPreparedTransaction(//
+                                        req.getCommitLogOffset(),//
+                                        req.getMsgSize(),//
+                                        (int) (req.getStoreTimestamp() / 1000),//
+                                        req.getProducerGroup().hashCode());
+                                break;
+                            case MessageSysFlag.TransactionCommitType:
+                            case MessageSysFlag.TransactionRollbackType:
+                                DefaultMessageStore.this.getTransactionStateService().updateTransactionState(//
+                                        req.getTranStateTableOffset(),//
+                                        req.getPreparedTransactionOffset(),//
+                                        req.getProducerGroup().hashCode(),//
+                                        tranType//
+                                );
+                                break;
+                        }
+                    }
+                    /***************************add 事务  end  gaoyanlei **************************************************/
                 }
 
                 if (DefaultMessageStore.this.getMessageStoreConfig().isMessageIndexEnable()) {
@@ -1950,4 +2045,14 @@ public class DefaultMessageStore implements MessageStore {
     public BrokerStatsManager getBrokerStatsManager() {
         return brokerStatsManager;
     }
+    /***************************add 事务 begin gaoyanlei **************************************************/
+
+    public TransactionStateService getTransactionStateService() {
+        return transactionStateService;
+    }
+
+    public TransactionCheckExecuter getTransactionCheckExecuter() {
+        return transactionCheckExecuter;
+    }
+    /***************************add 事务  end  gaoyanlei **************************************************/
 }

@@ -25,6 +25,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +54,7 @@ import com.alibaba.rocketmq.broker.processor.SendMessageProcessor;
 import com.alibaba.rocketmq.broker.slave.SlaveSynchronize;
 import com.alibaba.rocketmq.broker.subscription.SubscriptionGroupManager;
 import com.alibaba.rocketmq.broker.topic.TopicConfigManager;
+import com.alibaba.rocketmq.broker.transaction.DefaultTransactionCheckExecuter;
 import com.alibaba.rocketmq.common.BrokerConfig;
 import com.alibaba.rocketmq.common.DataVersion;
 import com.alibaba.rocketmq.common.MixAll;
@@ -95,6 +97,11 @@ public class BrokerController {
     private final ConsumerManager consumerManager;
     private final ProducerManager producerManager;
     private final ClientHousekeepingService clientHousekeepingService;
+    /***************************add 事务  end  gaoyanlei **************************************************/
+    // Broker主动回查Producer事务状态
+    private final DefaultTransactionCheckExecuter defaultTransactionCheckExecuter;
+    private ScheduledFuture<?> slaveSyncScheduledFuture;
+    /***************************add 事务 begin gaoyanlei **************************************************/
     private final PullMessageProcessor pullMessageProcessor;
     private final PullRequestHoldService pullRequestHoldService;
     private final Broker2Client broker2Client;
@@ -139,6 +146,7 @@ public class BrokerController {
         this.topicConfigManager = new TopicConfigManager(this);
         this.pullMessageProcessor = new PullMessageProcessor(this);
         this.pullRequestHoldService = new PullRequestHoldService(this);
+        this.defaultTransactionCheckExecuter = new DefaultTransactionCheckExecuter(this);
         this.consumerIdsChangeListener = new DefaultConsumerIdsChangeListener(this);
         this.consumerManager = new ConsumerManager(this.consumerIdsChangeListener);
         this.producerManager = new ProducerManager();
@@ -177,7 +185,7 @@ public class BrokerController {
 
         if (result) {
             try {
-                this.messageStore = new DefaultMessageStore(this.messageStoreConfig, this.brokerStatsManager);
+                this.messageStore = new DefaultMessageStore(this.messageStoreConfig, this.defaultTransactionCheckExecuter,this.brokerStatsManager);
             }
             catch (IOException e) {
                 result = false;
@@ -800,4 +808,7 @@ public class BrokerController {
     public void setStoreHost(InetSocketAddress storeHost) {
         this.storeHost = storeHost;
     }
+	public DefaultTransactionCheckExecuter getDefaultTransactionCheckExecuter() {
+		return defaultTransactionCheckExecuter;
+	}
 }

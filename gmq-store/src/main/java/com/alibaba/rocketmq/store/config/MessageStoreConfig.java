@@ -36,7 +36,40 @@ public class MessageStoreConfig {
     @ImportantField
     private String storePathCommitLog = System.getProperty("user.home") + File.separator + "store"
             + File.separator + "commitlog";
+    /***************************add 事务 begin gaoyanlei **************************************************/
+    // ConsumeQueue存储目录
+    @ImportantField
+    private String storePathConsumeQueue = System.getProperty("user.home") + File.separator + "store"
+            + File.separator + "consumequeue";
 
+    // 索引文件存储目录
+    @ImportantField
+    private String storePathIndex = System.getProperty("user.home") + File.separator + "store"
+            + File.separator + "index";
+
+    // 异常退出产生的文件
+    @ImportantField
+    private String storeCheckpoint = System.getProperty("user.home") + File.separator + "store"
+            + File.separator + "checkpoint";
+
+    // 异常退出产生的文件
+    @ImportantField
+    private String abortFile = System.getProperty("user.home") + File.separator + "store" + File.separator
+            + "abort";
+    // 分布式事务配置
+    private String tranStateTableStorePath = System.getProperty("user.home") + File.separator + "store"
+            + File.separator + "transaction" + File.separator + "statetable";
+    private int tranStateTableMapedFileSize = 2000000 *1;// TransactionStateService.TSStoreUnitSize;
+    private String tranRedoLogStorePath = System.getProperty("user.home") + File.separator + "store"
+            + File.separator + "transaction" + File.separator + "redolog";
+    private int tranRedoLogMapedFileSize = 2000000 * ConsumeQueue.CQStoreUnitSize;
+    // 事务回查至少间隔时间
+    private long checkTransactionMessageAtleastInterval = 1000 * 60;
+    // 事务回查定时间隔时间
+    private long checkTransactionMessageTimerInterval = 1000 * 60;
+    // 是否开启事务Check过程，双十一时，可以关闭
+    private boolean checkTransactionMessageEnable = true;
+    /***************************add 事务  end  gaoyanlei **************************************************/
     // CommitLog每个文件大小 1G
     private int mapedFileSizeCommitLog = 1024 * 1024 * 1024;
     // ConsumeQueue每个文件大小 默认存储30W条消息
@@ -237,7 +270,77 @@ public class MessageStoreConfig {
         this.deleteWhen = deleteWhen;
     }
 
+    public String getTranStateTableStorePath() {
+        return tranStateTableStorePath;
+    }
 
+
+    public void setTranStateTableStorePath(String tranStateTableStorePath) {
+        this.tranStateTableStorePath = tranStateTableStorePath;
+    }
+
+
+    public int getTranStateTableMapedFileSize() {
+        return tranStateTableMapedFileSize;
+    }
+
+
+    public void setTranStateTableMapedFileSize(int tranStateTableMapedFileSize) {
+        this.tranStateTableMapedFileSize = tranStateTableMapedFileSize;
+    }
+
+
+    public String getTranRedoLogStorePath() {
+        return tranRedoLogStorePath;
+    }
+
+
+    public void setTranRedoLogStorePath(String tranRedoLogStorePath) {
+        this.tranRedoLogStorePath = tranRedoLogStorePath;
+    }
+
+
+    public int getTranRedoLogMapedFileSize() {
+        return tranRedoLogMapedFileSize;
+    }
+
+
+    public void setTranRedoLogMapedFileSize(int tranRedoLogMapedFileSize) {
+        this.tranRedoLogMapedFileSize = tranRedoLogMapedFileSize;
+    }
+
+
+    public long getCheckTransactionMessageAtleastInterval() {
+        return checkTransactionMessageAtleastInterval;
+    }
+
+
+    public void setCheckTransactionMessageAtleastInterval(
+            long checkTransactionMessageAtleastInterval) {
+        this.checkTransactionMessageAtleastInterval = checkTransactionMessageAtleastInterval;
+    }
+
+
+    public long getCheckTransactionMessageTimerInterval() {
+        return checkTransactionMessageTimerInterval;
+    }
+
+
+    public void setCheckTransactionMessageTimerInterval(
+            long checkTransactionMessageTimerInterval) {
+        this.checkTransactionMessageTimerInterval = checkTransactionMessageTimerInterval;
+    }
+
+
+    public boolean isCheckTransactionMessageEnable() {
+        return checkTransactionMessageEnable;
+    }
+
+
+    public void setCheckTransactionMessageEnable(
+            boolean checkTransactionMessageEnable) {
+        this.checkTransactionMessageEnable = checkTransactionMessageEnable;
+    }
     public int getDiskMaxUsedSpaceRatio() {
         if (this.diskMaxUsedSpaceRatio < 10)
             return 10;
@@ -592,4 +695,44 @@ public class MessageStoreConfig {
     public void setStorePathRootDir(String storePathRootDir) {
         this.storePathRootDir = storePathRootDir;
     }
+
+	public String getStorePathConsumeQueue() {
+		return storePathConsumeQueue;
+	}
+
+
+	public void setStorePathConsumeQueue(String storePathConsumeQueue) {
+		this.storePathConsumeQueue = storePathConsumeQueue;
+	}
+
+
+	public String getStorePathIndex() {
+		return storePathIndex;
+	}
+
+
+	public void setStorePathIndex(String storePathIndex) {
+		this.storePathIndex = storePathIndex;
+	}
+
+
+	public String getStoreCheckpoint() {
+		return storeCheckpoint;
+	}
+
+
+	public void setStoreCheckpoint(String storeCheckpoint) {
+		this.storeCheckpoint = storeCheckpoint;
+	}
+
+
+	public String getAbortFile() {
+		return abortFile;
+	}
+
+
+	public void setAbortFile(String abortFile) {
+		this.abortFile = abortFile;
+	}
+	
 }
