@@ -121,18 +121,18 @@ public class DefaultMessageStore implements MessageStore {
 
     public DefaultMessageStore(final MessageStoreConfig messageStoreConfig,
             final BrokerStatsManager brokerStatsManager) throws IOException {
-        this.messageStoreConfig = messageStoreConfig;
-        this.brokerStatsManager = brokerStatsManager;
+        this.messageStoreConfig = messageStoreConfig; // 初始化存储层配置文件所有属性值
+        this.brokerStatsManager = brokerStatsManager; // broker状态统计（ex：记录clustername及当前put Topic数等）
         this.transactionCheckExecuter = null;;
-        this.allocateMapedFileService = new AllocateMapedFileService();
-        this.commitLog = new CommitLog(this);
+        this.allocateMapedFileService = new AllocateMapedFileService(); // 启动创建MapedFile的线程服务
+        this.commitLog = new CommitLog(this); // commitLog用于持久化消息到磁盘（可用以宕机或者重启恢复）
         this.consumeQueueTable =
                 new ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>>(
                     32);
 
-        this.flushConsumeQueueService = new FlushConsumeQueueService();
-        this.cleanCommitLogService = new CleanCommitLogService();
-        this.cleanConsumeQueueService = new CleanConsumeQueueService();
+        this.flushConsumeQueueService = new FlushConsumeQueueService(); // 启动ConsumeQueue逻辑队列刷盘线程服务
+        this.cleanCommitLogService = new CleanCommitLogService(); // 清理物理文件服务，ex：磁盘达到85%则删除commitLog文件，到达90%则停止接受新消息
+        this.cleanConsumeQueueService = new CleanConsumeQueueService(); // 清理ConsumeQueue逻辑文件服务
         this.dispatchMessageService =
                 new DispatchMessageService(this.messageStoreConfig.getPutMsgIndexHightWater());
         this.storeStatsService = new StoreStatsService();
@@ -1607,9 +1607,12 @@ public class DefaultMessageStore implements MessageStore {
 
             while (!this.isStoped()) {
                 try {
+                    // 获取ConsumeQueue刷盘间隔时间（默认1000毫秒）
                     int interval =
                             DefaultMessageStore.this.getMessageStoreConfig().getFlushIntervalConsumeQueue();
+                    // 调用Object的wait方法，等待该对象调用notify唤醒
                     this.waitForRunning(interval);
+                    // 刷盘
                     this.doFlush(1);
                 }
                 catch (Exception e) {
@@ -1705,9 +1708,10 @@ public class DefaultMessageStore implements MessageStore {
 
 
         private void doDispatch() {
-            if (!this.requestsRead.isEmpty()) {
-                for (DispatchRequest req : this.requestsRead) {
+            if (!this.requestsRead.isEmpty()) { // 当requestsRead有读请求时
+                for (DispatchRequest req : this.requestsRead) { // 遍历读请求
 
+                    // 事务处理相关逻辑，根据SysFlag值，来确定事务的状态
                     final int tranType = MessageSysFlag.getTransactionValue(req.getSysFlag());
                     // 1、分发消息位置信息到ConsumeQueue
                     switch (tranType) {
@@ -1750,7 +1754,9 @@ public class DefaultMessageStore implements MessageStore {
                     /***************************add 事务  end  gaoyanlei **************************************************/
                 }
 
+                // 检查是否开启消息索引功能
                 if (DefaultMessageStore.this.getMessageStoreConfig().isMessageIndexEnable()) {
+                    // 向indexService服务的队列中添加请求，队列满情况下，丢弃请求
                     DefaultMessageStore.this.indexService.putRequest(this.requestsRead.toArray());
                 }
 

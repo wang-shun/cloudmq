@@ -236,6 +236,7 @@ public class IndexService extends ServiceThread {
      * 向队列中添加请求，队列满情况下，丢弃请求
      */
     public void putRequest(final Object[] reqs) {
+        // 添加读请求到队尾，如果队列满（即超过3000），则丢弃该请求
         boolean offer = this.requestQueue.offer(reqs);
         if (!offer) {
             if (log.isDebugEnabled()) {

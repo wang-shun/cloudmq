@@ -443,6 +443,13 @@ public class ConsumeQueue {
             return true;
         }
 
+        /**
+         * 翻转缓冲区，即将limit设置为当前的position，然后将position设置为0
+         * 1、如果需要读取之前写入的数据，调用flip即可以将之前写入数据读取到（即flip之后的position到limit之间的数据）
+         * 2、此处即将20字节的索引信息从position为0开始到limit为20的缓冲区区间
+         * @author tantexian<my.oschina.net/tantexian>
+         * @since 2016/12/6
+         */
         this.byteBufferIndex.flip();
         this.byteBufferIndex.limit(CQStoreUnitSize);
         this.byteBufferIndex.putLong(offset);

@@ -131,6 +131,14 @@ public abstract class ServiceThread implements Runnable {
             }
 
             try {
+                /**
+                 * Object的wait与Thread sleep方法不同在于:
+                 * 1、sleep不会释放对象锁，sleep休眠固定时间后恢复
+                 * 2、wait()会等待该对象调用notify()唤起
+                 *
+                 * @author tantexian<my.oschina.net/tantexian>
+                 * @since 2016/12/7
+                 */
                 this.wait(interval);
             }
             catch (InterruptedException e) {

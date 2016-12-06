@@ -6,6 +6,7 @@ package com.alibaba.rocketmq.store;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.IllegalFormatCodePointException;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -28,6 +29,26 @@ public class MapedFileTest {
     public static void tearDownAfterClass() throws Exception {
     }
 
+
+    @Test
+    public void test_write() {
+        try {
+            MapedFile mapedFile = new MapedFile("./unit_test_store/MapedFileTest/001", 1024 * 64);
+            int num = 100;
+            String msg = "hello word ";
+            for (int i =0; i< num; i++) {
+
+                boolean result = mapedFile.appendMessage((msg + i + "\n").getBytes());
+                assertTrue(result);
+            }
+
+            System.out.println("write OK");
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void test_write_read() {

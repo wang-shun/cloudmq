@@ -38,6 +38,7 @@ import com.alibaba.rocketmq.common.constant.LoggerName;
 public class AllocateMapedFileService extends ServiceThread {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.StoreLoggerName);
     private static int WaitTimeOut = 1000 * 5;
+    // requestTable的key-val分别保存文件的filePath及当前req请求
     private ConcurrentHashMap<String, AllocateRequest> requestTable =
             new ConcurrentHashMap<String, AllocateRequest>();
     private PriorityBlockingQueue<AllocateRequest> requestQueue =
@@ -121,6 +122,7 @@ public class AllocateMapedFileService extends ServiceThread {
     public void run() {
         log.info(this.getServiceName() + " service started");
 
+        // 调用mmapOperation函数
         while (!this.isStoped() && this.mmapOperation())
             ;
 
@@ -134,23 +136,27 @@ public class AllocateMapedFileService extends ServiceThread {
     private boolean mmapOperation() {
         AllocateRequest req = null;
         try {
+            // 从分配MappedFile的请求优先级队列中，出队一个请求
             req = this.requestQueue.take();
+            // 判断当前请求是否保存在requestTable中
             if (null == this.requestTable.get(req.getFilePath())) {
                 log.warn("this mmap request expired, maybe cause timeout " + req.getFilePath() + " "
                         + req.getFileSize());
                 return true;
             }
 
+            // 如果当前mmap请求的mapedFile为空，则创建新的mapedFile文件
             if (req.getMapedFile() == null) {
                 long beginTime = System.currentTimeMillis();
+                // 根据当前请求的文件路径及文件大小创建对于的mmap内存映射
                 MapedFile mapedFile = new MapedFile(req.getFilePath(), req.getFileSize());
                 long eclipseTime = UtilAll.computeEclipseTimeMilliseconds(beginTime);
-                if (eclipseTime > 10) {
+                if (eclipseTime > 10) {// 如果创建内存映射超过10ms则记录warn日志
                     int queueSize = this.requestQueue.size();
                     log.warn("create mapedFile spent time(ms) " + eclipseTime + " queue size " + queueSize
                             + " " + req.getFilePath() + " " + req.getFileSize());
                 }
-
+                // 设置req的mapedFile为当前新创建的mapedFile
                 req.setMapedFile(mapedFile);
                 this.hasException = false;
             }
@@ -165,6 +171,7 @@ public class AllocateMapedFileService extends ServiceThread {
             this.hasException = true;
         }
         finally {
+            // 如果此处从mmap请求队列中获取的req不为空，则通过countDown唤醒线程await（count值减到0位唤醒）
             if (req != null)
                 req.getCountDownLatch().countDown();
         }
