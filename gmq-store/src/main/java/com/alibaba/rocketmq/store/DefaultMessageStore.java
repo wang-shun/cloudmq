@@ -140,55 +140,12 @@ public class DefaultMessageStore implements MessageStore {
         this.indexService = new IndexService(this);
         this.haService = new HAService(this);
         this.transactionStateService = new TransactionStateService(this);
-        switch (this.messageStoreConfig.getBrokerRole()) {
-        case SLAVE:
-            this.reputMessageService = new ReputMessageService();
-            // reputMessageService依赖scheduleMessageService做定时消息的恢复，确保储备数据一致
-            this.scheduleMessageService = new ScheduleMessageService(this);
-            break;
-        case ASYNC_MASTER:
-        case SYNC_MASTER:
-            this.reputMessageService = null;
-            this.scheduleMessageService = new ScheduleMessageService(this);
-            break;
-        default:
-            this.reputMessageService = null;
-            this.scheduleMessageService = null;
-        }
-
-        // load过程依赖此服务，所以提前启动
-        this.allocateMapedFileService.start();
-        this.dispatchMessageService.start();
-        // 因为下面的recover会分发请求到索引服务，如果不启动，分发过程会被流控
-        this.indexService.start();
-    }
-    /***************************add 事务 begin gaoyanlei **************************************************/
-    public DefaultMessageStore(final MessageStoreConfig messageStoreConfig,
-                               final TransactionCheckExecuter transactionCheckExecuter,
-                               final BrokerStatsManager brokerStatsManager) throws IOException {
-        this.messageStoreConfig = messageStoreConfig;
-        this.transactionCheckExecuter = transactionCheckExecuter;
-        this.brokerStatsManager = brokerStatsManager;
-        this.allocateMapedFileService = new AllocateMapedFileService();
-        this.commitLog = new CommitLog(this);
-        this.consumeQueueTable =
-                new ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>>(
-                        32);
-
-        this.flushConsumeQueueService = new FlushConsumeQueueService();
-        this.cleanCommitLogService = new CleanCommitLogService();
-        this.cleanConsumeQueueService = new CleanConsumeQueueService();
-        this.dispatchMessageService =
-                new DispatchMessageService(this.messageStoreConfig.getPutMsgIndexHightWater());
-        this.storeStatsService = new StoreStatsService();
-        this.indexService = new IndexService(this);
-        this.haService = new HAService(this);
-        this.transactionStateService = new TransactionStateService(this);
 
         switch (this.messageStoreConfig.getBrokerRole()) {
             case SLAVE:
                 /**
                  *  slave模式，需要重放master的消息；但是不需要处理 定时消息， 全部由重放完成
+                 *  reputMessageService依赖scheduleMessageService做定时消息的恢复，确保储备数据一致
                  */
                 this.reputMessageService = new ReputMessageService();
                 this.scheduleMessageService = null;
@@ -212,7 +169,8 @@ public class DefaultMessageStore implements MessageStore {
         // 因为下面的recover会分发请求到索引服务，如果不启动，分发过程会被流控
         this.indexService.start();
     }
-    /***************************add 事务  end  gaoyanlei **************************************************/
+
+
     public void truncateDirtyLogicFiles(long phyOffset) {
         ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConsumeQueue>> tables =
                 DefaultMessageStore.this.consumeQueueTable;
@@ -1311,6 +1269,7 @@ public class DefaultMessageStore implements MessageStore {
 
         public void run() {
             try {
+                // 删除过期文件
                 this.deleteExpiredFiles();
 
                 this.redeleteHangedFile();
@@ -1344,14 +1303,25 @@ public class DefaultMessageStore implements MessageStore {
         }
 
 
+        /**
+         * 清理过期文件（超过72小时，或者占用空间超过85%）
+         *
+         * @author tantexian<my.oschina.net/tantexian>
+         * @since 2016/12/8
+         * @params
+         */
         private void deleteExpiredFiles() {
             int deleteCount = 0;
+            // 文件保留时间默认为72小时
             long fileReservedTime = DefaultMessageStore.this.getMessageStoreConfig().getFileReservedTime();
+            // 删除多个commitlog文件之间的间隔默认为100毫秒
             int deletePhysicFilesInterval =
                     DefaultMessageStore.this.getMessageStoreConfig().getDeleteCommitLogFilesInterval();
+            // // 强制删除文件间隔时间默认为120秒
             int destroyMapedFileIntervalForcibly =
                     DefaultMessageStore.this.getMessageStoreConfig().getDestroyMapedFileIntervalForcibly();
 
+            // 判断当前时间是否能删除（默认凌晨四点）
             boolean timeup = this.isTimeToDelete();
             boolean spacefull = this.isSpaceToDelete();
             boolean manualDelete = this.manualDeleteFileSeveralTimes > 0;
@@ -1417,6 +1387,7 @@ public class DefaultMessageStore implements MessageStore {
 
                     cleanImmediately = true;
                 }
+                // 空间使用比率超过0.85则开始清理文件 2016/12/8 Add by tantexixan
                 else if (physicRatio > DiskSpaceCleanForciblyRatio) {
                     cleanImmediately = true;
                 }
