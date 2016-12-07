@@ -301,7 +301,11 @@ public class MapedFile extends ReferenceResource {
                 this.committedPosition.set(this.wrotePostion.get());
             }
         }
+<<<<<<< 18f4238591bb7aae121a4f3cb055bef161bf77f7
         // 返回当前flush到磁盘的位置（offset是相对于当前的mappedFile）
+=======
+        // 返回当前flush到磁盘的位置
+>>>>>>> 增加DefaultMessageStore注释
         return this.getCommittedPosition();
     }
 

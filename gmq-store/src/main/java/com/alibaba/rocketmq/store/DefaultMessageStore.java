@@ -126,6 +126,7 @@ public class DefaultMessageStore implements MessageStore {
         this.transactionCheckExecuter = null;
         this.allocateMapedFileService = new AllocateMapedFileService(); // 启动创建MapedFile的线程服务
         this.commitLog = new CommitLog(this); // commitLog用于持久化消息到磁盘（可用以宕机或者重启恢复）
+        // 用于保存topic、queueId、consumeQueue的对应关系
         this.consumeQueueTable =
                 new ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>>(
                     32);
