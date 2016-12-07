@@ -446,12 +446,13 @@ public class MapedFileQueue {
         if (mapedFile != null) {
             // 获取最后一条消息存储时间
             long tmpTimeStamp = mapedFile.getStoreTimestamp();
-            // 根据flushLeastPages数值，进行刷盘处理，offset为当前此处commit调用flush到磁盘的位置
+            // 根据flushLeastPages数值，进行刷盘处理，offset为当前此处commit调用flush到磁盘的位置（此offset是相对于当前的mappedFile）
             int offset = mapedFile.commit(flushLeastPages);
-            // 计算当前
+            // 计算当前offset的绝对位置值where（从0开始）
             long where = mapedFile.getFileFromOffset() + offset;
-            // 如果当前的
+            // 如果当前的flush位置与记录的committedWhere相同，则说明所有缓冲区的数据全部刷盘完毕
             result = (where == this.committedWhere);
+            // 更新committedWhere为最新的where值
             this.committedWhere = where;
             if (0 == flushLeastPages) {
                 this.storeTimestamp = tmpTimeStamp;
@@ -480,7 +481,14 @@ public class MapedFileQueue {
 
                 /**
                  * 举例说明：
-                 * 假设当前offset=5024，且每个mappedFile文件大小为1024k。当前mapedFile的FileFromOffset为？
+                 * 假设当前offset=5024，且每个mappedFile文件大小为1024k。(该5024是全局的相对于0的offset)
+                 * 文件路径下面保存的所有文件（包括被删除的）为：0000|1024|2048|3072|4096等5个文件
+                 * 在当前状态时间节点：0000|1024两个文件被清理掉了，那么只剩下2048|3072|4096三个文件
+                 * 那么当前mapedFile.getFileFromOffset()即为this.getFirstMapedFile()的文件的offset，即第一个文件2048的FromOffset==2048（默认FromOffset为文件名）
+                 *
+                 * 则：index = 5024/1024-2048/1024=5-2=3,即offset=5024应当对应的mappedFile为第三个文件及4096文件
+                 *
+                 * PS:上述MapedFile mapedFile = this.getFirstMapedFile();方法获取到了第一个mappedFile。（因为过期的文件会被删除掉，所以不一定是0000）
                  *
                  * @author tantexian<my.oschina.net/tantexian>
                  * @since 2016/12/7
