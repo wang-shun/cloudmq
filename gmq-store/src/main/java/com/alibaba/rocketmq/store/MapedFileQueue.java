@@ -434,16 +434,23 @@ public class MapedFileQueue {
 
     /**
      * 返回值表示是否全部刷盘完成
+     *
+     * @parms flushLeastPages 最少刷盘page个数
      * 
      * @return
      */
     public boolean commit(final int flushLeastPages) {
         boolean result = true;
+        // 根据offset找到对应的mappedFile文件，committedWhere变量记录了上次刷盘的offset位置
         MapedFile mapedFile = this.findMapedFileByOffset(this.committedWhere, true);
         if (mapedFile != null) {
+            // 获取最后一条消息存储时间
             long tmpTimeStamp = mapedFile.getStoreTimestamp();
+            // 根据flushLeastPages数值，进行刷盘处理，offset为当前此处commit调用flush到磁盘的位置
             int offset = mapedFile.commit(flushLeastPages);
+            // 计算当前
             long where = mapedFile.getFileFromOffset() + offset;
+            // 如果当前的
             result = (where == this.committedWhere);
             this.committedWhere = where;
             if (0 == flushLeastPages) {
@@ -455,12 +462,30 @@ public class MapedFileQueue {
     }
 
 
+    /**
+     * 根据offset计算出对应的mappedfile，并返回对应的mappedfile
+     *
+     * @author tantexian<my.oschina.net/tantexian>
+     * @since 2016/12/7
+     * @params returnFirstOnNotFound: 为true则在没有找到对应offset对应的mappedfile时候，则默认返回第一个mappedfile
+     */
     public MapedFile findMapedFileByOffset(final long offset, final boolean returnFirstOnNotFound) {
         try {
+            // 加读锁
             this.readWriteLock.readLock().lock();
+            // 获取MappedFileQueue中的第一个MapedFile文件
             MapedFile mapedFile = this.getFirstMapedFile();
 
             if (mapedFile != null) {
+
+                /**
+                 * 举例说明：
+                 * 假设当前offset=5024，且每个mappedFile文件大小为1024k。当前mapedFile的FileFromOffset为？
+                 *
+                 * @author tantexian<my.oschina.net/tantexian>
+                 * @since 2016/12/7
+                 * @params FileFromOffset: 映射的起始偏移量(注：文件的名字即为映射的起始偏移量)
+                 */
                 int index =
                         (int) ((offset / this.mapedFileSize) - (mapedFile.getFileFromOffset() / this.mapedFileSize));
                 if (index < 0 || index >= this.mapedFiles.size()) {
@@ -488,6 +513,7 @@ public class MapedFileQueue {
             log.error("findMapedFileByOffset Exception", e);
         }
         finally {
+            // 释放读锁
             this.readWriteLock.readLock().unlock();
         }
 

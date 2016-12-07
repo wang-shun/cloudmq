@@ -126,6 +126,7 @@ public class DefaultMessageStore implements MessageStore {
         this.transactionCheckExecuter = null;;
         this.allocateMapedFileService = new AllocateMapedFileService(); // 启动创建MapedFile的线程服务
         this.commitLog = new CommitLog(this); // commitLog用于持久化消息到磁盘（可用以宕机或者重启恢复）
+        // 用于保存topic、queueId、consumeQueue的对应关系
         this.consumeQueueTable =
                 new ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>>(
                     32);
@@ -1561,33 +1562,41 @@ public class DefaultMessageStore implements MessageStore {
         private void doFlush(int retryTimes) {
             /**
              * 变量含义：如果大于0，则标识这次刷盘必须刷多少个page，如果=0，则有多少刷多少
+             * 刷ConsumeQueue最小PAGE个数，默认为2个
              */
             int flushConsumeQueueLeastPages =
                     DefaultMessageStore.this.getMessageStoreConfig().getFlushConsumeQueueLeastPages();
 
+            // 如果重试次数超过最大次数3，则设置最少刷盘page为0
             if (retryTimes == RetryTimesOver) {
                 flushConsumeQueueLeastPages = 0;
             }
 
             long logicsMsgTimestamp = 0;
 
-            // 定时刷盘
+            // 定时刷盘（刷ConsumeQueue，彻底刷盘间隔时间，默认60s）
             int flushConsumeQueueThoroughInterval =
                     DefaultMessageStore.this.getMessageStoreConfig().getFlushConsumeQueueThoroughInterval();
-            long currentTimeMillis = System.currentTimeMillis();
+            long currentTimeMillis = System.currentTimeMillis(); // 获取当前时间
             if (currentTimeMillis >= (this.lastFlushTimestamp + flushConsumeQueueThoroughInterval)) {
+                // 如果最后一次刷盘时间到当前的时间间隔超过刷盘间隔时间60s，设置最后一次刷盘时间为当前时间
                 this.lastFlushTimestamp = currentTimeMillis;
                 flushConsumeQueueLeastPages = 0;
+                // 获取最后一次存储模型最终一致的时间点LogicsMsgTimestamp
                 logicsMsgTimestamp = DefaultMessageStore.this.getStoreCheckpoint().getLogicsMsgTimestamp();
             }
 
+            // 获取ConsumeQueue集合（保存了topic、queueId、consumeQueue等）
             ConcurrentHashMap<String, ConcurrentHashMap<Integer, ConsumeQueue>> tables =
                     DefaultMessageStore.this.consumeQueueTable;
 
+            // 遍历tables中所有的ConsumeQueue
             for (ConcurrentHashMap<Integer, ConsumeQueue> maps : tables.values()) {
                 for (ConsumeQueue cq : maps.values()) {
                     boolean result = false;
+                    // 如果result部位true，则表示刷盘没有完全完成，重试retryTimes次
                     for (int i = 0; i < retryTimes && !result; i++) {
+                        // 返回值result表示是否全部刷盘完成
                         result = cq.commit(flushConsumeQueueLeastPages);
                     }
                 }

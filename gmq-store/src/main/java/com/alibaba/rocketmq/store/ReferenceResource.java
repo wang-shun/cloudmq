@@ -36,10 +36,13 @@ public abstract class ReferenceResource {
      */
     public synchronized boolean hold() {
         if (this.isAvailable()) {
+            // 判断资源是否可用（只有资源调用shutdown才会导致资源不可用） 2016/12/7 by tantexixan
             if (this.refCount.getAndIncrement() > 0) {
+                // 只有当引用计数小于等于零（即当前资源没有被任何其他对象hold),此处判断才会成功，返回true 2016/12/7 by tantexixan
                 return true;
             }
             else {
+                // 如果当前对象引用计数大于零，则说明已经被其他对象hold了，此处调用hold，应该使引用计数减1，返回false
                 this.refCount.getAndDecrement();
             }
         }

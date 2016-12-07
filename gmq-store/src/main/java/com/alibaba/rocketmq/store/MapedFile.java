@@ -74,6 +74,7 @@ public class MapedFile extends ReferenceResource {
         this.fileName = fileName;
         this.fileSize = fileSize;
         this.file = new File(fileName);
+        // 文件的名字即为映射的起始偏移量
         this.fileFromOffset = Long.parseLong(this.file.getName());
         boolean ok = false;
 
@@ -267,22 +268,28 @@ public class MapedFile extends ReferenceResource {
      * 
      * @param flushLeastPages
      *            至少刷几个page
-     * @return
+     * @return 当前flush到磁盘的位置
      */
     public int commit(final int flushLeastPages) {
         if (this.isAbleToFlush(flushLeastPages)) {
+            // 判断当前是否需要立即刷缓冲数据到磁盘
             if (this.hold()) {
+                // 获取当前写的位置
                 int value = this.wrotePostion.get();
+                // 将mappedByteBuffer的数据强制刷新到磁盘文件中
                 this.mappedByteBuffer.force();
+                // 刷新完毕，则将committedPosition即flush的位置更新为当前位置记录
                 this.committedPosition.set(value);
+                // 释放资源
                 this.release();
             }
             else {
                 log.warn("in commit, hold failed, commit offset = " + this.committedPosition.get());
+                // 如果没有获取到资源，则flush的位置设置为当前缓冲区当期写入的位置
                 this.committedPosition.set(this.wrotePostion.get());
             }
         }
-
+        // 返回当前flush到磁盘的位置
         return this.getCommittedPosition();
     }
 
@@ -296,21 +303,32 @@ public class MapedFile extends ReferenceResource {
         this.committedPosition.set(pos);
     }
 
-
+    /**
+     * 根据最少需要刷盘page数值来判断当前是否需要立即刷新缓存数据到磁盘
+     * @author tantexian<my.oschina.net/tantexian>
+     * @since 2016/12/7
+     * @params
+     */
     private boolean isAbleToFlush(final int flushLeastPages) {
+        // 获取当前flush到磁盘的位置
         int flush = this.committedPosition.get();
+        // 获取当前write到缓冲区的位置
         int write = this.wrotePostion.get();
 
-        // 如果当前文件已经写满，应该立刻刷盘
+        // 如果当前文件已经写满，应该立刻刷盘（即当前写的位置==整个映射文件filesize的位置）
         if (this.isFull()) {
             return true;
         }
 
         // 只有未刷盘数据满足指定page数目才刷盘
+        // OS_PAGE_SIZE默认为1024*4=4k
         if (flushLeastPages > 0) {
+            // 计算出前期写缓冲区的位置到已刷盘的数据位置之间的数据，是否大于等于设置的至少得刷盘page个数
+            // 超过则需要刷盘
             return ((write / OS_PAGE_SIZE) - (flush / OS_PAGE_SIZE)) >= flushLeastPages;
         }
 
+        // 如果flushLeastPages为0，那么则是每次有数据写入缓冲区则则直接刷盘
         return write > flush;
     }
 
