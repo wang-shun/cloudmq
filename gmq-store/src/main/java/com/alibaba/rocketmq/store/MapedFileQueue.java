@@ -568,15 +568,19 @@ public class MapedFileQueue {
 
 
     public boolean retryDeleteFirstFile(final long intervalForcibly) {
+        // 获取第一个文件
         MapedFile mapedFile = this.getFirstMapedFileOnLock();
         if (mapedFile != null) {
+            // 如果不可用，则执行删除逻辑
             if (!mapedFile.isAvailable()) {
                 log.warn("the mapedfile was destroyed once, but still alive, " + mapedFile.getFileName());
+                // 开始清理mapedFile资源
                 boolean result = mapedFile.destroy(intervalForcibly);
                 if (result) {
                     log.warn("the mapedfile redelete OK, " + mapedFile.getFileName());
                     List<MapedFile> tmps = new ArrayList<MapedFile>();
                     tmps.add(mapedFile);
+                    // 从全局mapedFiles列表中清理mapedFile
                     this.deleteExpiredFile(tmps);
                 }
                 else {

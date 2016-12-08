@@ -40,6 +40,8 @@ import com.alibaba.rocketmq.store.config.FlushDiskType;
 import com.alibaba.rocketmq.store.ha.HAService;
 import com.alibaba.rocketmq.store.schedule.ScheduleMessageService;
 
+import static javafx.scene.input.KeyCode.G;
+
 
 /**
  * Store all metadata downtime for recovery, data protection reliability
@@ -98,9 +100,11 @@ public class CommitLog {
 
 
     public long getMinOffset() {
+        // 获取第一个mappedFile
         MapedFile mapedFile = this.mapedFileQueue.getFirstMapedFileOnLock();
         if (mapedFile != null) {
             if (mapedFile.isAvailable()) {
+                // 获取文件的起始偏移量（即文件名）
                 return mapedFile.getFileFromOffset();
             } else {
                 return this.rollNextFile(mapedFile.getFileFromOffset());
@@ -112,6 +116,7 @@ public class CommitLog {
 
 
     public long rollNextFile(final long offset) {
+        // CommitLog对应的mapedFileSize每个文件大小 1G
         int mapedFileSize = this.defaultMessageStore.getMessageStoreConfig().getMapedFileSizeCommitLog();
         return (offset + mapedFileSize - offset % mapedFileSize);
     }

@@ -134,8 +134,7 @@ public class DefaultMessageStore implements MessageStore {
         this.flushConsumeQueueService = new FlushConsumeQueueService(); // 启动ConsumeQueue逻辑队列刷盘线程服务
         this.cleanCommitLogService = new CleanCommitLogService(); // 清理物理文件服务，ex：磁盘达到85%则删除commitLog文件，到达90%则停止接受新消息
         this.cleanConsumeQueueService = new CleanConsumeQueueService(); // 清理ConsumeQueue逻辑文件服务
-        this.dispatchMessageService =
-                new DispatchMessageService(this.messageStoreConfig.getPutMsgIndexHightWater());
+        this.dispatchMessageService = new DispatchMessageService(this.messageStoreConfig.getPutMsgIndexHightWater());
         this.storeStatsService = new StoreStatsService();
         this.indexService = new IndexService(this);
         this.haService = new HAService(this);
@@ -1271,7 +1270,7 @@ public class DefaultMessageStore implements MessageStore {
             try {
                 // 删除过期文件
                 this.deleteExpiredFiles();
-
+                // 重新删除被hang的文件
                 this.redeleteHangedFile();
             }
             catch (Exception e) {
@@ -1289,13 +1288,17 @@ public class DefaultMessageStore implements MessageStore {
          * 最前面的文件有可能Hang住，定期检查一下
          */
         private void redeleteHangedFile() {
+            // 定期检查Hanged文件间隔时间（默认120秒）
             int interval = DefaultMessageStore.this.getMessageStoreConfig().getRedeleteHangedFileInterval();
             long currentTimestamp = System.currentTimeMillis();
+            // 判断定期删除时间是否满足删除条件
             if ((currentTimestamp - this.lastRedeleteTimestamp) > interval) {
                 this.lastRedeleteTimestamp = currentTimestamp;
+                // 获取强制删除时间间隔
                 int destroyMapedFileIntervalForcibly =
                         DefaultMessageStore.this.getMessageStoreConfig()
                             .getDestroyMapedFileIntervalForcibly();
+                // 重试删除文件
                 if (DefaultMessageStore.this.commitLog.retryDeleteFirstFile(destroyMapedFileIntervalForcibly)) {
                     // TODO
                 }
@@ -1476,10 +1479,13 @@ public class DefaultMessageStore implements MessageStore {
 
 
         private void deleteExpiredFiles() {
+            // 删除多个ConsumeQueue文件的间隔时间（默认100毫秒）
             int deleteLogicsFilesInterval =
                     DefaultMessageStore.this.getMessageStoreConfig().getDeleteConsumeQueueFilesInterval();
 
+            // 获取文件的最小offset，即未被删除的第一个文件的初始offset
             long minOffset = DefaultMessageStore.this.commitLog.getMinOffset();
+            // 设置物理磁盘中文件的最小offset
             if (minOffset > this.lastPhysicalMinOffset) {
                 this.lastPhysicalMinOffset = minOffset;
 
@@ -1489,6 +1495,7 @@ public class DefaultMessageStore implements MessageStore {
 
                 for (ConcurrentHashMap<Integer, ConsumeQueue> maps : tables.values()) {
                     for (ConsumeQueue logic : maps.values()) {
+                        // 根据物理文件的最小offset来清理逻辑队列的对于数据记录
                         int deleteCount = logic.deleteExpiredFile(minOffset);
 
                         if (deleteCount > 0 && deleteLogicsFilesInterval > 0) {
@@ -1509,6 +1516,7 @@ public class DefaultMessageStore implements MessageStore {
 
         public void run() {
             try {
+                // 清理过期文件
                 this.deleteExpiredFiles();
             }
             catch (Exception e) {

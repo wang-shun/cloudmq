@@ -90,7 +90,7 @@ public class MapedFileTest {
     /**
      * 当前测试用例由于对mmap操作错误，会导致JVM CRASHED
      */
-    @Ignore
+    @Test
     public void test_jvm_crashed() {
         try {
             MapedFile mapedFile = new MapedFile("./unit_test_store/MapedFileTest/10086", 1024 * 64);

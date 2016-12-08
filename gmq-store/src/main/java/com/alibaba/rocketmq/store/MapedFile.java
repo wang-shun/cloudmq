@@ -82,6 +82,17 @@ public class MapedFile extends ReferenceResource {
 
         try {
             this.fileChannel = new RandomAccessFile(this.file, "rw").getChannel();
+            /**
+             * this.fileChannel.map为FileChannelImpl的map方法
+             * 继续调用Util.newMappedByteBuffer
+             * 再调用directByteBufferConstructor.newInstance
+             * 因此返回的是directByteBuffer。
+             * PS: 在后续的clean方法中，使用反射invoke调用的也是directByteBuffer的cleaner方法
+             *
+             * @author tantexian<my.oschina.net/tantexian>
+             * @since 2016/12/8
+             * @params [fileName, fileSize]
+             */
             this.mappedByteBuffer = this.fileChannel.map(MapMode.READ_WRITE, 0, fileSize);
             TotalMapedVitualMemory.addAndGet(fileSize);
             TotalMapedFiles.incrementAndGet();
@@ -117,6 +128,7 @@ public class MapedFile extends ReferenceResource {
     public static void clean(final ByteBuffer buffer) {
         if (buffer == null || !buffer.isDirect() || buffer.capacity() == 0)
             return;
+        // 使用反射invoke调用的是directByteBuffer的cleaner方法
         invoke(invoke(viewed(buffer), "cleaner"), "clean");
     }
 
@@ -402,6 +414,7 @@ public class MapedFile extends ReferenceResource {
             return true;
         }
 
+        // 清理资源
         clean(this.mappedByteBuffer);
         TotalMapedVitualMemory.addAndGet(this.fileSize * (-1));
         TotalMapedFiles.decrementAndGet();
@@ -416,6 +429,7 @@ public class MapedFile extends ReferenceResource {
      * @return 是否被destory成功，上层调用需要对失败情况处理，失败后尝试重试
      */
     public boolean destroy(final long intervalForcibly) {
+        // 清理资源（调用this.cleanup函数）
         this.shutdown(intervalForcibly);
 
         if (this.isCleanupOver()) {
