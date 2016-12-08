@@ -1054,6 +1054,7 @@ public class DefaultMessageStore implements MessageStore {
                         this.getMessageStoreConfig().getMapedFileSizeConsumeQueue(),//
                         this);
             // putIfAbsent为如果没有对应的key值，则put且返回null，否则返回key值对应的value旧值
+            // 得到老的ConsumeQueue
             ConsumeQueue oldLogic = map.putIfAbsent(queueId, newLogic);
             if (oldLogic != null) {
                 logic = oldLogic;
