@@ -974,10 +974,13 @@ public class DefaultMessageStore implements MessageStore {
 
 
     public ConsumeQueue findConsumeQueue(String topic, int queueId) {
+        // 根据topic找到对应的ConsumeQueue
         ConcurrentHashMap<Integer, ConsumeQueue> map = consumeQueueTable.get(topic);
         if (null == map) {
+            // 如果根据该topic回去map为空
             ConcurrentHashMap<Integer, ConsumeQueue> newMap =
                     new ConcurrentHashMap<Integer, ConsumeQueue>(128);
+            // putIfAbsent为如果没有对应的key值，则put，否则返回key值对应的旧值
             ConcurrentHashMap<Integer, ConsumeQueue> oldMap = consumeQueueTable.putIfAbsent(topic, newMap);
             if (oldMap != null) {
                 map = oldMap;
@@ -987,8 +990,10 @@ public class DefaultMessageStore implements MessageStore {
             }
         }
 
+        // 根据queueId获取对应的ConsumeQueue
         ConsumeQueue logic = map.get(queueId);
         if (null == logic) {
+            // 如果获取的ConsumeQueue为空，则创建一个new的ConsumeQueue
             ConsumeQueue newLogic =
                     new ConsumeQueue(//
                         topic,//
@@ -997,6 +1002,7 @@ public class DefaultMessageStore implements MessageStore {
                             .getStorePathRootDir()),//
                         this.getMessageStoreConfig().getMapedFileSizeConsumeQueue(),//
                         this);
+            // 得到老的ConsumeQueue
             ConsumeQueue oldLogic = map.putIfAbsent(queueId, newLogic);
             if (oldLogic != null) {
                 logic = oldLogic;
