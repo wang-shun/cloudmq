@@ -134,8 +134,7 @@ public class DefaultMessageStore implements MessageStore {
         this.flushConsumeQueueService = new FlushConsumeQueueService(); // 启动ConsumeQueue逻辑队列刷盘线程服务
         this.cleanCommitLogService = new CleanCommitLogService(); // 清理物理文件服务，ex：磁盘达到85%则删除commitLog文件，到达90%则停止接受新消息
         this.cleanConsumeQueueService = new CleanConsumeQueueService(); // 清理ConsumeQueue逻辑文件服务
-        this.dispatchMessageService =
-                new DispatchMessageService(this.messageStoreConfig.getPutMsgIndexHightWater());
+        this.dispatchMessageService = new DispatchMessageService(this.messageStoreConfig.getPutMsgIndexHightWater());
         this.storeStatsService = new StoreStatsService();
         this.indexService = new IndexService(this);
         this.haService = new HAService(this);
