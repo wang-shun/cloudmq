@@ -101,13 +101,17 @@ public class TransactionStateService {
 
 
     private void addTimerTask(final MapedFile mf) {
+        // 固定周期为60s定时任务执行
         this.timer.scheduleAtFixedRate(new TimerTask() {
             private final MapedFile mapedFile = mf;
+            // 事务回调检查事务状态
             private final TransactionCheckExecuter transactionCheckExecuter =
                     TransactionStateService.this.defaultMessageStore.getTransactionCheckExecuter();
+            // 事务回查最少间隔时间（60秒）
             private final long checkTransactionMessageAtleastInterval =
                     TransactionStateService.this.defaultMessageStore.getMessageStoreConfig()
                         .getCheckTransactionMessageAtleastInterval();
+            // 判断broker是否为slave角色
             private final boolean slave = TransactionStateService.this.defaultMessageStore
                 .getMessageStoreConfig().getBrokerRole() == BrokerRole.SLAVE;
 
@@ -130,6 +134,7 @@ public class TransactionStateService {
                 	 * 
                 	 * 这里做个同步是不是好点，加载完消息，再触发这里
                 	 */
+                    // 返回从0开始到已写数据的position之间的pagecache对象
                     SelectMapedBufferResult selectMapedBufferResult = mapedFile.selectMapedBuffer(0);
                     if (selectMapedBufferResult != null) {
                         long preparedMessageCountInThisMapedFile = 0;
@@ -137,6 +142,7 @@ public class TransactionStateService {
                         try {
 
                             for (; i < selectMapedBufferResult.getSize(); i += TSStoreUnitSize) {
+                                // 获取当前pagecache的buffer对象的posiztion设置为i
                                 selectMapedBufferResult.getByteBuffer().position(i);
 
                                 // Commit Log Offset
@@ -162,12 +168,14 @@ public class TransactionStateService {
                                 long timestampLong = timestamp * 1000;
                                 long diff = System.currentTimeMillis() - timestampLong;
                                 if (diff < checkTransactionMessageAtleastInterval) {
+                                    // 如果时间小于回查间隔60秒则直接跳过
                                     break;
                                 }
 
                                 preparedMessageCountInThisMapedFile++;
 
                                 try {
+                                    // 存储层向Producer回查事务状态
                                     this.transactionCheckExecuter.gotoCheck(//
                                         groupHashCode,//
                                         getTranStateOffset(i),//
@@ -354,6 +362,7 @@ public class TransactionStateService {
             final int timestamp,//
             final int groupHashCode//
     ) {
+        // 获取tranStateTable表中最后一个文件
         MapedFile mapedFile = this.tranStateTable.getLastMapedFile();
         if (null == mapedFile) {
             log.error("appendPreparedTransaction: create mapedfile error.");
@@ -365,6 +374,7 @@ public class TransactionStateService {
          */
         // 首次创建，加入定时任务中
         if (0 == mapedFile.getWrotePostion()) {
+            // 定时间隔60s查询，未被确认的超过60s的事务消息，回调producer询问本地事务执行结果
             this.addTimerTask(mapedFile);
         }
 

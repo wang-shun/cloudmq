@@ -409,8 +409,10 @@ public class ConsumeQueue {
         // 判断当前ConsumeQueue是否具有写权限
         boolean canWrite = this.defaultMessageStore.getRunningFlags().isWriteable();
         for (int i = 0; i < MaxRetries && canWrite; i++) {
+            // 存储一个20字节的信息到对应consumeQueue的mappedFile文件中
             boolean result = this.putMessagePostionInfo(offset, size, tagsCode, logicOffset);
             if (result) {
+                // 记录逻辑消息刷盘的最终一致的时间点
                 this.defaultMessageStore.getStoreCheckpoint().setLogicsMsgTimestamp(storeTimestamp);
                 return;
             }

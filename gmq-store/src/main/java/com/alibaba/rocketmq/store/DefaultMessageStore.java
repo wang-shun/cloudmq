@@ -1202,6 +1202,7 @@ public class DefaultMessageStore implements MessageStore {
             long storeTimestamp, long logicOffset) {
         // 根据topic及queueId获取对应的consumeQueue
         ConsumeQueue cq = this.findConsumeQueue(topic, queueId);
+        // 存储20字节的信息到consumeQueue的mappedFile中
         cq.putMessagePostionInfoWrapper(offset, size, tagsCode, storeTimestamp, logicOffset);
     }
 
@@ -1719,7 +1720,7 @@ public class DefaultMessageStore implements MessageStore {
                     switch (tranType) {
                     case MessageSysFlag.TransactionNotType:
                     case MessageSysFlag.TransactionCommitType:
-                        // 将请求发到具体的Consume Queue
+                        // 将请求发到具体的Consume Queue（存储20字节数据到consumeQueue的mappedFile文件中）
                         DefaultMessageStore.this.putMessagePostionInfo(req.getTopic(), req.getQueueId(),
                             req.getCommitLogOffset(), req.getMsgSize(), req.getTagsCode(),
                             req.getStoreTimestamp(), req.getConsumeQueueOffset());

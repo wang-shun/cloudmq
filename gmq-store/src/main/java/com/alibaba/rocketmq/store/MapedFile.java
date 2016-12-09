@@ -382,12 +382,15 @@ public class MapedFile extends ReferenceResource {
      */
     public SelectMapedBufferResult selectMapedBuffer(int pos) {
         if (pos < this.wrotePostion.get() && pos >= 0) {
-            if (this.hold()) {
+            // 当前pos小于mapedFile的已写入数据的位置，切大于等于0
+            if (this.hold()) {// 锁住当前操作文件资源
+                // slice将返回buffer中从当前position到limit之间的数据子分片buffer
                 ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
                 byteBuffer.position(pos);
                 int size = this.wrotePostion.get() - pos;
                 ByteBuffer byteBufferNew = byteBuffer.slice();
                 byteBufferNew.limit(size);
+                // 返回当前mapedFile的从offset到size的pagecache的对象
                 return new SelectMapedBufferResult(this.fileFromOffset + pos, byteBufferNew, size, this);
             }
         }

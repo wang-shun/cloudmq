@@ -223,6 +223,18 @@ public class MapedFileQueue {
         long createOffset = -1;
         MapedFile mapedFileLast = null;
         {
+            /**
+             * 加读锁，进入读锁的前提条件：
+             * 1、没有其他线程的写锁
+             * 2、没有写请求或者有写请求，但是调用线程和持有锁的线程是同一个
+             *
+             * 进入写锁的前提条件：
+             * 1、没有其他线程的读锁
+             * 2、没有其他线程的写锁
+             *
+             * @author tantexian<my.oschina.net/tantexian>
+             * @since 2016/12/9
+             */
             this.readWriteLock.readLock().lock();
             if (this.mapedFiles.isEmpty()) {
                 createOffset = startOffset - (startOffset % this.mapedFileSize);
