@@ -56,11 +56,11 @@ public class ConsumeQueue {
     private volatile long minLogicOffset = 0;
 
 
-    public ConsumeQueue(//
-            final String topic,//
-            final int queueId,//
-            final String storePath,//
-            final int mapedFileSize,//
+    public ConsumeQueue(
+            final String topic,// 消息的topic
+            final int queueId,// 消息queueId
+            final String storePath,//消息存储路径
+            final int mapedFileSize,//文件size
             final DefaultMessageStore defaultMessageStore) {
         this.storePath = storePath;
         this.mapedFileSize = mapedFileSize;
@@ -69,10 +69,12 @@ public class ConsumeQueue {
         this.topic = topic;
         this.queueId = queueId;
 
+        // 拼装出来类似：/root/store/consumequeue/topicA/0 或者/root/store/consumequeue/topicA/1等
         String queueDir = this.storePath//
                 + File.separator + topic//
                 + File.separator + queueId;//
 
+        // 创建MapedFileQueue的构造函数，然后根据读写请求队列requestQueue/readQueue中的读写请求，创建对应的mappedFile文件
         this.mapedFileQueue = new MapedFileQueue(queueDir, mapedFileSize, null);
 
         this.byteBufferIndex = ByteBuffer.allocate(CQStoreUnitSize);
@@ -394,9 +396,17 @@ public class ConsumeQueue {
     }
 
 
+    /**
+     * @author tantexian<my.oschina.net/tantexian>
+     * @since 2016/12/9
+     *
+     * @params offset为DispatchRequest的commitLogOffset
+     * @params logicOffset为DispatchRequest的consumeQueueOffset
+     */
     public void putMessagePostionInfoWrapper(long offset, int size, long tagsCode, long storeTimestamp,
             long logicOffset) {
         final int MaxRetries = 5;
+        // 判断当前ConsumeQueue是否具有写权限
         boolean canWrite = this.defaultMessageStore.getRunningFlags().isWriteable();
         for (int i = 0; i < MaxRetries && canWrite; i++) {
             boolean result = this.putMessagePostionInfo(offset, size, tagsCode, logicOffset);
@@ -427,9 +437,11 @@ public class ConsumeQueue {
 
     /**
      * 存储一个20字节的信息，putMessagePostionInfo只有一个线程调用，所以不需要加锁
-     * 
+     *
      * @param offset
      *            消息对应的CommitLog offset
+     * @param cqOffset
+     *            消息对应的ConsumeQueue offset
      * @param size
      *            消息在CommitLog存储的大小
      * @param tagsCode
@@ -446,7 +458,7 @@ public class ConsumeQueue {
         /**
          * 翻转缓冲区，即将limit设置为当前的position，然后将position设置为0
          * 1、如果需要读取之前写入的数据，调用flip即可以将之前写入数据读取到（即flip之后的position到limit之间的数据）
-         * 2、此处即将20字节的索引信息从position为0开始到limit为20的缓冲区区间
+         * 2、此处即将20字节的索引信息写入到从position为0开始到limit为20的缓冲区区间
          * @author tantexian<my.oschina.net/tantexian>
          * @since 2016/12/6
          */

@@ -60,8 +60,9 @@ public class MapedFileQueue {
 
     public MapedFileQueue(final String storePath, int mapedFileSize,
             AllocateMapedFileService allocateMapedFileService) {
-        this.storePath = storePath;
-        this.mapedFileSize = mapedFileSize;
+        this.storePath = storePath; // 存储路径
+        this.mapedFileSize = mapedFileSize; // 文件size
+        // 根据读写请求队列requestQueue/readQueue中的读写请求，创建对应的mappedFile文件
         this.allocateMapedFileService = allocateMapedFileService;
     }
 

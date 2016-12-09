@@ -973,14 +973,21 @@ public class DefaultMessageStore implements MessageStore {
     }
 
 
+    /**
+     * 根据topic，queueId查找对应的ConsumeQueue（如果不存储则创建新的）
+     *
+     * @author tantexian<my.oschina.net/tantexian>
+     * @since 2016/12/9
+     * @params
+     */
     public ConsumeQueue findConsumeQueue(String topic, int queueId) {
         // 根据topic找到对应的ConsumeQueue
         ConcurrentHashMap<Integer, ConsumeQueue> map = consumeQueueTable.get(topic);
         if (null == map) {
-            // 如果根据该topic回去map为空
+            // 如果根据该topic获取map为空
             ConcurrentHashMap<Integer, ConsumeQueue> newMap =
                     new ConcurrentHashMap<Integer, ConsumeQueue>(128);
-            // putIfAbsent为如果没有对应的key值，则put，否则返回key值对应的旧值
+            // putIfAbsent为如果没有对应的key值，则put且返回null，否则返回key值对应的value旧值
             ConcurrentHashMap<Integer, ConsumeQueue> oldMap = consumeQueueTable.putIfAbsent(topic, newMap);
             if (oldMap != null) {
                 map = oldMap;
@@ -1002,7 +1009,7 @@ public class DefaultMessageStore implements MessageStore {
                             .getStorePathRootDir()),//
                         this.getMessageStoreConfig().getMapedFileSizeConsumeQueue(),//
                         this);
-            // 得到老的ConsumeQueue
+            // putIfAbsent为如果没有对应的key值，则put且返回null，否则返回key值对应的value旧值
             ConsumeQueue oldLogic = map.putIfAbsent(queueId, newLogic);
             if (oldLogic != null) {
                 logic = oldLogic;
@@ -1193,6 +1200,7 @@ public class DefaultMessageStore implements MessageStore {
 
     public void putMessagePostionInfo(String topic, int queueId, long offset, int size, long tagsCode,
             long storeTimestamp, long logicOffset) {
+        // 根据topic及queueId获取对应的consumeQueue
         ConsumeQueue cq = this.findConsumeQueue(topic, queueId);
         cq.putMessagePostionInfoWrapper(offset, size, tagsCode, storeTimestamp, logicOffset);
     }
