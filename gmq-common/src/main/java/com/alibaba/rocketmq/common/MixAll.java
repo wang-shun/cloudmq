@@ -49,9 +49,14 @@ import com.alibaba.rocketmq.common.help.FAQUrl;
 
 /**
  * 各种方法大杂烩
- * 
+ *
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @author lansheng.zj@taobao.com
+ *
+ * 修改项目名及环境变量为GMQ
+ *
+ * @author tantexian<my.oschina.net/tantexian>
+ * @since 2016/6/1
  */
 public class MixAll {
     public static final String GMQ_HOME_ENV = "GMQ_HOME";

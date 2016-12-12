@@ -120,10 +120,11 @@ public class DefaultMessageStore implements MessageStore {
 
 
     public DefaultMessageStore(final MessageStoreConfig messageStoreConfig,
-            final BrokerStatsManager brokerStatsManager) throws IOException {
+                               final TransactionCheckExecuter transactionCheckExecuter,
+                               final BrokerStatsManager brokerStatsManager) throws IOException {
         this.messageStoreConfig = messageStoreConfig; // 初始化存储层配置文件所有属性值
         this.brokerStatsManager = brokerStatsManager; // broker状态统计（ex：记录clustername及当前put Topic数等）
-        this.transactionCheckExecuter = null;
+        this.transactionCheckExecuter = transactionCheckExecuter;
         this.allocateMapedFileService = new AllocateMapedFileService(); // 启动创建MapedFile的线程服务
         this.commitLog = new CommitLog(this); // commitLog用于持久化消息到磁盘（可用以宕机或者重启恢复）
         // 用于保存topic、queueId、consumeQueue的对应关系
