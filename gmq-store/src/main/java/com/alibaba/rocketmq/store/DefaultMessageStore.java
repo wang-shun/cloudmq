@@ -120,12 +120,64 @@ public class DefaultMessageStore implements MessageStore {
 
 
     public DefaultMessageStore(final MessageStoreConfig messageStoreConfig,
+                               final BrokerStatsManager brokerStatsManager) throws IOException {
+        this.messageStoreConfig = messageStoreConfig; // 初始化存储层配置文件所有属性值
+        this.brokerStatsManager = brokerStatsManager; // broker状态统计（ex：记录clustername及当前put Topic数等）
+        this.transactionCheckExecuter = null;; // 事务相关
+        this.allocateMapedFileService = new AllocateMapedFileService(); // 创建mapedfile服务
+        this.commitLog = new CommitLog(this); // commitLog用于持久化消息到磁盘（可用以宕机或者重启恢复）
+        // 用于保存topic、queueId、consumeQueue的对应关系
+        this.consumeQueueTable =
+                new ConcurrentHashMap<String/* topic */, ConcurrentHashMap<Integer/* queueId */, ConsumeQueue>>(
+                        32);
+
+        this.flushConsumeQueueService = new FlushConsumeQueueService(); // 启动ConsumeQueue逻辑队列刷盘线程服务
+        this.cleanCommitLogService = new CleanCommitLogService(); // 清理物理文件服务，ex：磁盘达到85%则删除commitLog文件，到达90%则停止接受新消息
+        this.cleanConsumeQueueService = new CleanConsumeQueueService(); // 清理ConsumeQueue逻辑文件服务
+        this.dispatchMessageService =
+                new DispatchMessageService(this.messageStoreConfig.getPutMsgIndexHightWater());
+        this.storeStatsService = new StoreStatsService();
+        this.indexService = new IndexService(this);
+        this.haService = new HAService(this);
+        this.transactionStateService = new TransactionStateService(this);
+        switch (this.messageStoreConfig.getBrokerRole()) {
+            case SLAVE:
+                /**
+                 *  slave模式，需要重放master的消息；但是不需要处理 定时消息， 全部由重放完成
+                 *  reputMessageService依赖scheduleMessageService做定时消息的恢复，确保储备数据一致
+                 */
+                this.reputMessageService = new ReputMessageService();
+                // reputMessageService依赖scheduleMessageService做定时消息的恢复，确保储备数据一致
+                this.scheduleMessageService = new ScheduleMessageService(this);
+                break;
+            case ASYNC_MASTER:
+            case SYNC_MASTER:
+                /**
+                 *  master模式，需要处理定时消息，但是不需要重放功能
+                 */
+                this.reputMessageService = null;
+                this.scheduleMessageService = new ScheduleMessageService(this);
+                break;
+            default:
+                this.reputMessageService = null;
+                this.scheduleMessageService = null;
+        }
+
+        // load过程依赖此服务，所以提前启动
+        this.allocateMapedFileService.start();
+        this.dispatchMessageService.start();
+        // 因为下面的recover会分发请求到索引服务，如果不启动，分发过程会被流控
+        this.indexService.start();
+    }
+
+
+    public DefaultMessageStore(final MessageStoreConfig messageStoreConfig,
                                final TransactionCheckExecuter transactionCheckExecuter,
                                final BrokerStatsManager brokerStatsManager) throws IOException {
         this.messageStoreConfig = messageStoreConfig; // 初始化存储层配置文件所有属性值
         this.brokerStatsManager = brokerStatsManager; // broker状态统计（ex：记录clustername及当前put Topic数等）
         this.transactionCheckExecuter = transactionCheckExecuter;
-        this.allocateMapedFileService = new AllocateMapedFileService(); // 启动创建MapedFile的线程服务
+        this.allocateMapedFileService = new AllocateMapedFileService(); // 创建mapedfile服务
         this.commitLog = new CommitLog(this); // commitLog用于持久化消息到磁盘（可用以宕机或者重启恢复）
         // 用于保存topic、queueId、consumeQueue的对应关系
         this.consumeQueueTable =
