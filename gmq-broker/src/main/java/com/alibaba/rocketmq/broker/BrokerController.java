@@ -97,11 +97,9 @@ public class BrokerController {
     private final ConsumerManager consumerManager;
     private final ProducerManager producerManager;
     private final ClientHousekeepingService clientHousekeepingService;
-    /***************************add 事务  end  gaoyanlei **************************************************/
-    // Broker主动回查Producer事务状态
+    // Broker主动回查Producer事务状态 2016/12/13 Add by gaoyanlei
     private final DefaultTransactionCheckExecuter defaultTransactionCheckExecuter;
     private ScheduledFuture<?> slaveSyncScheduledFuture;
-    /***************************add 事务 begin gaoyanlei **************************************************/
     private final PullMessageProcessor pullMessageProcessor;
     private final PullRequestHoldService pullRequestHoldService;
     private final Broker2Client broker2Client;
@@ -146,6 +144,7 @@ public class BrokerController {
         this.topicConfigManager = new TopicConfigManager(this);
         this.pullMessageProcessor = new PullMessageProcessor(this);
         this.pullRequestHoldService = new PullRequestHoldService(this);
+		// 事务消息 2016/12/13 Add by gaoyanlei
         this.defaultTransactionCheckExecuter = new DefaultTransactionCheckExecuter(this);
         this.consumerIdsChangeListener = new DefaultConsumerIdsChangeListener(this);
         this.consumerManager = new ConsumerManager(this.consumerIdsChangeListener);
@@ -185,7 +184,7 @@ public class BrokerController {
 
         if (result) {
             try {
-                this.messageStore = new DefaultMessageStore(this.messageStoreConfig, this.defaultTransactionCheckExecuter,this.brokerStatsManager);
+                this.messageStore = new DefaultMessageStore(this.messageStoreConfig, this.brokerStatsManager);
             }
             catch (IOException e) {
                 result = false;

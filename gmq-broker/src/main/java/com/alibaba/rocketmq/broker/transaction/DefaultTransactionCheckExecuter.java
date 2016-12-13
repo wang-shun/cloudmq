@@ -28,9 +28,9 @@ import com.alibaba.rocketmq.store.transaction.TransactionCheckExecuter;
 
 /**
  * 存储层回调此接口，用来主动回查Producer的事务状态
- * 
- * @author shijia.wxr<vintage.wang@gmail.com>
- * @since 2013-7-26
+ *
+ * @author gaoyanlei
+ * @since 2016/12/13
  */
 public class DefaultTransactionCheckExecuter implements TransactionCheckExecuter {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);
@@ -44,13 +44,13 @@ public class DefaultTransactionCheckExecuter implements TransactionCheckExecuter
 
     @Override
     public void gotoCheck(int producerGroupHashCode, long tranStateTableOffset, long commitLogOffset,
-            int msgSize) {
+                          int msgSize) {
         // 第一步、查询Producer
         final ClientChannelInfo clientChannelInfo =
                 this.brokerController.getProducerManager().pickProducerChannelRandomly(producerGroupHashCode);
         if (null == clientChannelInfo) {
             log.warn("check a producer transaction state, but not find any channel of this group[{}]",
-                producerGroupHashCode);
+                    producerGroupHashCode);
             return;
         }
 
@@ -59,8 +59,8 @@ public class DefaultTransactionCheckExecuter implements TransactionCheckExecuter
                 this.brokerController.getMessageStore().selectOneMessageByOffset(commitLogOffset, msgSize);
         if (null == selectMapedBufferResult) {
             log.warn(
-                "check a producer transaction state, but not find message by commitLogOffset: {}, msgSize: ",
-                commitLogOffset, msgSize);
+                    "check a producer transaction state, but not find message by commitLogOffset: {}, msgSize: ",
+                    commitLogOffset, msgSize);
             return;
         }
 
@@ -69,6 +69,6 @@ public class DefaultTransactionCheckExecuter implements TransactionCheckExecuter
         requestHeader.setCommitLogOffset(commitLogOffset);
         requestHeader.setTranStateTableOffset(tranStateTableOffset);
         this.brokerController.getBroker2Client().checkProducerTransactionState(
-            clientChannelInfo.getChannel(), requestHeader, selectMapedBufferResult);
+                clientChannelInfo.getChannel(), requestHeader, selectMapedBufferResult);
     }
 }

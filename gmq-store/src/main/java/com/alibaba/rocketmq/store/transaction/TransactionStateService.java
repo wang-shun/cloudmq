@@ -35,8 +35,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * clOffset - Commit Log Offset<br>
  * tsOffset - Transaction State Table Offset
  * 
- * @author shijia.wxr<vintage.wang@gmail.com>
- * @since 2013-7-21
+ * @author gaoyanlei
+ * @since 2016/12/13
  */
 public class TransactionStateService {
     // 存储单元大小
@@ -71,10 +71,10 @@ public class TransactionStateService {
                     defaultMessageStore.getMessageStoreConfig().getTranStateTableMapedFileSize(), null);
 
         this.tranRedoLog = new ConsumeQueue(//
-            TRANSACTION_REDOLOG_TOPIC,//
-            TRANSACTION_REDOLOG_TOPIC_QUEUEID,//
-            defaultMessageStore.getMessageStoreConfig().getTranRedoLogStorePath(),//
-            defaultMessageStore.getMessageStoreConfig().getTranRedoLogMapedFileSize(),//
+            TRANSACTION_REDOLOG_TOPIC, //
+            TRANSACTION_REDOLOG_TOPIC_QUEUEID, //
+            defaultMessageStore.getMessageStoreConfig().getTranRedoLogStorePath(), //
+            defaultMessageStore.getMessageStoreConfig().getTranRedoLogMapedFileSize(), //
             defaultMessageStore);
     }
 
@@ -125,11 +125,11 @@ public class TransactionStateService {
                 }
 
                 try {
-                	/**
-                	 * chen.si:这里会延迟执行，消息会先写进去，导致file的write position
-                	 * 
-                	 * 这里做个同步是不是好点，加载完消息，再触发这里
-                	 */
+                    /**
+                     * chen.si:这里会延迟执行，消息会先写进去，导致file的write position
+                     * 
+                     * 这里做个同步是不是好点，加载完消息，再触发这里
+                     */
                     SelectMapedBufferResult selectMapedBufferResult = mapedFile.selectMapedBuffer(0);
                     if (selectMapedBufferResult != null) {
                         long preparedMessageCountInThisMapedFile = 0;
@@ -169,9 +169,9 @@ public class TransactionStateService {
 
                                 try {
                                     this.transactionCheckExecuter.gotoCheck(//
-                                        groupHashCode,//
-                                        getTranStateOffset(i),//
-                                        clOffset,//
+                                        groupHashCode, //
+                                        getTranStateOffset(i), //
+                                        clOffset, //
                                         msgSize);
                                 }
                                 catch (Exception e) {
@@ -182,10 +182,9 @@ public class TransactionStateService {
                             // 无Prepared消息，且遍历完，则终止定时任务
                             if (0 == preparedMessageCountInThisMapedFile //
                                     && i == mapedFile.getFileSize()) {
-                                tranlog
-                                    .info(
-                                        "remove the transaction timer task, because no prepared message in this mapedfile[{}]",
-                                        mapedFile.getFileName());
+                                tranlog.info(
+                                    "remove the transaction timer task, because no prepared message in this mapedfile[{}]",
+                                    mapedFile.getFileName());
                                 this.cancel();
                             }
                         }
@@ -193,14 +192,13 @@ public class TransactionStateService {
                             selectMapedBufferResult.release();
                         }
 
-                        tranlog
-                            .info(
-                                "the transaction timer task execute over in this period, {} Prepared Message: {} Check Progress: {}/{}",
-                                mapedFile.getFileName(),//
-                                preparedMessageCountInThisMapedFile,//
-                                i / TSStoreUnitSize,//
-                                mapedFile.getFileSize() / TSStoreUnitSize//
-                            );
+                        tranlog.info(
+                            "the transaction timer task execute over in this period, {} Prepared Message: {} Check Progress: {}/{}",
+                            mapedFile.getFileName(), //
+                            preparedMessageCountInThisMapedFile, //
+                            i / TSStoreUnitSize, //
+                            mapedFile.getFileSize() / TSStoreUnitSize//
+                        );
                     }
                     else if (mapedFile.isFull()) {
                         tranlog.info("the mapedfile[{}] maybe deleted, cancel check transaction timer task",
@@ -216,13 +214,12 @@ public class TransactionStateService {
 
 
             private long getTranStateOffset(final long currentIndex) {
-                long offset =
-                        (this.mapedFile.getFileFromOffset() + currentIndex)
-                                / TransactionStateService.TSStoreUnitSize;
+                long offset = (this.mapedFile.getFileFromOffset() + currentIndex)
+                        / TransactionStateService.TSStoreUnitSize;
                 return offset;
             }
-        }, 1000 * 60, this.defaultMessageStore.getMessageStoreConfig()
-            .getCheckTransactionMessageTimerInterval());
+        }, 1000 * 60,
+            this.defaultMessageStore.getMessageStoreConfig().getCheckTransactionMessageTimerInterval());
     }
 
 
@@ -243,9 +240,9 @@ public class TransactionStateService {
         }
         else {
             // 第一步，删除State Table
-        	/**
-        	 * chen.si：这里删除了所有的tran table
-        	 */
+            /**
+             * chen.si：这里删除了所有的tran table
+             */
             this.tranStateTable.destroy();
             // 第二步，通过RedoLog全量恢复StateTable
             /**
@@ -277,21 +274,15 @@ public class TransactionStateService {
                         long tagsCode = bufferConsumeQueue.getByteBuffer().getLong();
                         /**
                          * chen.si:redo 消息示例：
-                         *  
-                            prepared:
-                            1 commitLogOffset:3780
-							2 messageSize:195
-							3 tagsCode:-1
-							
-							prepared:
-							1 commitLogOffset:3975
-							2 messageSize:195
-							3 tagsCode:-1
-							
-							commit/rollback:
-							1 commitLogOffset:4170
-							2 messageSize:195
-							3 tagsCode:3975
+                         * 
+                         * prepared: 1 commitLogOffset:3780 2 messageSize:195 3
+                         * tagsCode:-1
+                         * 
+                         * prepared: 1 commitLogOffset:3975 2 messageSize:195 3
+                         * tagsCode:-1
+                         * 
+                         * commit/rollback: 1 commitLogOffset:4170 2
+                         * messageSize:195 3 tagsCode:3975
                          */
 
                         // Prepared
@@ -303,9 +294,10 @@ public class TransactionStateService {
                         }
                         // Commit/Rollback
                         else {
-                        	/**
-                        	 * chen.si: commit和rollback的消息，不需要继续处理，同时 要将对应的prepared消息移除掉
-                        	 */
+                            /**
+                             * chen.si: commit和rollback的消息，不需要继续处理，同时
+                             * 要将对应的prepared消息移除掉
+                             */
                             preparedItemSet.remove(tagsCode);
                         }
                     }
@@ -333,9 +325,9 @@ public class TransactionStateService {
              */
             MessageExt msgExt = this.defaultMessageStore.lookMessageByOffset(offset);
             if (msgExt != null) {
-            	/**
-            	 * chen.si:重建tran stat消息
-            	 */
+                /**
+                 * chen.si:重建tran stat消息
+                 */
                 this.appendPreparedTransaction(msgExt.getCommitLogOffset(), msgExt.getStoreSize(),
                     (int) (msgExt.getStoreTimestamp() / 1000),
                     msgExt.getProperty(MessageConst.PROPERTY_PRODUCER_GROUP).hashCode());
@@ -349,9 +341,9 @@ public class TransactionStateService {
      * 单线程调用
      */
     public boolean appendPreparedTransaction(//
-            final long clOffset,//
-            final int size,//
-            final int timestamp,//
+            final long clOffset, //
+            final int size, //
+            final int timestamp, //
             final int groupHashCode//
     ) {
         MapedFile mapedFile = this.tranStateTable.getLastMapedFile();
@@ -390,22 +382,22 @@ public class TransactionStateService {
 
 
     private void recoverStateTableNormal() {
-    	/**
-    	 * chen.si：这个方法的主要任务如下：
-    	 * 
-    	 * 1. 设置 tran log queue中的最后一个消息位置 ？ 这个版本为什么不设置？
-    	 * 
-    	 * 2. 设置最后一个消息所在 log文件的commit 和 write position
-    	 * 
-    	 * 3. 设置tran stat的事务消息的下一个序号
-    	 * 
-    	 * 3. 删除多余的文件
-    	 */
+        /**
+         * chen.si：这个方法的主要任务如下：
+         * 
+         * 1. 设置 tran log queue中的最后一个消息位置 ？ 这个版本为什么不设置？
+         * 
+         * 2. 设置最后一个消息所在 log文件的commit 和 write position
+         * 
+         * 3. 设置tran stat的事务消息的下一个序号
+         * 
+         * 3. 删除多余的文件
+         */
         final List<MapedFile> mapedFiles = this.tranStateTable.getMapedFiles();
         if (!mapedFiles.isEmpty()) {
-        	/**
-        	 * chen.si:老路子了，依旧从最后的3个文件中找出 最后一个在用文件
-        	 */
+            /**
+             * chen.si:老路子了，依旧从最后的3个文件中找出 最后一个在用文件
+             */
             // 从倒数第三个文件开始恢复
             int index = mapedFiles.size() - 3;
             if (index < 0)
@@ -423,9 +415,9 @@ public class TransactionStateService {
              */
             long mapedFileOffset = 0;
             while (true) {
-            	/**
-            	 * chen.si：每个事务消息24个字节
-            	 */
+                /**
+                 * chen.si：每个事务消息24个字节
+                 */
                 for (int i = 0; i < mapedFileSizeLogics; i += TSStoreUnitSize) {
 
                     final long clOffset_read = byteBuffer.getLong();
@@ -436,25 +428,19 @@ public class TransactionStateService {
                      * chen.si：事务状态：prepared/commit/rollback
                      */
                     final int state_read = byteBuffer.getInt();
-                    
+
                     /**
                      * chen.si: 事务消息的示例
                      * 
-                     *  其中<>内的内容为时间转换后的
+                     * 其中<>内的内容为时间转换后的
                      * 
-                     * prepared：
-                        1 commitLogOffset:3780
-						2 messageSize:195
-						3 timestamp:1404354477 <1970-01-17 14:05:54>
-						4 groupHCode:1119945399
-						5 tranType:4
-					   
-					   commit：
-						1 commitLogOffset:3975
-						2 messageSize:195
-						3 timestamp:1404355385 <1970-01-17 14:05:55>
-						4 groupHCode:1119945399
-						5 tranType:8
+                     * prepared： 1 commitLogOffset:3780 2 messageSize:195 3
+                     * timestamp:1404354477 <1970-01-17 14:05:54> 4
+                     * groupHCode:1119945399 5 tranType:4
+                     * 
+                     * commit： 1 commitLogOffset:3975 2 messageSize:195 3
+                     * timestamp:1404355385 <1970-01-17 14:05:55> 4
+                     * groupHCode:1119945399 5 tranType:8
                      */
 
                     boolean stateOK = false;
@@ -471,15 +457,15 @@ public class TransactionStateService {
                     // 说明当前存储单元有效
                     // TODO 这样判断有效是否合理？
                     if (clOffset_read >= 0 && size_read > 0 && stateOK) {
-                    	/**
-                    	 * chen.si：消息合法，增加 file offset
-                    	 */
+                        /**
+                         * chen.si：消息合法，增加 file offset
+                         */
                         mapedFileOffset = i + TSStoreUnitSize;
                     }
                     else {
-                        log.info("recover current transaction state table file over,  "
-                                + mapedFile.getFileName() + " " + clOffset_read + " " + size_read + " "
-                                + timestamp_read);
+                        log.info(
+                            "recover current transaction state table file over,  " + mapedFile.getFileName()
+                                    + " " + clOffset_read + " " + size_read + " " + timestamp_read);
                         break;
                     }
                 }
@@ -494,9 +480,9 @@ public class TransactionStateService {
                         break;
                     }
                     else {
-                    	/**
-                    	 * chen.si：继续解析下一个文件
-                    	 */
+                        /**
+                         * chen.si：继续解析下一个文件
+                         */
                         mapedFile = mapedFiles.get(index);
                         byteBuffer = mapedFile.sliceByteBuffer();
                         /**
@@ -516,9 +502,7 @@ public class TransactionStateService {
 
             processOffset += mapedFileOffset;
             /**
-             * chen.si：
-             * 1. 设置 代写文件 的commit 和 write position
-             * 2. 删除多余的文件
+             * chen.si： 1. 设置 代写文件 的commit 和 write position 2. 删除多余的文件
              */
             this.tranStateTable.truncateDirtyFiles(processOffset);
             /**
@@ -535,9 +519,9 @@ public class TransactionStateService {
      * 单线程调用
      */
     public boolean updateTransactionState(//
-            final long tsOffset,//
-            final long clOffset,//
-            final int groupHashCode,//
+            final long tsOffset, //
+            final long clOffset, //
+            final int groupHashCode, //
             final int state//
     ) {
         SelectMapedBufferResult selectMapedBufferResult = this.findTransactionBuffer(tsOffset);

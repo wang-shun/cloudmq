@@ -44,14 +44,13 @@ public class ProducerManager {
     private final Lock groupChannelLock = new ReentrantLock();
     private final HashMap<String /* group name */, HashMap<Channel, ClientChannelInfo>> groupChannelTable =
             new HashMap<String, HashMap<Channel, ClientChannelInfo>>();
-    /** ************************add 事务 begin gaoyanlei **************************************************/
+    // 事务消息 2016/12/13 Add by gaoyanlei
     private final Lock hashcodeChannelLock = new ReentrantLock();
     private final HashMap<Integer /* group hash code */, List<ClientChannelInfo>> hashcodeChannelTable =
             new HashMap<Integer, List<ClientChannelInfo>>();
     private final Random random = new Random(System.currentTimeMillis());
 
-    /**************************add 事务  end  gaoyanlei **************************************************/
-
+    
     public ProducerManager() {
     }
 
@@ -60,7 +59,7 @@ public class ProducerManager {
         HashMap<String /* group name */, HashMap<Channel, ClientChannelInfo>> newGroupChannelTable =
                 new HashMap<String, HashMap<Channel, ClientChannelInfo>>();
         try {
-            if (this.groupChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
+            if (this.groupChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)){
                 try {
                     newGroupChannelTable.putAll(groupChannelTable);
                 } finally {
@@ -68,7 +67,7 @@ public class ProducerManager {
                 }
             }
         } catch (InterruptedException e) {
-            log.error("", e);
+           log.error("",e);
         }
         return newGroupChannelTable;
     }
@@ -79,7 +78,7 @@ public class ProducerManager {
             if (this.groupChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
                 try {
                     for (final Map.Entry<String, HashMap<Channel, ClientChannelInfo>> entry : this.groupChannelTable
-                            .entrySet()) {
+                        .entrySet()) {
                         final String group = entry.getKey();
                         final HashMap<Channel, ClientChannelInfo> chlMap = entry.getValue();
 
@@ -93,19 +92,22 @@ public class ProducerManager {
                             if (diff > ChannelExpiredTimeout) {
                                 it.remove();
                                 log.warn(
-                                        "SCAN: remove expired channel[{}] from ProducerManager groupChannelTable, producer group name: {}",
-                                        RemotingHelper.parseChannelRemoteAddr(info.getChannel()), group);
+                                    "SCAN: remove expired channel[{}] from ProducerManager groupChannelTable, producer group name: {}",
+                                    RemotingHelper.parseChannelRemoteAddr(info.getChannel()), group);
                                 RemotingUtil.closeChannel(info.getChannel());
                             }
                         }
                     }
-                } finally {
+                }
+                finally {
                     this.groupChannelLock.unlock();
                 }
-            } else {
+            }
+            else {
                 log.warn("ProducerManager scanNotActiveChannel lock timeout");
             }
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             log.error("", e);
         }
     }
@@ -117,7 +119,7 @@ public class ProducerManager {
                 if (this.groupChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
                     try {
                         for (final Map.Entry<String, HashMap<Channel, ClientChannelInfo>> entry : this.groupChannelTable
-                                .entrySet()) {
+                            .entrySet()) {
                             final String group = entry.getKey();
                             final HashMap<Channel, ClientChannelInfo> clientChannelInfoTable =
                                     entry.getValue();
@@ -130,13 +132,16 @@ public class ProducerManager {
                             }
 
                         }
-                    } finally {
+                    }
+                    finally {
                         this.groupChannelLock.unlock();
                     }
-                } else {
+                }
+                else {
                     log.warn("ProducerManager doChannelCloseEvent lock timeout");
                 }
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
                 log.error("", e);
             }
         }
@@ -172,7 +177,7 @@ public class ProducerManager {
                 log.warn("ProducerManager registerProducer lock timeout");
             }
 
-            /***************************add 事务 begin gaoyanlei **************************************************/
+            // 事务消息 2016/12/13 Add by gaoyanlei
             boolean bClientChannelInfoFound = false;
 
             if (this.hashcodeChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
@@ -199,7 +204,6 @@ public class ProducerManager {
             } else {
                 log.warn("ProducerManager registerProducer hashcodeChannelLock timeout");
             }
-            /***************************add 事务  end  gaoyanlei **************************************************/
         } catch (InterruptedException e) {
             log.error("", e);
         }
@@ -229,7 +233,7 @@ public class ProducerManager {
             } else {
                 log.warn("ProducerManager unregisterProducer lock timeout");
             }
-            /***************************add 事务 begin gaoyanlei **************************************************/
+            // 事务消息 2016/12/13 Add by gaoyanlei
             if (this.hashcodeChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
                 try {
                     List<ClientChannelInfo> channelList = this.hashcodeChannelTable.get(group);
@@ -251,7 +255,6 @@ public class ProducerManager {
             } else {
                 log.warn("ProducerManager unregisterProducer hashcodeChannelLock timeout");
             }
-            /***************************add 事务  end  gaoyanlei **************************************************/
         } catch (InterruptedException e) {
             log.error("", e);
         }
@@ -259,9 +262,11 @@ public class ProducerManager {
 
 
     /**
-     * ************************add 事务 begin gaoyanlei *************************************************
+     * 事务消息
+     *
+     * @author gaoyanlei
+     * @since 2016/12/13
      */
-
     public ClientChannelInfo pickProducerChannelRandomly(final int producerGroupHashCode) {
         try {
             if (this.hashcodeChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
@@ -296,5 +301,4 @@ public class ProducerManager {
         return value;
     }
 
-/***************************add 事务  end  gaoyanlei **************************************************/
 }

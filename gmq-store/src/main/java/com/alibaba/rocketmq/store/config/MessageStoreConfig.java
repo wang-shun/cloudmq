@@ -23,7 +23,7 @@ import com.alibaba.rocketmq.store.ConsumeQueue;
 
 /**
  * 存储层配置文件类
- * 
+ *
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-21
  */
@@ -36,22 +36,19 @@ public class MessageStoreConfig {
     @ImportantField
     private String storePathCommitLog = System.getProperty("user.home") + File.separator + "store"
             + File.separator + "commitlog";
-    /***************************add 事务 begin gaoyanlei **************************************************/
+    // 事务消息 2016/12/13 Add by gaoyanlei
     // ConsumeQueue存储目录
     @ImportantField
     private String storePathConsumeQueue = System.getProperty("user.home") + File.separator + "store"
             + File.separator + "consumequeue";
-
     // 索引文件存储目录
     @ImportantField
     private String storePathIndex = System.getProperty("user.home") + File.separator + "store"
             + File.separator + "index";
-
     // 异常退出产生的文件
     @ImportantField
     private String storeCheckpoint = System.getProperty("user.home") + File.separator + "store"
             + File.separator + "checkpoint";
-
     // 异常退出产生的文件
     @ImportantField
     private String abortFile = System.getProperty("user.home") + File.separator + "store" + File.separator
@@ -69,7 +66,7 @@ public class MessageStoreConfig {
     private long checkTransactionMessageTimerInterval = 1000 * 60;
     // 是否开启事务Check过程，双十一时，可以关闭
     private boolean checkTransactionMessageEnable = true;
-    /***************************add 事务  end  gaoyanlei **************************************************/
+
     // CommitLog每个文件大小 1G
     private int mapedFileSizeCommitLog = 1024 * 1024 * 1024;
     // ConsumeQueue每个文件大小 默认存储30W条消息
@@ -270,6 +267,8 @@ public class MessageStoreConfig {
         this.deleteWhen = deleteWhen;
     }
 
+
+	// 事务消息 2016/12/13 Add by gaoyanlei
     public String getTranStateTableStorePath() {
         return tranStateTableStorePath;
     }
@@ -341,6 +340,8 @@ public class MessageStoreConfig {
             boolean checkTransactionMessageEnable) {
         this.checkTransactionMessageEnable = checkTransactionMessageEnable;
     }
+	
+	
     public int getDiskMaxUsedSpaceRatio() {
         if (this.diskMaxUsedSpaceRatio < 10)
             return 10;
@@ -696,6 +697,8 @@ public class MessageStoreConfig {
         this.storePathRootDir = storePathRootDir;
     }
 
+
+	// 事务消息 2016/12/13 Add by gaoyanlei
 	public String getStorePathConsumeQueue() {
 		return storePathConsumeQueue;
 	}
@@ -734,5 +737,5 @@ public class MessageStoreConfig {
 	public void setAbortFile(String abortFile) {
 		this.abortFile = abortFile;
 	}
-	
+
 }

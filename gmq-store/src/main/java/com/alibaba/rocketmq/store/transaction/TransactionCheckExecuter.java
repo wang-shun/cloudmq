@@ -15,11 +15,12 @@
  */
 package com.alibaba.rocketmq.store.transaction;
 
+
 /**
  * 存储层向Producer回查事务状态
- * 
- * @author shijia.wxr<vintage.wang@gmail.com>
- * @since 2013-7-21
+ *
+ * @author gaoyanlei
+ * @since 2016/12/13
  */
 public interface TransactionCheckExecuter {
     public void gotoCheck(//
