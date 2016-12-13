@@ -109,11 +109,16 @@ public class IndexFile {
 
     /**
      * 如果返回false，表示需要创建新的索引文件
+     *
+     * @author tantexian<my.oschina.net/tantexian>
+     * @since 2016/12/13
+     * @params phyOffset为msg的commitlogoffset
      */
     public boolean putKey(final String key, final long phyOffset, final long storeTimestamp) {
         if (this.indexHeader.getIndexCount() < this.indexNum) {
+            // 返回大于0的哈希值
             int keyHash = indexKeyHashMethod(key);
-            int slotPos = keyHash % this.hashSlotNum;
+            int slotPos = keyHash % this.hashSlotNum; // 默认值为maxHashSlotNum = 5000000;
             int absSlotPos = IndexHeader.INDEX_HEADER_SIZE + slotPos * HASH_SLOT_SIZE;
 
             FileLock fileLock = null;

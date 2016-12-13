@@ -58,6 +58,11 @@ public class IndexService extends ServiceThread {
     private LinkedBlockingQueue<Object[]> requestQueue = new LinkedBlockingQueue<Object[]>(300000);
 
 
+    @Override
+    protected void waitForRunning(long interval) {
+        super.waitForRunning(interval);
+    }
+
     public IndexService(final DefaultMessageStore store) {
         this.defaultMessageStore = store;
         this.hashSlotNum = store.getMessageStoreConfig().getMaxHashSlotNum();
@@ -288,6 +293,7 @@ public class IndexService extends ServiceThread {
                     continue;
                 }
 
+                // 获取消息事务类型
                 final int tranType = MessageSysFlag.getTransactionValue(msg.getSysFlag());
                 switch (tranType) {
                 case MessageSysFlag.TransactionNotType:
@@ -299,23 +305,23 @@ public class IndexService extends ServiceThread {
                 }
 
                 if (keys != null && keys.length() > 0) {
+                    // 如果msg有key的话
                     String[] keyset = keys.split(MessageConst.KEY_SEPARATOR);
                     for (String key : keyset) {
+                        // 遍历所有key
                         // TODO 是否需要TRIM
                         if (key.length() > 0) {
-                            for (boolean ok =
-                                    indexFile.putKey(buildKey(topic, key), msg.getCommitLogOffset(),
-                                        msg.getStoreTimestamp()); !ok;) {
+                            // 根据topic#key、commitlogoffset、消息存储时间storeTimestamp将之写入到索引文件中。其中buildKey返回topic#key
+                            for (boolean ok = indexFile.putKey(buildKey(topic, key), msg.getCommitLogOffset(), msg.getStoreTimestamp()); !ok;) {
+                                // 如果ok==false则需要重新创建索引文件
                                 log.warn("index file full, so create another one, " + indexFile.getFileName());
                                 indexFile = retryGetAndCreateIndexFile();
                                 if (null == indexFile) {
                                     breakdown = true;
                                     break MSG_WHILE;
                                 }
-
-                                ok =
-                                        indexFile.putKey(buildKey(topic, key), msg.getCommitLogOffset(),
-                                            msg.getStoreTimestamp());
+                                // 根据topic#key、commitlogoffset、消息存储时间storeTimestamp将之写入到索引文件中。其中buildKey返回topic#key
+                                ok = indexFile.putKey(buildKey(topic, key), msg.getCommitLogOffset(), msg.getStoreTimestamp());
                             }
                         }
                     }
