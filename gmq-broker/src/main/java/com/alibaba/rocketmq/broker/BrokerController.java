@@ -184,7 +184,7 @@ public class BrokerController {
 
         if (result) {
             try {
-                this.messageStore = new DefaultMessageStore(this.messageStoreConfig, this.brokerStatsManager);
+                this.messageStore = new DefaultMessageStore(this.messageStoreConfig,this.defaultTransactionCheckExecuter,this.brokerStatsManager);
             }
             catch (IOException e) {
                 result = false;
