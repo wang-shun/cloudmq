@@ -25,7 +25,7 @@ public class SimpleProducer {
 
         try {
             // 订单消息A
-            Message msg = new Message("SimpleOrderTopic-99", // topic
+            Message msg = new Message("SimpleOrderTopic", // topic
                 "TagA", // tag
                 ("订单创建-步骤A --Time:" + new Date()).getBytes()// body
             );

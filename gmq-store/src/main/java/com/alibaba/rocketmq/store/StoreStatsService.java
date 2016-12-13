@@ -70,6 +70,10 @@ public class StoreStatsService extends ServiceThread {
     private volatile long putMessageEntireTimeMax = 0;
     // getMessage，读取一批消息耗时，含加锁竟争时间（单位毫秒）
     private volatile long getMessageEntireTimeMax = 0;
+
+    // ReentrantLock相对于sychornized锁提供更多功能：
+    // 时间锁等候、可中断锁等候、无块结构锁、多个条件变量或者锁投票 2016/12/12 Add by tantexixan
+
     // for putMessageEntireTimeMax
     private ReentrantLock lockPut = new ReentrantLock();
     // for getMessageEntireTimeMax
@@ -466,6 +470,7 @@ public class StoreStatsService extends ServiceThread {
 
         while (!this.isStoped()) {
             try {
+                // 采样频率，1秒钟采样一次
                 this.waitForRunning(FrequencyOfSampling);
 
                 this.sampling();

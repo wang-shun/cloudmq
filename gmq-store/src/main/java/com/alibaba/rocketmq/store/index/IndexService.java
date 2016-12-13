@@ -252,9 +252,12 @@ public class IndexService extends ServiceThread {
 
         while (!this.isStoped()) {
             try {
+                // 获取request,其中req为DispatchRequest的数组
+                // 移除并返问队列头部的元素    如果队列为空，则返回null(remove则是队列为空则抛异常)
                 Object[] req = this.requestQueue.poll(3000, TimeUnit.MILLISECONDS);
 
                 if (req != null) {
+                    // 创建索引
                     this.buildIndex(req);
                 }
             }
@@ -269,14 +272,19 @@ public class IndexService extends ServiceThread {
 
     public void buildIndex(Object[] req) {
         boolean breakdown = false;
+        // 获取last 索引文件（没有则新建）
         IndexFile indexFile = retryGetAndCreateIndexFile();
         if (indexFile != null) {
             long endPhyOffset = indexFile.getEndPhyOffset();
             MSG_WHILE: for (Object o : req) {
+                // 遍历req，其中req为DispatchRequest的数组
                 DispatchRequest msg = (DispatchRequest) o;
+                // 获取totip
                 String topic = msg.getTopic();
+                // 获取keys
                 String keys = msg.getKeys();
                 if (msg.getCommitLogOffset() < endPhyOffset) {
+                    // 如果commitlog的offset小于索引的endPhyOffset
                     continue;
                 }
 
@@ -330,6 +338,7 @@ public class IndexService extends ServiceThread {
 
         // 如果创建失败，尝试重建3次
         for (int times = 0; null == indexFile && times < 3; times++) {
+            // 获取最后一个索引文件
             indexFile = this.getAndCreateLastIndexFile();
             if (null != indexFile)
                 break;
@@ -366,11 +375,14 @@ public class IndexService extends ServiceThread {
         {
             this.readWriteLock.readLock().lock();
             if (!this.indexFileList.isEmpty()) {
+                // 获取索引文件列表最后一个文件
                 IndexFile tmp = this.indexFileList.get(this.indexFileList.size() - 1);
                 if (!tmp.isWriteFull()) {
+                    // 没有写满直接获取
                     indexFile = tmp;
                 }
                 else {
+                    // 如果写满了
                     lastUpdateEndPhyOffset = tmp.getEndPhyOffset();
                     lastUpdateIndexTimestamp = tmp.getEndTimestamp();
                     prevIndexFile = tmp;

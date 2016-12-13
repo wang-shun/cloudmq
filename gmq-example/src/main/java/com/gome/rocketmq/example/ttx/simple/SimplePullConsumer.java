@@ -25,7 +25,7 @@ public class SimplePullConsumer {
         
         consumer.start();
 
-        Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues("SimplePullConsumerTopic");
+        Set<MessageQueue> mqs = consumer.fetchSubscribeMessageQueues("SimpleOrderTopic");
         for (MessageQueue mq : mqs) {
             System.out.println("Consume from the queue: " + mq);
             SINGLE_MQ: while (true) {

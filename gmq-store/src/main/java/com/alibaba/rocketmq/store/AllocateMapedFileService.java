@@ -41,6 +41,7 @@ public class AllocateMapedFileService extends ServiceThread {
     // requestTable的key-val分别保存文件的filePath及当前req请求
     private ConcurrentHashMap<String, AllocateRequest> requestTable =
             new ConcurrentHashMap<String, AllocateRequest>();
+    // 请求优先级queue
     private PriorityBlockingQueue<AllocateRequest> requestQueue =
             new PriorityBlockingQueue<AllocateRequest>();
     private volatile boolean hasException = false;
@@ -49,10 +50,22 @@ public class AllocateMapedFileService extends ServiceThread {
     public MapedFile putRequestAndReturnMapedFile(String nextFilePath, String nextNextFilePath, int fileSize) {
         AllocateRequest nextReq = new AllocateRequest(nextFilePath, fileSize);
         AllocateRequest nextNextReq = new AllocateRequest(nextNextFilePath, fileSize);
+        /**
+         * 将当前创建nextFilePath mappedfile的请求放置到requestTable请求列表中，
+         * putIfAbsent（原子操作，返回老的key-val的对应关系val值）：
+         * 1、如果返回null，则说明之前没有key-val对应关系，put成功
+         * 2、如果之前有key-val的对应关系，则返回老的key对应val值，且put更新val失败
+         *
+         * @author tantexian<my.oschina.net/tantexian>
+         * @since 2016/12/12
+         * @params [nextFilePath, nextNextFilePath, fileSize]
+         */
+        // 返回值为true则说明，创建请求放置到requestTable列表中成功
         boolean nextPutOK = (this.requestTable.putIfAbsent(nextFilePath, nextReq) == null);
         boolean nextNextPutOK = (this.requestTable.putIfAbsent(nextNextFilePath, nextNextReq) == null);
 
         if (nextPutOK) {
+            // offer方法：如果超过queue的边界长度，则添加失败返回false，否则添加成功返回true
             boolean offerOK = this.requestQueue.offer(nextReq);
             if (!offerOK) {
                 log.warn("add a request to preallocate queue failed");
@@ -74,11 +87,15 @@ public class AllocateMapedFileService extends ServiceThread {
         AllocateRequest result = this.requestTable.get(nextFilePath);
         try {
             if (result != null) {
+                // 调用AllocateRequest的CountDownLatch方法（只有等到该对象资源没有被其他地方使用才返回true）
                 boolean waitOK = result.getCountDownLatch().await(WaitTimeOut, TimeUnit.MILLISECONDS);
                 if (!waitOK) {
                     log.warn("create mmap timeout " + result.getFilePath() + " " + result.getFileSize());
                 }
+                // AllocateRequest对应的mappedfile创建成功，则从requestTable移除 2016/12/12 Add by tantexixan
+                // 如果上述waitOK为超时，也依然移除？下次会自动添加进来创建？
                 this.requestTable.remove(nextFilePath);
+                // 返回mappedfile文件
                 return result.getMapedFile();
             }
             else {

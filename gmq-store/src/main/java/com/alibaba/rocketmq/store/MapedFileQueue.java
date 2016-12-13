@@ -237,9 +237,11 @@ public class MapedFileQueue {
              */
             this.readWriteLock.readLock().lock();
             if (this.mapedFiles.isEmpty()) {
+                // 此处createOffset即后续步骤中用来为文件命令用
                 createOffset = startOffset - (startOffset % this.mapedFileSize);
             }
             else {
+                // 如果mapedFile不为空，则获取ArrayList的最后一个文件
                 mapedFileLast = this.mapedFiles.get(this.mapedFiles.size() - 1);
             }
             this.readWriteLock.readLock().unlock();
