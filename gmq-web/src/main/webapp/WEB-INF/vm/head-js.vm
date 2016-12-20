@@ -1,8 +1,22 @@
 
     ## 注意此处引入js文件的顺序
-    <script type="text/javascript" src="$root/js/jquery-1.11.1.min.js" ></script>
+    <!-- Let HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="$root/static/bootstrap/3.3.7/js/html5shiv/html5shiv-3.7.3.min.js"></script>
+    <script type="text/javascript" src="$root/static/bootstrap/3.3.7/js/respond/respond-1.4.2.min.js"></script>
+    <![endif]-->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" src="$root/static/bootstrap/3.3.7/js/ie/ie10-viewport-bug-workaround.js"></script>
+    <script type="text/javascript" src="$root/static/js/jquery/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="$root/static/js/jquery/jquery.cookie.js"></script>
     <script type="text/javascript" src="$root/js/common/base.js" ></script>
-    <script type="text/javascript" src="$root/js/common/ajaxDataController.js" ></script>
+    <script type="text/javascript" src="$root/static/bootstrap/3.3.7/js/bootstrap.js"></script>
+    <script type="text/javascript" src="$root/static/layer/layer.js"></script>
+    <script type="text/javascript" src="$root/static/layer/extend/layer.ext.js"></script>
+    <script type="text/javascript" src="$root/static/js/common/ajax.data.controller.js"></script>
+    <script type="text/javascript" src="$root/static/js/common/util.js"></script>
+    <script type="text/javascript" src="$root/static/js/common/config.js"></script>
+
     <script type="text/javascript" src="$root/js/jQuery-Knob/js/jquery.knob.js" ></script>
     <script type="text/javascript" src="$root/js/parsley.min.js" ></script>
 

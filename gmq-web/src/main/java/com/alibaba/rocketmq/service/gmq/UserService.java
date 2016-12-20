@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.rocketmq.dao.UserDao;
 import com.alibaba.rocketmq.domain.gmq.User;
-import com.alibaba.rocketmq.util.MyBeanUtils;
+import com.alibaba.rocketmq.util.bean.MyBeanUtils;
 
 
 /**

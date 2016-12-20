@@ -1,82 +1,135 @@
 package com.alibaba.rocketmq.filter;
 
-import org.apache.commons.lang.StringUtils;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Created by yintongjiang on 2016/7/29.
+ * 用户过滤器
+ * @author: tianyuliang
+ * @since: 2016/12/1
  */
 public class UserFilter implements Filter {
-    private String[] excludedArray;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserFilter.class);
+    private static final String ContentType = "text/html; charset=utf-8";
+    private static final String UTF8 = "utf-8";
+    private static final String LOGIN_SUCCESS = "isLoginSuccess";
+
+    private String loginUrl;
+    private String[] testApi;
+    private String[] loginApi;
+    private String[] staticResouce;
+
 
     @Override
-    public void destroy() {
-        // TODO Auto-generated method stub
+    public void init(FilterConfig config) throws ServletException {
+        LOGGER.info("init the ResourceFilter.");
+        String apiCfg = config.getInitParameter("testApi");
+        String loginCfg = config.getInitParameter("logintApi");
+        String resourceCfg = config.getInitParameter("staticResouce");
+        String indexCfg = config.getInitParameter("indexApi");
+        testApi = StringUtils.isNotBlank(apiCfg) ? apiCfg.trim().split(",") : null;
+        loginApi = StringUtils.isNotBlank(loginCfg) ? loginCfg.trim().split(",") : null;
+        staticResouce = StringUtils.isNotBlank(resourceCfg) ? resourceCfg.trim().split("|") : null;
+        loginUrl = "<script language='javascript'>window.location.href='" + indexCfg + "'</script>";
     }
 
+
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        request.setCharacterEncoding("utf-8");
-        /**
-         * 如果处理HTTP请求，并且需要访问诸如getHeader或getCookies等在ServletRequest中
-         * 无法得到的方法，就要把此request对象构造成HttpServletRequest
-         */
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("text/html;charset=utf-8");
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        request.setCharacterEncoding(UTF8);
+        HttpServletResponse response = (HttpServletResponse) resp;
+        response.setCharacterEncoding(UTF8);
+        response.setContentType(ContentType);
         String currentURL = request.getRequestURI(); // 取得根目录所对应的绝对路径:
-//        String targetURL = currentURL.substring(currentURL.indexOf("/", 1)); // 截取到当前文件名用于比较
+        // String targetURL = currentURL.substring(currentURL.indexOf("/", 1));
+        // // 截取到当前文件名用于比较
 
-		/*不过滤排除的URL*/
-        if (null != excludedArray) {
-            for (String excluded : excludedArray) {
-                if (currentURL.startsWith(excluded)) {
-                    chain.doFilter(request, response);
-                    return;
-                }
-            }
-        }
-        // 若存在会话则返回该会话,否则返回NULL
-        HttpSession session = request.getSession(false);
-
-        if (currentURL.indexOf(".mp4") > 0 ||
-                currentURL.indexOf(".jpg") > 0 ||
-                currentURL.indexOf(".bmp") > 0 ||
-                currentURL.indexOf(".gif") > 0 ||
-                currentURL.indexOf(".css") > 0 ||
-                ".js".equals(StringUtils.right(currentURL, 3)) ||
-                currentURL.indexOf("index.do") > 0 ||// TODO: 2016/7/29 tomcat和jetty路径不一样
-                currentURL.indexOf("login.do") > 0 ||// TODO: 2016/7/29 tomcat和jetty路径不一样
-                currentURL.indexOf(".map") > 0 ||
-                currentURL.indexOf(".png") > 0) {
+        // 2016/7/29 不处理“被排除”的URL Add by yintongjiang
+        if (matchTestApi(currentURL) || matchLoginApi(currentURL) || matchResource(currentURL)) {
             chain.doFilter(request, response);
             return;
         }
-        if (null == session || null == session.getAttribute("isLoginSuccess")) {
-            response.reset();
-            response.setContentType("text/html; charset=utf-8"); // 设置编码格式要在创建PrintWriter对象之前.不然不能生效
-            PrintWriter pw = response.getWriter();
-            pw.write("<script language='javascript'>window.location.href='/gmq/index.do'</script>");
-            pw.flush();
-            pw.close();
+
+
+        chain.doFilter(request, response);
+
+       /* // 权限控制
+        HttpSession session = request.getSession(false);
+        if (matchEmptySession(session)) {
+            handleEmptySession(response);
             return;
         }
-        // 加入filter链继续向下执行 */
-        chain.doFilter(request, response);
+        chain.doFilter(request, response); */
     }
 
+
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        String excluded = filterConfig.getInitParameter("excluded");
-        if (StringUtils.isNotBlank(excluded)) {
-            excludedArray = excluded.split(",");
-        }
+    public void destroy() {
+        LOGGER.info("destroied the ResourceFilter.");
     }
+
+
+    private boolean matchTestApi(String currentURL) {
+        if (null != testApi) {
+            for (String api : testApi) {
+                if (currentURL.startsWith(api.trim())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private boolean matchLoginApi(String currentURL) {
+        if (null != loginApi) {
+            for (String api : loginApi) {
+                // TODO: 2016/7/29 tomcat和jetty路径不一样, index.do login.do
+                if (currentURL.indexOf(api.trim()) > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private boolean matchResource(String currentURL) {
+        if (null != staticResouce) {
+            for (String resource : staticResouce) {
+                if (currentURL.indexOf(resource.trim()) > 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private boolean matchEmptySession(HttpSession session) throws IOException {
+        return null == session || null == session.getAttribute(LOGIN_SUCCESS);
+    }
+
+
+    private void handleEmptySession(HttpServletResponse response) throws IOException {
+        response.reset();
+        response.setContentType(ContentType);
+        PrintWriter pw = response.getWriter();
+        pw.write(loginUrl);
+        pw.flush();
+        pw.close();
+    }
+
+
 }

@@ -1,6 +1,7 @@
-package com.alibaba.rocketmq.util;
+package com.alibaba.rocketmq.util.bean;
 
 import com.alibaba.rocketmq.util.date.DateStyle;
+import com.alibaba.rocketmq.util.date.DateUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaProperty;
@@ -23,7 +24,7 @@ import java.util.Map;
  * @params
  * @since 2016/7/13
  */
-
+@SuppressWarnings("unchecked")
 public final class MyBeanUtils extends BeanUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(MyBeanUtils.class);

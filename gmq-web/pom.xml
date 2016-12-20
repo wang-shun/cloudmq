@@ -42,6 +42,7 @@
 		<netty-all.version>4.0.27.Final</netty-all.version>
 		<fastjson.version>1.1.37</fastjson.version>
 		<servlet-api.version>2.5</servlet-api.version>
+		<gome-inc-sso-client.version>0.0.1-SNAPSHOT</gome-inc-sso-client.version>
 	</properties>
 
 	<dependencies>
@@ -255,6 +256,11 @@
             <artifactId>spring-jdbc</artifactId>
             <version>${spring.version}</version>
         </dependency>
+		<dependency>
+			<groupId>com.gome</groupId>
+			<artifactId>gome-inc-sso-client</artifactId>
+			<version>${gome-inc-sso-client.version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -277,7 +283,7 @@
 					<scanIntervalSeconds>5</scanIntervalSeconds>
 					<connectors>
 						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-							<port>80</port>
+							<port>8097</port>
 							<maxIdleTime>60000</maxIdleTime>
 						</connector>
 					</connectors>

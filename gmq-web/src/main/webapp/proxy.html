@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/images/favicon.ico"/>
+    <title>gmq-success</title>
+</head>
+<body>
+<form id="proxyForm" method="post"></form>
+</body>
+</html>
+
+<script type="text/javascript" src="static/js/jquery/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="static/js/common/ajax.data.controller.js"></script>
+<script type="text/javascript" src="static/js/common/util.js"></script>
+<script type="text/javascript" src="static/js/common/config.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        var sign = getUrlParameter("sign");
+        var ts = getUrlParameter("_t");
+        myConsoleLog("sign=" + sign + "         timesmap=" + ts);
+        verify_sign(sign);
+
+        //$("#proxyForm").attr("action", globalApi("api.verify.sign"));
+
+    });
+
+    function verify_sign(sign) {
+
+
+        var param = {"sign": sign};
+        ajaxDataController(globalApi("api.verify.sign"), JSON.stringify(param), null, function (data) {
+            alert("获取用户数据成功");
+            myConsoleLog(data);
+        }, true, "post");
+    }
+</script>

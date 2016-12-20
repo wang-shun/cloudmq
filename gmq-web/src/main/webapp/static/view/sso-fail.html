@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../images/sso.png"/>
+    <title>sso-web</title>
+    <link rel="stylesheet" type="text/css" href="../bootstrap/3.3.7/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="../bootstrap/3.3.7/css/ie10-viewport-bug-workaround.css">
+    <link rel="stylesheet" type="text/css" href="../css/signin.css">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../bootstrap/3.3.7/js/html5shiv/html5shiv-3.7.3.min.js"></script>
+    <script type="text/javascript" src="../bootstrap/3.3.7/js/respond/respond-1.4.2.min.js"></script>
+    <![endif]-->
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script type="text/javascript" src="../bootstrap/3.3.7/js/ie/ie10-viewport-bug-workaround.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <div class="panel panel-default panel-info">
+        <div class="panel-body">
+            <div id="loginErrorMsg" class="text-center h2 text-danger"></div>
+        </div>
+    </div>
+</div>
+
+
+<br/><br/>
+<footer id="sso-footer">
+    <hr/>
+    <p class="text-center">
+        <span>Copyright&nbsp;&nbsp;©</span>
+        <span id="copyrightYear"></span>
+        <span>&nbsp;&nbsp;成都服务架构部<a href="mailto:cdxxjcpt@gome.com.cn" title="cdxxjcpt@gome.com.cn"><i class="glyphicon glyphicon-envelope"></i></a></span>
+        <span>&nbsp;&nbsp;All rights reserved.</span>
+    </p>
+</footer>
+</body>
+</html>
+
+<script type="text/javascript" src="../js/jquery/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="../js/common/util.js"></script>
+<script type="text/javascript" src="../js/common/config.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $("#copyrightYear").html(new Date().getFullYear());
+        var code = getUrlParameter("code");
+        var errorMsg = "";
+        if (code && !isNaN(Number(code)) && Number(code) > 0) {
+            errorMsg = globalError(code);
+        }
+        $("#loginErrorMsg").html(errorMsg.length > 0 ? errorMsg : "参数异常");
+    });
+</script>

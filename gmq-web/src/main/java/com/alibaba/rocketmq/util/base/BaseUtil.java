@@ -1,4 +1,4 @@
-package com.alibaba.rocketmq.util;
+package com.alibaba.rocketmq.util.base;
 
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;

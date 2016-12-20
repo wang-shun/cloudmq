@@ -2,10 +2,9 @@ package com.alibaba.rocketmq.action;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.rocketmq.domain.system.MemoryInfo;
-import com.alibaba.rocketmq.util.BaseUtil;
+import com.alibaba.rocketmq.util.base.BaseUtil;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/sysResource")
+@SuppressWarnings("unchecked")
 public class GMQSysResourceAction extends AbstractAction {
 
     @Autowired

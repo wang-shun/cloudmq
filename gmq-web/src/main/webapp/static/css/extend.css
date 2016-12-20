@@ -1,0 +1,35 @@
+
+/** 2016/10/21 调整顶部导航栏字体颜色 Add by tianyuliang  */
+.navbar-default .navbar-brand, .navbar-default .navbar-brand:hover {
+    color: #FFFFFF;
+}
+
+
+/** 2016/10/21  0.12rem此类大小的字体在火狐不兼容 Add by tianyuliang  */
+#sso-footer{
+    font-size: 12px;
+}
+
+#a_dropdown {
+    padding-top: 0px !important;
+    color: #FFFDFA !important;
+}
+
+#a_dropdown span{
+    padding-top: 3px;
+}
+
+.input-text-muted {
+    color: #FF0000;
+    font-size: 14px;
+}
+
+.span-ip-single {
+    border: 1px solid #6192c8;
+    cursor:pointer;
+}
+
+.span-ip-complex {
+    border: 1px solid #6192c8;
+    cursor:pointer;
+}

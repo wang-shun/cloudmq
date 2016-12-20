@@ -1,7 +1,4 @@
-package com.alibaba.rocketmq.util;
-
-import com.alibaba.rocketmq.util.date.DateStyle;
-import com.alibaba.rocketmq.util.date.Week;
+package com.alibaba.rocketmq.util.date;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

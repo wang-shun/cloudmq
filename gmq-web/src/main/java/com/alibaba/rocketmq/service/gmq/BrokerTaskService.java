@@ -7,6 +7,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,9 @@ import java.util.List;
 public class BrokerTaskService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BrokerTaskService.class);
+
+    @Value("#{configProperties['gmq.broker.schedule.enable']}")
+    private String brokerScheduleEnable;
 
     @Autowired
     private BrokerDao brokerDao;
@@ -43,7 +47,7 @@ public class BrokerTaskService extends AbstractService {
 
     public void batchSaveBroker() {
         try {
-            LOGGER.info("### start broker schedule ###");
+            /*LOGGER.info("### start broker schedule ###");
             List<BrokerExt> brokers = getBatchBrokers();
             if (CollectionUtils.isEmpty(brokers)) {
                 LOGGER.info("no brokers data to save.");
@@ -52,7 +56,7 @@ public class BrokerTaskService extends AbstractService {
             for (BrokerExt broker : brokers) {
                 this.saveBroker(broker);
             }
-            LOGGER.info("### end broker schedule ### batch count={}", brokers.size());
+            LOGGER.info("### end broker schedule ### batch count={}", brokers.size());*/
         } catch (Exception e) {
             LOGGER.error("### error broker schedule ### msg={}", e.getMessage(), e);
             // throw e; // ignore e;

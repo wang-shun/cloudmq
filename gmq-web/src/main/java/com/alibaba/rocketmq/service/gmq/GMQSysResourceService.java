@@ -1,5 +1,17 @@
 package com.alibaba.rocketmq.service.gmq;
 
+import static com.alibaba.rocketmq.util.restful.handle.ObjectHandle.getForObject;
+
+import java.util.*;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.rocketmq.common.BrokerConst;
 import com.alibaba.rocketmq.common.protocol.body.ClusterInfo;
 import com.alibaba.rocketmq.common.protocol.body.KVTable;
@@ -12,29 +24,19 @@ import com.alibaba.rocketmq.domain.gmq.Cluster;
 import com.alibaba.rocketmq.domain.system.MemoryInfo;
 import com.alibaba.rocketmq.service.AbstractService;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
-import com.alibaba.rocketmq.util.DateUtils;
+import com.alibaba.rocketmq.util.date.DateUtils;
 import com.alibaba.rocketmq.util.date.DateStyle;
 import com.alibaba.rocketmq.util.restful.domian.AbstractEntity;
 import com.alibaba.rocketmq.util.restful.handle.ObjectHandle;
 import com.alibaba.rocketmq.util.restful.restTemplate.TenantIdRestOperations;
 import com.google.common.collect.Maps;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-
-import static com.alibaba.rocketmq.util.restful.handle.ObjectHandle.getForObject;
 
 /**
  * @author gaoyanlei
  * @since 2016/7/25
  */
 @Service
+@SuppressWarnings("unchecked")
 public class GMQSysResourceService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GMQSysResourceService.class);
