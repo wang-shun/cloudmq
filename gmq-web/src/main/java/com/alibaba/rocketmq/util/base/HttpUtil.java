@@ -67,7 +67,7 @@ public class HttpUtil {
             if (!Strings.isNullOrEmpty(requestData)) {
                 // 写数据
                 writeOutputStream(http.getOutputStream(), requestData);
-                logger.info(String.format("third-request(http):%s\r\n%s", requestUrl, requestData));
+                logger.info(String.format("third-request(http):%s\r\n\t%s", requestUrl, requestData));
             }
 
             if (http.getResponseCode() >= 300) {
@@ -76,7 +76,7 @@ public class HttpUtil {
             if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 // 读数据
                 ret = readInputStream(http.getInputStream());
-                logger.info(String.format("%s ms elapsed, third-request(http):%s\r\n\t%s", String.valueOf(System.currentTimeMillis() - s), requestUrl, ret));
+                logger.info(String.format("%s ms elapsed, third-response(http):%s\r\n\t%s", String.valueOf(System.currentTimeMillis() - s), requestUrl, ret));
             }
         } catch (SocketTimeoutException e) {
             // 此处忽略异常日志，由外层捕获并自行处理
@@ -93,7 +93,6 @@ public class HttpUtil {
         } finally {
             try {
                 http.disconnect();
-                http = null;
             } catch (Exception e) {
                 logger.error("close http connection error.", e);
             }

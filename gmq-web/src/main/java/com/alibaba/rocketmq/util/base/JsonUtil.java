@@ -112,7 +112,8 @@ public class JsonUtil {
             respData = JsonUtil.toGenericsObject(respText, new TypeReference<RespData>() {
             });
             isResponseOK = respData.getCode().equals(0);
-            logger.info("transformed response bean with isResponseOK = " + isResponseOK);
+            //logger.info("transformed response bean with isResponseOK = " + isResponseOK);
+
             // TODO: 天坑啊！ responseRoot对象下的data节点是一个map对象，需要再一次转化为具体的实例Bean对象
             Map<String, Object> paramMap = (Map<String, Object>) respData.getData();
             if (paramMap == null || paramMap.isEmpty()) {

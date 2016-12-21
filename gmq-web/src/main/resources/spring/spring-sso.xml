@@ -37,4 +37,23 @@
 
     <bean id="gomeSSOService" class="com.gome.sso.client.service.impl.GomeSSOServiceImpl" init-method="init"/>
 
+
+    <bean id="gmqLoginConfigService" class="com.alibaba.rocketmq.service.gmq.GMQLoginConfigService">
+        <property name="indexApi" value="${app.index.api}"/>
+        <property name="loginApi" value="${app.verify.api}"/>
+        <property name="staticResouce" value="${app.static.resouce}"/>
+        <property name="appLoginUrl" value="${app.index.url}"/>
+        <property name="appRedirectUrl" value="${sso.app.homeUrl}"/>
+        <property name="ssoLoginUrl" value="${sso.loginUrl}"/>
+        <property name="appKey" value="${sso.app.appKey}"/>
+        <property name="tokenVerifyUrl" value="${sso.tokenUrl}"/>
+        <property name="maxInactiveInterval" value="${app.maxInactiveInterval}"/>
+        <property name="adminApi" value="${app.admin.api}"/>
+        <property name="guestApi" value="${app.guest.api}"/>
+    </bean>
+
+    <mvc:interceptors>
+        <bean class="com.alibaba.rocketmq.interceptor.LoginHandlerInterceptor" init-method="init"/>
+    </mvc:interceptors>
+
 </beans>

@@ -1,14 +1,19 @@
 package com.alibaba.rocketmq.action;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.rocketmq.domain.sso.gmq.GmqUser;
+import com.alibaba.rocketmq.service.gmq.GMQUserService;
 import org.apache.commons.cli.Option;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 
 import com.alibaba.rocketmq.common.Table;
@@ -23,7 +28,6 @@ public abstract class AbstractAction {
     protected abstract String getFlag();
 
     protected abstract String getName();
-
 
     public static final String TITLE = "title";
 
@@ -50,6 +54,38 @@ public abstract class AbstractAction {
     // 新增类型 2016/7/15 Add by gaoyanlei
     public static final String OPTIONS = "options";
 
+
+    @Autowired
+    private GMQUserService gmqUserService;
+
+    protected GmqUser handleSessionUser(HttpServletRequest request, HttpServletResponse response) {
+        GmqUser gmqUser = null;
+        String userName = (String)request.getSession().getAttribute("userName");
+        if(StringUtils.isEmpty(userName)){
+            return gmqUser;
+        }
+
+        String userType = "0";
+        try{
+            gmqUser = gmqUserService.queryAdminUser(userName);
+            userType = gmqUser != null ? gmqUser.getUserType() : "0";
+        } catch(SQLException e){
+           // ingore e
+        }
+        request.getSession().setAttribute("userType", userType);
+        return gmqUser;
+    }
+
+    protected boolean handleUserType(HttpServletRequest request, HttpServletResponse response) {
+        GmqUser gmqUser = this.handleSessionUser(request, response);
+        boolean isAdmin = gmqUser != null && gmqUser.getUserType().equals("1"); // 1:管理员  0:普通用户
+        return isAdmin;
+    }
+
+
+
+
+
     // 新增 2016/7/15 Add by gaoyanlei
     protected void putTable(ModelMap map, Object object) {
         map.put(TBODY_DATA, object);
@@ -64,8 +100,7 @@ public abstract class AbstractAction {
         map.put(KEY_TABLE, table);
     }
 
-    protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options,
-                                      HttpServletRequest request) {
+    protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options, HttpServletRequest request) {
         putPublicAttribute(map, title, options);
         @SuppressWarnings("unchecked")
         Enumeration<String> enumer = request.getParameterNames();
@@ -76,8 +111,7 @@ public abstract class AbstractAction {
         }
     }
 
-    protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options,
-                                      Map object) {
+    protected void putPublicAttribute(ModelMap map, String title, Collection<Option> options, Map object) {
         putPublicAttribute(map, title, options);
         @SuppressWarnings("unchecked")
         Iterator entries = object.entrySet().iterator();

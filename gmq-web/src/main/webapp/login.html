@@ -18,7 +18,6 @@
     var loginUrl = getUrlParameter("loginUrl");
     var redirectUrl = getUrlParameter("redirectUrl");
     var ssoUrl = "{0}?redirectUrl={1}&r={2}".format(loginUrl, encodeURI(redirectUrl), Math.random());
-    // var ssoUrl = loginUrl + "?redirectUrl=" + encodeURI(redirectUrl) + "&r=" + Math.random();
     // top.location.href 最外层页面跳转，  window.location.href 本页面跳转
     top.location.href = ssoUrl;
 </script>

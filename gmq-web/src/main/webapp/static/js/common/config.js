@@ -15,7 +15,7 @@ function globalApi(key) {
         "api.rootPath": "",
         "api.login": "/app/login",
         "api.logout": "/app/logout",
-        "api.verify.sign": "/sso/verify/token.do",
+        "api.verify.sign": "/sso/token.do",
         "api.user.query": "/app/loginUserInfo"
     };
     var api = globalConfig[key] || "/unknown/"

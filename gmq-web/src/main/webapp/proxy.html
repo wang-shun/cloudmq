@@ -10,7 +10,10 @@
     <title>gmq-success</title>
 </head>
 <body>
-<form id="proxyForm" method="post"></form>
+<form id="proxyForm" method="post">
+    <input type="hidden" name="sign" id="sign" value="" />
+    <input type="hidden" name="timesmap" id="timesmap" value="" />
+</form>
 </body>
 </html>
 
@@ -21,22 +24,17 @@
 
 <script type="text/javascript">
     $(function () {
-        var sign = getUrlParameter("sign");
-        var ts = getUrlParameter("_t");
-        myConsoleLog("sign=" + sign + "         timesmap=" + ts);
-        verify_sign(sign);
-
-        //$("#proxyForm").attr("action", globalApi("api.verify.sign"));
-
+        verify_sign();
     });
 
-    function verify_sign(sign) {
-
-
-        var param = {"sign": sign};
-        ajaxDataController(globalApi("api.verify.sign"), JSON.stringify(param), null, function (data) {
-            alert("获取用户数据成功");
-            myConsoleLog(data);
-        }, true, "post");
+    function verify_sign() {
+        var sign = getUrlParameter("sign");
+        var ts = getUrlParameter("_t");
+        myConsoleLog("timesmap={0}, sign={1}".format(ts, sign));
+        $("#sign").val(sign);
+        $("#timesmap").val(ts);
+        $("#proxyForm").attr("action", globalApi("api.verify.sign"));
+        $("#proxyForm").submit();
     }
+
 </script>

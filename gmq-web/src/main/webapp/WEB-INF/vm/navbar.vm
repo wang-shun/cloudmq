@@ -29,9 +29,7 @@
                     $!userName <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu"> <!-- 下拉菜单class样式 -->
-                    <li><a href="$root/user/saveOrUpdate.do?id=$!userId">My Account</a></li>
-                    <li class="divider"></li>
-                    <li><a tabindex="-1" href="$root/gmq/logout.do">Logout</a></li>
+                    <li><a tabindex="-1" href="$root/sso/logout.do">Logout</a></li>
                 </ul>
             </li>
         </ul>

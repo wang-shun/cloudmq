@@ -1,7 +1,9 @@
 package com.alibaba.rocketmq.service.gmq;
 
+import java.sql.SQLException;
 import java.util.List;
 
+import com.alibaba.rocketmq.domain.sso.gmq.GmqUser;
 import com.alibaba.rocketmq.service.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +20,11 @@ import com.alibaba.rocketmq.util.bean.MyBeanUtils;
  * @since 2016/7/12
  */
 @Service
-public class UserService extends AbstractService {
+public class GMQUserService extends AbstractService {
 
+    static final Logger logger = LoggerFactory.getLogger(GMQUserService.class);
     @Autowired
     UserDao userDao;
-
-    static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
 
     /**
      * login test
@@ -43,6 +43,42 @@ public class UserService extends AbstractService {
         return false;
     }
 
+
+     /**
+      * 判断是否为管理员
+      * @author tianyuliang
+      * @since 2016/12/20
+      * @params 用户名
+      */
+    public boolean verifyAdminUser(String realName) {
+        User user = new User();
+        user.setRealName(realName);
+        List<User> users = userDao.selectEntryList(user);
+        return users != null && users.size() > 0;
+    }
+
+    /**
+     * 判断是否为管理员
+     * @author tianyuliang
+     * @since 2016/12/20
+     * @params 用户名
+     */
+    public GmqUser queryAdminUser(String realName) throws SQLException{
+        GmqUser gmqUser = null;
+        User user = new User();
+        user.setRealName(realName);
+        List<User> users = userDao.selectEntryList(user);
+        if(users != null && users.size() > 0) {
+            gmqUser = new GmqUser();
+            gmqUser.setUserName(users.get(0).getUserName());
+            gmqUser.setUserType("1");
+            gmqUser.setRealName(users.get(0).getRealName());
+        }
+        return gmqUser;
+    }
+
+
+
     /**
      * login test
      *
@@ -56,6 +92,7 @@ public class UserService extends AbstractService {
         List<User> users = userDao.selectEntryList(user);
         return users.isEmpty() ? null : users.get(0);
     }
+
 
     /**
      * 查找全部用户
@@ -81,7 +118,8 @@ public class UserService extends AbstractService {
     public int saveOrUpdate(User user) throws Exception {
         if (user.getId() == null) {
             return userDao.insertEntry(user);
-        } else {
+        }
+        else {
             User u = this.findById(user.getId());
             MyBeanUtils.copyBeanNotNull2Bean(user, u);
             return userDao.updateByKey(u);
