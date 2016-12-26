@@ -75,6 +75,6 @@ GMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式、队�
 ----------
 
 ### 联系我们
- :fa-comments-o: 基础平台架构组 cdxxjcpt@gome.com.cn
+ :fa-comments-o: 服务架构部 cdxxjcpt@gome.com.cn
 
 ----------
