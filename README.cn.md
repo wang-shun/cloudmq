@@ -66,7 +66,8 @@ GMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式、队�
 ```
   
 
-* 关于TODO、FIXME、XXX注释规范
+* 关于TODO、FIXME、XXX注释规范、
+
 ```
 // TODO: + 说明：
 ```
