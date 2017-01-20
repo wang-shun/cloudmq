@@ -584,7 +584,7 @@ public class DefaultMQProducerImpl implements MQProducerInner {
                     + FAQUrl.suggestTodo(FAQUrl.NAME_SERVER_ADDR_NOT_EXIST_URL), null);
         }
 
-        throw new MQClientException("No route info of this topic, " + msg.getTopic()
+        throw new MQClientException("No route info of this topic, Pleace check the nameserver[nameserver:" + this.getmQClientFactory().getMQClientAPIImpl().getNameServerAddressList() + "] is corrent?" + msg.getTopic()
                 + FAQUrl.suggestTodo(FAQUrl.NO_TOPIC_ROUTE_INFO), null);
     }
 
