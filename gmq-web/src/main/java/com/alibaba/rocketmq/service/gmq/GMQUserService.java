@@ -58,17 +58,17 @@ public class GMQUserService extends AbstractService {
     }
 
     /**
-     * 判断是否为管理员
+     * 判断是否为管理员(校验realName字段和state字段)
      * @author tianyuliang
      * @since 2016/12/20
-     * @params 用户名
+     * @params
      */
     public GmqUser queryAdminUser(String realName) throws SQLException{
         GmqUser gmqUser = null;
         User user = new User();
         user.setRealName(realName);
         List<User> users = userDao.selectEntryList(user);
-        if(users != null && users.size() > 0) {
+        if(users != null && users.size() > 0 && users.get(0).getState() == 0) {
             gmqUser = new GmqUser();
             gmqUser.setUserName(users.get(0).getUserName());
             gmqUser.setUserType("1");

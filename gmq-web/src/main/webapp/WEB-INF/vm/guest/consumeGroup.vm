@@ -1,0 +1,12 @@
+<div class="main-content">
+    <div id="consumeGroup" class="tab-content">
+        <span class="input-lg">consumerGroupID :</span> <br/><br/><br/><br/><br/><br/>
+        #foreach($group in $!tbodyData)
+            <a href="/group/consumerGroup.do?groupId=$group"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$group&nbsp;&nbsp;</span></a><br/><br/>
+
+            <a href="/connection/consumerConnection.do?consumerGroup=$group"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$group&nbsp;&nbsp;</span></a>
+            <br/><br/>
+        #end
+    </div>
+</div>
+

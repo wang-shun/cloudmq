@@ -20,4 +20,9 @@
         <scope>request</scope>
         <class>org.apache.velocity.tools.view.tools.LinkTool</class>
     </tool>
+    <tool>
+        <key>map</key>
+        <scope>session</scope>
+        <class>java.util.HashMap</class>
+    </tool>
 </toolbox>

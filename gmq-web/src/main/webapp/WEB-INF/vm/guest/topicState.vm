@@ -1,0 +1,33 @@
+<div class="main-content">
+    <ul class="nav nav-tabs"><li class="active">
+        <li class="active"><a href="javascript:void(0);" data-toggle="tab" class="input-lg">Topic状态</a></li>
+    </ul>
+    <div class="tab-content">
+        #if($!tbodyData.topicState && $!tbodyData.topicState.size() > 0)
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>TopicName</th>
+                    <th>BrokerName</th>
+                    <th>QueueID</th>
+                    <th>Max Offset</th>
+                    <th>Min Offset</th>
+                    <th>Last Updated</th>
+                </tr>
+                </thead>
+                <tbody>
+                    #foreach($statsVo in $!tbodyData.topicState)
+                    <tr>
+                        <td><a href="$root/guest/consumeGroup.do?topic=$!{statsVo.topic}" title="点击查看消费列表">$!{statsVo.topic}</a></td>
+                        <td>$!{statsVo.brokerName}</td>
+                        <td>$!{statsVo.queueId}</td>
+                        <td>$!{statsVo.maxOffset}</td>
+                        <td>$!{statsVo.minOffset}</td>
+                        <td>$!{statsVo.lastUpdated}</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        #end
+    </div>
+</div>

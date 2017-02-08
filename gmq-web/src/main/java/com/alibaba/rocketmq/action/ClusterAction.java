@@ -34,7 +34,11 @@ public class ClusterAction extends AbstractAction {
         return "Cluster";
     }
 
-
+    /***
+     * 针对“管理员”的访问控制
+     * @param map
+     * @return
+     */
     @RequestMapping(value = "/list.do", method = RequestMethod.GET)
     public String list(ModelMap map) {
         putPublicAttribute(map, "list");
@@ -48,6 +52,24 @@ public class ClusterAction extends AbstractAction {
         return TEMPLATE;
     }
 
+    /**
+     * 针对“客人”的访问控制，此处保留
+     * @author tianyuliang
+     * @since 2017/2/7
+     * @params
+     */
+    @RequestMapping(value = "/guest.do", method = RequestMethod.GET)
+    public String guest(ModelMap map) {
+        putPublicAttribute(map, "list");
+        try {
+            Table table = clusterService.list();
+            putTable(map, table);
+        }
+        catch (Throwable t) {
+            putAlertMsg(t, map);
+        }
+        return TEMPLATE;
+    }
 
     @RequestMapping(value = "/demo.do", method = RequestMethod.GET)
     public String demo() {

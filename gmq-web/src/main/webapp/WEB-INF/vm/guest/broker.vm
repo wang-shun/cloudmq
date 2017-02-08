@@ -1,0 +1,56 @@
+<div class="main-content">
+    <ul class="nav nav-tabs">
+        #foreach($cluster in $!tbodyData)
+            #if($velocityCount==1)
+                <li class="active"><a href="#$cluster.name" data-toggle="tab">$cluster.name</a></li>
+            #else
+                <li><a href="#$cluster.name" data-toggle="tab">$cluster.name</a></li>
+            #end
+        #end
+    </ul>
+
+    <div class="tab-content">
+        #foreach($cluster in $!tbodyData)
+            #if($velocityCount==1)
+                <div class="tab-pane active in" id="$cluster.name">
+            #else
+                <div class="tab-pane fade" id="$cluster.name">
+            #end
+
+            <table class="table" class="tab-pane fade in active">
+                <thead>
+                <tr>
+                    <th>BID</th>
+                    <th>Addr</th>
+                    <th>Broker Name</th>
+                    <th>Version</th>
+                    <th>InTPS</th>
+                    <th>OutTPS</th>
+                    <th>InTotalYest</th>
+                    <th>OutTotalYest</th>
+                    <th>InTotalToday</th>
+                    <th>OutTotalToday</th>
+                </tr>
+                </thead>
+                <tbody>
+                    #foreach($broker in $!cluster.brokerList)
+                    <tr>
+                        <td>$!{broker.brokerId}</td>
+                        <td>$!{broker.addr}</td>
+                        <td>$!{broker.brokerName}</td>
+                        <td>$!{broker.version}</td>
+                        <td>$!{broker.inTps}</td>
+                        <td>$!{broker.outTps}</td>
+                        <td>$!{broker.inTotalToday}</td>
+                        <td>$!{broker.outTotalTodtay}</td>
+                        <td>$!{broker.inTotalYest}</td>
+                        <td>$!{broker.outTotalYest}</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+        #end
+    </div>
+</div>
+

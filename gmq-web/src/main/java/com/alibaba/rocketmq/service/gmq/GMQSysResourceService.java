@@ -221,10 +221,10 @@ public class GMQSysResourceService extends AbstractService {
             String version = kvTable.getTable().get(BrokerConst.BROKER_VERSION);
 
             String[] inTpsValues = putTps.split(" ");
-            Double in = inTpsValues != null && inTpsValues.length > 0 ? Double.parseDouble(inTpsValues[0]) : 0D;
+            long in = inTpsValues != null && inTpsValues.length > 0 ? Long.parseLong(inTpsValues[0]) : 0L;
 
             String[] outTpsValues = getTransferedTps.split(" ");
-            Double out = outTpsValues != null && outTpsValues.length > 0 ? Double.parseDouble(outTpsValues[0]) : 0D;
+            long out = outTpsValues != null && outTpsValues.length > 0 ? Long.parseLong(outTpsValues[0]) : 0L;
 
             String msgPutTotalYesterdayMorning = kvTable.getTable().get(BrokerConst.PUT_TOTAL_YESTERDAY_MORNING);
             String msgPutTotalTodayMorning = kvTable.getTable().get(BrokerConst.PUT_TOTAL_TODAY_MORNING);

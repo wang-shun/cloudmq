@@ -65,7 +65,6 @@ public class GMQBrokerAction extends AbstractAction {
         putPublicAttribute(map, "list");
         try {
             List<Cluster> list = clusterService.list();
-            LOGGER.info("cluster.size={}", list.size());
             putTable(map, list);
         } catch (Throwable t) {
             putAlertMsg(t, map);

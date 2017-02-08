@@ -63,7 +63,7 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
                 logger.info("timesmap={}, token={}", timesmap, ssoToken.getToken());
                 VerifyRespData userData = gmqTokenService.verifyToken(gmqLoginConfigService.getTokenVerifyUrl(), ssoToken);
                 if(userData == null){
-                    logger.info("token verify ok, but verifyRespData is empty.");
+                    logger.info("token verify end, but verifyRespData is empty.");
                     redirectUrl(request, response, buildUrlParam());
                     return false;
                 }
@@ -107,7 +107,7 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
     }
 
     /***
-     * 使用此方逻辑会导致/token.do等类型的接口无法被拦截器处理
+     * 使用此方逻辑会导致/token.do等类型的接口无法被拦截器处理，暂不使用
      * @param request
      * @return
      */

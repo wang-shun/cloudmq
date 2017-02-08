@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -163,9 +164,25 @@ public class GMQTopicAction extends AbstractAction {
 
     public Map<String, Object> getTopicAndCluster() throws Throwable {
         Map<String, Object> params = Maps.newHashMap();
-        List<String> topics = gmqTopicService.list();
-        List<String> clusterNames = gmqTopicService.getClusterNames();
+        List<String> list = gmqTopicService.list();
+        List<String> topics = new ArrayList<>();        // 正常topic
+        List<String> retryTopics = new ArrayList<>();   // 重试队列
+        List<String> dlqTopics = new ArrayList<>();     // 死信队列
+        for (String topic : list) {
+            if(topic.startsWith("%RETRY%")){
+                retryTopics.add(topic);
+            } else if(topic.startsWith("%DLQ%")) {
+                dlqTopics.add(topic);
+            } else {
+                topics.add(topic);
+            }
+        }
+
         params.put("topics", topics);
+        params.put("retryTopics", retryTopics);
+        params.put("dlqTopics", dlqTopics);
+
+        List<String> clusterNames = gmqTopicService.getClusterNames();
         params.put("clusterNames", clusterNames);
         return params;
     }

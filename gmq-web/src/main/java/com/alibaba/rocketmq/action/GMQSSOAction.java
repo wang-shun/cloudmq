@@ -75,7 +75,7 @@ public class GMQSSOAction extends AbstractAction {
         }
         catch (IOException e) {
             logger.error("sso logout error.", e);
-            // TODO:调整到失败页面？提示用户？
+            // TODO:跳转到失败页？提示用户？
         } finally {
             request.getSession().setMaxInactiveInterval(24 * 60 * 60 * 1000);
         }
