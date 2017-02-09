@@ -16,6 +16,7 @@
 package com.alibaba.rocketmq.example.simple;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
@@ -24,9 +25,12 @@ import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
 import com.alibaba.rocketmq.common.message.MessageExt;
+import com.gome.rocketmq.common.MyUtils;
 
 
 public class PushConsumer {
+    final static AtomicInteger nums = new AtomicInteger(0);
+    final static AtomicInteger nums_size = new AtomicInteger(0);
 
     /**
      * 当前例子是PushConsumer用法，使用方式给用户感觉是消息从RocketMQ服务器推到了应用客户端。<br>
@@ -38,11 +42,15 @@ public class PushConsumer {
          * 注意：ConsumerGroupName需要由应用来保证唯一
          */
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("CID_001");
+        consumer.setConsumeMessageBatchMaxSize(8);
+        consumer.setNamesrvAddr(MyUtils.getNamesrvAddr());
+        consumer.setConsumeThreadMin(8);
+        consumer.setConsumeThreadMax(10);
 
         /**
          * 订阅指定topic下tags分别等于TagA或TagC或TagD
          */
-        consumer.subscribe("TopicTest1", "TagA || TagC || TagD");
+        consumer.subscribe("topicTestByTTX", "TagA || TagC || TagD");
         /**
          * 订阅指定topic下所有消息<br>
          * 注意：一个consumer对象可以订阅多个topic
@@ -64,10 +72,13 @@ public class PushConsumer {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
                     ConsumeConcurrentlyContext context) {
-                System.out.println(Thread.currentThread().getName() + " Receive New Messages: " + msgs);
-
+                System.out.println(Thread.currentThread().getName() + "msgs.size() ==" + msgs.size() + " Receive New Messages: " + msgs);
+                // 此处使用msgs.get(0)获取第一条消息，如需获取全部消息应该使用for循环获取:for (MessageExt msg: msgs ) {}
                 MessageExt msg = msgs.get(0);
-                if (msg.getTopic().equals("TopicTest1")) {
+                System.out.println("nums == " + nums.incrementAndGet());
+                System.out.println("nums_size == " + nums_size.addAndGet(msgs.size()));
+
+                if (msg.getTopic().equals("topicTestByTTX")) {
                     // 执行TopicTest1的消费逻辑
                     if (msg.getTags() != null && msg.getTags().equals("TagA")) {
                         // 执行TagA的消费
