@@ -30,7 +30,8 @@ public class ConsumerTest {
         // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
         consumer.subscribe("TopicTestMQ", "*", new MsgListener() {
             public Action consume(Msg msg, ConsumeContext context) {
-                System.out.println("Receive Msg : " + new String(msg.getBody()));
+                // 此处为线程池调用，使用过程中请注意线程安全问题！！！
+                System.out.println(Thread.currentThread().getName() + "Receive Msg : " + new String(msg.getBody()));
                 try {
                     // do something..
                     return Action.CommitMessage;
