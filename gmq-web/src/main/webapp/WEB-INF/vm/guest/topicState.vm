@@ -1,6 +1,6 @@
 <div class="main-content">
     <ul class="nav nav-tabs"><li class="active">
-        <li class="active"><a href="javascript:void(0);" data-toggle="tab" class="input-lg">Topic状态</a></li>
+        <li class="active"><a href="javascript:void(0);" data-toggle="tab" class="input-lg">存储状态</a></li>
     </ul>
     <div class="tab-content">
         #if($!tbodyData.topicState && $!tbodyData.topicState.size() > 0)

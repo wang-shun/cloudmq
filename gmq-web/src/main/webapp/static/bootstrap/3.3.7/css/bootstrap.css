@@ -4711,7 +4711,7 @@ old-source
   padding: 8px 30px 8px 30px;
   margin: 0px 0px 2px 0px;
   list-style: none;
-  background-color: #5cb85c; /** #f5f5f5 303030 313542 ADD8E6 F0FFFF B0E0E6 E6E6FA 2016-9-19 Add by tianyuliang **/
+  background-color: #313542; /** #313542 #5cb85c #f5f5f5 303030 313542 ADD8E6 F0FFFF B0E0E6 E6E6FA 2016-9-19 Add by tianyuliang **/
                             /** 2016-10-9 去掉圆角 border-radius: 4px;  Add by tianyuliang**/
   font-size: 18px;          /** add font-size 2016-9-19 Add by tianyuliang**/
   line-height:180%;
@@ -4733,6 +4733,31 @@ old-source
 .breadcrumb > .active {
   color: #D3D3D3;  /** 2016-9-19 #777 add font-color by tianyuliang**/
 }
+
+/** 2016-9-19 gmq-breadcrumb Add by tianyuliang**/
+.gmq-breadcrumb {
+  padding: 4px 30px 0px 10px;
+  margin: 0px 0px 0px 0px;
+  list-style: none;
+  background-color: #313542;
+  font-size: 16px;
+  line-height:160%;
+}
+
+.gmq-breadcrumb-right {
+  color: #D3D3D3;
+  font-size: 22px;
+  line-height:200%;
+}
+
+.gmq-breadcrumb-right a:hover {
+  color: #D3D3D3;
+}
+
+.gmq-breadcrumb-right a:active {
+  color: #D3D3D3;
+}
+
 .pagination {
   display: inline-block;
   padding-left: 0;

@@ -83,9 +83,6 @@ public abstract class AbstractAction {
     }
 
 
-
-
-
     // 新增 2016/7/15 Add by gaoyanlei
     protected void putTable(ModelMap map, Object object) {
         map.put(TBODY_DATA, object);

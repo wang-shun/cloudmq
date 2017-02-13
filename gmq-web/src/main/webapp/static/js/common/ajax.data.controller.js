@@ -6,6 +6,7 @@ function ajaxDataController(requestUrl, params, gotoUrl, callback, async, method
     params = params || {};
     async = async || true;
 
+    var loadIndex = -1;
     $.ajax({
         async: async,
         url: requestUrl,
@@ -14,6 +15,9 @@ function ajaxDataController(requestUrl, params, gotoUrl, callback, async, method
         data: params,
         type: method,
         contentType: 'application/json;charset=utf-8',
+        beforeSend: function () {
+            loadIndex = openLoading();
+        },
         success: function (data) {
             if (gotoUrl) {
                 window.location.href = gotoUrl;
@@ -29,6 +33,9 @@ function ajaxDataController(requestUrl, params, gotoUrl, callback, async, method
                 }
             } catch (e) {
             }
+        },
+        complete: function (xhr) {
+            closeLoading(loadIndex);
         }
     });
 }

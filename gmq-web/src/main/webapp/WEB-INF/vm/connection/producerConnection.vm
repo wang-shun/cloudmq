@@ -1,14 +1,14 @@
 <div class="main-content">
-    <h2>test producer group has connection</h2><br/>
+    <h2>在线Producer进程</h2><br/>
     <table class="table table-bordered table-hover">
         <tbody>
         <form action="$action" method="post">
             <tr>
-                <th style="text-align: center;width: 20%;">
+                <td style="text-align: center;width: 30%;">
                     <center>
-                        producerGroupID&nbsp;<font color="red">*</font>
+                        producerGroupID（生产者组ID）&nbsp;<font color="red">*</font>
                     </center>
-                </th>
+                </td>
                 <td style="width: 25%;" class="text-center">
                     <input type="hidden" id="spTopicName" name="topic" value="TopicTestMQ">
                     <input id="txtGroupId" name="producerGroup" type="text" class="form-control" style="width: 240px;"
@@ -19,7 +19,7 @@
                         <button class="btn btn-sm btn-info" type="submit">Submit</button>
                     </center>
                 </td>
-                <td style="width: 40%;"></td>
+                <td style="width: 30%;"></td>
             </tr>
         </form>
         </tbody>

@@ -21,19 +21,3 @@ function globalApi(key) {
     var api = globalConfig[key] || "/unknown/"
     return api + "?r=" + Math.random();
 }
-
-function globalError(code) {
-    var errorlConfig = {
-        "100001": "appKey错误",
-        "100002": "token为空",
-        "100003": "token错误",
-        "100004": "token解密错误",
-        "100005": "appKey为空",
-        "100006": "appKey和url的domain不匹配",
-        "100007": "请求参数不正确",
-        "100008": "用户名或密码错误",
-        "100009": "token失效",
-        "500000": "系统错误"
-    };
-    return errorlConfig[code] || "服务内部异常";
-}

@@ -88,7 +88,7 @@
 
     function goBack() {
         var groupId = $("#hdGroupId").html();
-        var gotoAction = "$root/group/consumerGroup.do?";
+        var gotoAction = "$root/group/consumerProgress.do?";
         XUI.gotoPageHref(gotoAction + "&groupId=" + groupId);
     }
 </script>

@@ -8,6 +8,7 @@ import com.alibaba.rocketmq.domain.gmq.Cluster;
 import com.alibaba.rocketmq.service.AbstractService;
 import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.tools.command.CommandUtil;
+import com.google.common.collect.Maps;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -75,7 +76,7 @@ public class GMQTopicService extends AbstractService {
         throw t;
     }
 
-    public List<String> list() throws Throwable {
+    private List<String> list() throws Throwable {
         List<String> topics = new ArrayList<String>();
         Throwable t = null;
         DefaultMQAdminExt defaultMQAdminExt = getDefaultMQAdminExt();
@@ -131,6 +132,32 @@ public class GMQTopicService extends AbstractService {
         throw t;
     }
 
+    /***
+     * 获取集群Topic列表，分为topics、retryTopics、dlqTopics
+     * @return
+     * @throws Throwable
+     */
+    public Map<String, Object> getTopicList() throws Throwable {
+        Map<String, Object> params = Maps.newHashMap();
+        List<String> list = this.list();
+        List<String> topics = new ArrayList<>();        // 正常topic
+        List<String> retryTopics = new ArrayList<>();   // 重试队列
+        List<String> dlqTopics = new ArrayList<>();     // 死信队列
+        for (String topic : list) {
+            if(topic.startsWith("%RETRY%")){
+                retryTopics.add(topic);
+            } else if(topic.startsWith("%DLQ%")) {
+                dlqTopics.add(topic);
+            } else {
+                topics.add(topic);
+            }
+        }
+        Collections.sort(topics);
+        params.put("topics", topics);
+        params.put("retryTopics", retryTopics);
+        params.put("dlqTopics", dlqTopics);
+        return params;
+    }
 
     public List<String> getClusterNames() throws Throwable {
         List<String> clusterNames = new ArrayList<String>();

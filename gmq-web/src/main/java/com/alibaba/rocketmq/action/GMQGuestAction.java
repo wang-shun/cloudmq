@@ -7,17 +7,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.rocketmq.domain.gmq.TopicStats;
 import com.alibaba.rocketmq.service.gmq.GMQGroupService;
 import com.alibaba.rocketmq.service.gmq.GMQGuestService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.rocketmq.domain.gmq.Cluster;
 import com.alibaba.rocketmq.service.BrokerService;
@@ -25,6 +24,8 @@ import com.alibaba.rocketmq.service.gmq.GMQClusterService;
 import com.alibaba.rocketmq.service.gmq.GMQTopicService;
 import com.google.common.collect.Maps;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 
 
 /**
@@ -79,8 +80,11 @@ public class GMQGuestAction extends AbstractAction {
     public String consumeGroup(ModelMap map, @RequestParam(required = true) String topic) {
         putPublicAttribute(map, "consumeGroup");
         try {
+            Map<String, Object> params = Maps.newHashMap();
             HashSet<String> groups = gmqGuestService.queryTopicConsumeByWho(topic);
-            putTable(map, groups);
+            params.put("consumerGroupId", groups);
+            params.put("topic", topic);
+            putTable(map, params);
         }
         catch (Throwable t) {
             putAlertMsg(t, map);
@@ -90,20 +94,10 @@ public class GMQGuestAction extends AbstractAction {
 
     private Map<String, Object> getTopicAndCluster() throws Throwable {
         Map<String, Object> params = Maps.newHashMap();
-        List<String> list = gmqTopicService.list();
-        List<String> topics = new ArrayList<>();        // 正常topic
-        List<String> retryTopics = new ArrayList<>();   // 重试队列
-        List<String> dlqTopics = new ArrayList<>();     // 死信队列
-        for (String topic : list) {
-            if(topic.startsWith("%RETRY%")){
-                retryTopics.add(topic);
-            } else if(topic.startsWith("%DLQ%")) {
-                dlqTopics.add(topic);
-            } else {
-                topics.add(topic);
-            }
-        }
-
+        Map<String, Object> topicList = gmqTopicService.getTopicList();
+        List<String> topics = (ArrayList)topicList.get("topics");               // 正常topic
+        List<String> retryTopics = (ArrayList)topicList.get("retryTopics");      // 重试队列
+        List<String> dlqTopics = (ArrayList)topicList.get("dlqTopics");         // 死信队列
         params.put("topics", topics);
         params.put("retryTopics", retryTopics);
         params.put("dlqTopics", dlqTopics);
@@ -112,6 +106,7 @@ public class GMQGuestAction extends AbstractAction {
         params.put("clusterNames", clusterNames);
         return params;
     }
+
 
     @RequestMapping(value = "/topicState.do")
     public String topicState(ModelMap map, HttpServletRequest request, @RequestParam(required = true) String topic) {

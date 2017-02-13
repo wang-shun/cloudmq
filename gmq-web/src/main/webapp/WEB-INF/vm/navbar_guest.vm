@@ -1,24 +1,19 @@
-<!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
-<!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
-<!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
-
-<div class="navbar navbar-default" role="navigation">
-    <!-- start user info -->
-    <div class="navbar-collapse collapse" style="height: 1px;">
-        <ul id="main-menu" class="nav navbar-nav navbar-right">
-            <li class="dropdown hidden-xs">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-user padding-right-small" style="position:relative;top: 3px;"/>&nbsp;
-                    $!userName <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu"> <!-- 下拉菜单class样式 -->
-                    <li><a tabindex="-1" href="$root/sso/logout.do">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
+<div class="row">
+    <div class="col-md-12">
+        <div class="gmq-breadcrumb">
+            <div class="row">
+                <div class="col-md-9"><img src="$root/images/logo.jpg" alt=""></div>
+                <div class="col-md-3 text-right">
+                    <label class="dropdown-toggle gmq-breadcrumb-right">
+                        <i class="glyphicon glyphicon-user padding-right-small"></i>$!userName
+                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="gmq-breadcrumb-right" href="$root/sso/logout.do"><i class="glyphicon glyphicon-log-out"></i></a>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- end user info -->
 </div>
+
 
 <div class="sidebar-nav">
     <ul id="navbarEl">
@@ -34,7 +29,7 @@
                 <i class="fa fa-fw fa-outdent"></i> Group<i class="fa fa-collapse"></i>
             </a>
             <ul class="group-menu nav nav-list collapse">
-                <li><a href="$root/group/consumerGroup.do"><span class="fa fa-caret-right"></span> ConsumerGroup</a>
+                <li><a href="$root/group/consumerProgress.do"><span class="fa fa-caret-right"></span> ConsumerProgress</a>
                 </li>
                 <li><a href="$root/connection/consumerConnection.do"><span class="fa fa-caret-right"></span>
                     ConsumerConnection</a></li>
@@ -61,7 +56,6 @@
             </a>
             <ul class="message-menu nav nav-list collapse">
                 <li><a href="$root/msg/queryMsgById.do"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
-                </li>
             </ul>
         </li>
 
@@ -71,7 +65,7 @@
                 <i class="fa fa-fw fa-book"></i> Broker<i class="fa fa-collapse"></i>
             </a>
             <ul class="broker-menu nav nav-list collapse">
-                <li><a href="$root/guest/broker.do"><span class="fa fa-caret-right"></span> BrokerList</a></li>
+                <li><a href="$root/guest/broker.do"><span class="fa fa-caret-right"></span> Cluster</a></li>
             </ul>
         </li>
         <li #if($faq_flag) class="$!faq_flag" #end>

@@ -43,4 +43,36 @@ public class BaseUtil {
         }
     }
 
+    public static boolean isBlank(String str) {
+        int strLen;
+        if (str == null || (strLen = str.length()) == 0) {
+            return true;
+        }
+        for (int i = 0; i < strLen; i++) {
+            if ((Character.isWhitespace(str.charAt(i)) == false)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int asInt(String str, int defaultValue) {
+        try {
+            return Integer.parseInt(str);
+        }
+        catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
+
+    public static long asLong(String str, long defaultValue) {
+        try {
+            return Long.parseLong(str);
+        }
+        catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
 }

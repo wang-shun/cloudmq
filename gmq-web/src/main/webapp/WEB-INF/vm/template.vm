@@ -6,7 +6,7 @@
 	#parse("head-js.vm")
 </head>
 <body class="theme-blue" role="document">
-    #if($stringUtil.isNotBlank($!session.getAttribute("userType")) && $session.getAttribute("userType") == "1")
+    #if($!session.getAttribute("userType") && $!session.getAttribute("userType") == "1")
         #parse("navbar.vm")
     #else
         #parse("navbar_guest.vm")

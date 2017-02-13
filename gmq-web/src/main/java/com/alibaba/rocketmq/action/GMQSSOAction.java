@@ -8,6 +8,7 @@ import java.text.MessageFormat;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import com.alibaba.rocketmq.service.gmq.GMQLoginConfigService;
+import com.gome.sso.common.util.CookieUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,13 +72,17 @@ public class GMQSSOAction extends AbstractAction {
             String ssoLogOutUrl = gomeSSOService.getSsoLogOutUrl();
             String redirectUrl = URLEncoder.encode(gomeSSOService.getAppHomeUrl(), "UTF-8");
             String logoutUrl = MessageFormat.format("{0}?redirectUrl={1}&appKey={2}", ssoLogOutUrl, redirectUrl, appKey);
+            System.out.println("logoutUrl=" + logoutUrl);
+
             response.sendRedirect(logoutUrl);
         }
         catch (IOException e) {
             logger.error("sso logout error.", e);
             // TODO:跳转到失败页？提示用户？
         } finally {
-            request.getSession().setMaxInactiveInterval(24 * 60 * 60 * 1000);
+            CookieUtil.removeCookie(response, "token");
+            request.getSession().removeAttribute("userType");
+            request.getSession().invalidate();
         }
     }
 

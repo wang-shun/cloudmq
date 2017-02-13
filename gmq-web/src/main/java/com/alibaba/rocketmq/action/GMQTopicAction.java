@@ -23,6 +23,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/gmq/topic")
+@SuppressWarnings("unchecked")
 public class GMQTopicAction extends AbstractAction {
 
 
@@ -164,20 +165,10 @@ public class GMQTopicAction extends AbstractAction {
 
     public Map<String, Object> getTopicAndCluster() throws Throwable {
         Map<String, Object> params = Maps.newHashMap();
-        List<String> list = gmqTopicService.list();
-        List<String> topics = new ArrayList<>();        // 正常topic
-        List<String> retryTopics = new ArrayList<>();   // 重试队列
-        List<String> dlqTopics = new ArrayList<>();     // 死信队列
-        for (String topic : list) {
-            if(topic.startsWith("%RETRY%")){
-                retryTopics.add(topic);
-            } else if(topic.startsWith("%DLQ%")) {
-                dlqTopics.add(topic);
-            } else {
-                topics.add(topic);
-            }
-        }
-
+        Map<String, Object> topicList = gmqTopicService.getTopicList();
+        List<String> topics = (ArrayList)topicList.get("topics");               // 正常topic
+        List<String> retryTopics = (ArrayList)topicList.get("retryTopics");      // 重试队列
+        List<String> dlqTopics = (ArrayList)topicList.get("dlqTopics");         // 死信队列
         params.put("topics", topics);
         params.put("retryTopics", retryTopics);
         params.put("dlqTopics", dlqTopics);

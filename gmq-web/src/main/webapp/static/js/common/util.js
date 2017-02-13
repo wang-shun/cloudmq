@@ -111,3 +111,16 @@ function alertMsg(msg, fn) {
 function confirmMsg(msg, sureFn, cancelFn) {
     layer.confirm(msg, {btn: ['确定', '取消']}, sureFn, cancelFn);
 }
+
+function openLoading() {
+    // shade 弹层外区域遮罩,默认是0.3透明度的黑色背景（'#000'）
+    // 0:关闭遮罩   定义别的颜色，可以shade: [0.8, '#393D49']
+    var index = layer.msg('加载中...', {
+        icon: 16, shade: [0.09, '#393D49']
+    });
+    return index;
+}
+
+function closeLoading(index) {
+    layer.close(index);
+}
