@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="gmq-breadcrumb">
             <div class="row">
-                <div class="col-md-9"><img src="$root/images/logo.jpg" alt=""></div>
+                <div class="col-md-9"><img src="$root/static/images/logo.jpg" alt=""></div>
                 <div class="col-md-3 text-right">
                     <label class="dropdown-toggle gmq-breadcrumb-right">
                         <i class="glyphicon glyphicon-user padding-right-small"></i>$!userName
