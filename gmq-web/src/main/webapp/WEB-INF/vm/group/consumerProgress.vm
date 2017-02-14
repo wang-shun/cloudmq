@@ -122,13 +122,13 @@
     function stat(topicName) {
         var currGroup = $("#currGroup").val();
         var gotoAction = "$root/group/topicStats.do?";
-        XUI.gotoPageHref(gotoAction + "topicName=" + topicName + "&groupId=" + groupId);
+        XUI.gotoPageHref(gotoAction + "topicName=" + topicName + "&groupId=" + currGroup);
     }
 
     function route(topicName) {
         var currGroup = $("#currGroup").val();
         var gotoAction = "$root/group/topicRoute.do?";
-        XUI.gotoPageHref(gotoAction + "topicName=" + topicName + "&groupId=" + groupId);
+        XUI.gotoPageHref(gotoAction + "topicName=" + topicName + "&groupId=" + currGroup);
     }
 
     $(function () {
