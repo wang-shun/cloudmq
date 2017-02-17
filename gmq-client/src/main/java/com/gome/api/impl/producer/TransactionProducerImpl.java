@@ -2,12 +2,15 @@ package com.gome.api.impl.producer;
 
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.log.ClientLogger;
-import com.alibaba.rocketmq.client.producer.*;
+import com.alibaba.rocketmq.client.producer.LocalTransactionState;
+import com.alibaba.rocketmq.client.producer.TransactionCheckListener;
+import com.alibaba.rocketmq.client.producer.TransactionMQProducer;
 import com.alibaba.rocketmq.common.message.MessageAccessor;
 import com.alibaba.rocketmq.remoting.RPCHook;
 import com.alibaba.rocketmq.remoting.protocol.RemotingCommand;
 import com.gome.api.impl.base.MQClientAbstract;
-import com.gome.api.open.base.Msg;
+import com.gome.api.open.base.*;
+import com.gome.api.open.base.TransactionSendResult;
 import com.gome.api.open.transaction.LocalTransactionExecuter;
 import com.gome.api.open.transaction.TransactionProducer;
 import com.gome.api.open.transaction.TransactionStatus;
@@ -60,8 +63,8 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
     }
 
     public void start() {
-        if(this.started.compareAndSet(false, true)) {
-            if(this.transactionMQProducer.getTransactionCheckListener() == null) {
+        if (this.started.compareAndSet(false, true)) {
+            if (this.transactionMQProducer.getTransactionCheckListener() == null) {
                 throw new IllegalArgumentException("TransactionCheckListener is null");
             }
 
@@ -77,36 +80,42 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
     }
 
     public void shutdown() {
-        if(this.started.compareAndSet(true, false)) {
+        if (this.started.compareAndSet(true, false)) {
             this.transactionMQProducer.shutdown();
         }
 
     }
 
-    public SendResult send(final Msg message, final LocalTransactionExecuter executer, Object arg) {
+    public TransactionSendResult send(final Msg message, final LocalTransactionExecuter executer, Object arg) throws RuntimeException{
         this.checkONSProducerServiceState(this.transactionMQProducer.getDefaultMQProducerImpl());
         com.alibaba.rocketmq.common.message.Message msgRMQ = MyUtils.msgConvert(message);
-        MessageAccessor.putProperty(msgRMQ, "ProducerGroupId", (String)this.properties.get("ProducerGroupId"));
-        TransactionSendResult sendResultRMQ = null;
-
+        MessageAccessor.putProperty(msgRMQ, "ProducerGroupId", (String) this.properties.get("ProducerGroupId"));
+        TransactionSendResult sendResultRMQ = new TransactionSendResult();
+        com.alibaba.rocketmq.client.producer.TransactionSendResult transactionSendResult = null;
         try {
-            sendResultRMQ = this.transactionMQProducer.sendMessageInTransaction(msgRMQ, new com.alibaba.rocketmq.client.producer.LocalTransactionExecuter() {
+            transactionSendResult = this.transactionMQProducer.sendMessageInTransaction(msgRMQ, new com.alibaba.rocketmq.client.producer.LocalTransactionExecuter() {
                 public LocalTransactionState executeLocalTransactionBranch(com.alibaba.rocketmq.common.message.Message msg, Object arg) {
                     String msgId = msg.getProperty("__transactionId__");
                     message.setTransactionMsgId(msgId);
                     TransactionStatus transactionStatus = executer.execute(message, arg);
-                    return TransactionStatus.CommitTransaction == transactionStatus?LocalTransactionState.COMMIT_MESSAGE:(TransactionStatus.RollbackTransaction == transactionStatus?LocalTransactionState.ROLLBACK_MESSAGE:LocalTransactionState.UNKNOW);
+                    return TransactionStatus.CommitTransaction == transactionStatus ? LocalTransactionState.COMMIT_MESSAGE : (TransactionStatus.RollbackTransaction == transactionStatus ? LocalTransactionState.ROLLBACK_MESSAGE : LocalTransactionState.UNKNOW);
                 }
             }, arg);
+
+            sendResultRMQ.setSendStatus(transactionSendResult.getSendStatus());
+            sendResultRMQ.setMsgId(transactionSendResult.getMsgId());
+            sendResultRMQ.setMessageQueue(transactionSendResult.getMessageQueue());
+            sendResultRMQ.setQueueOffset(transactionSendResult.getQueueOffset());
+            sendResultRMQ.setLocalTransactionState(transactionSendResult.getLocalTransactionState());
+            sendResultRMQ.setTransactionId(transactionSendResult.getTransactionId());
         } catch (Exception exception) {
             throw new RuntimeException(exception);
         }
-
-        if(sendResultRMQ.getLocalTransactionState() == LocalTransactionState.ROLLBACK_MESSAGE) {
+        if (sendResultRMQ.getLocalTransactionState() == LocalTransactionState.ROLLBACK_MESSAGE) {
+            log.error("localTransactionState: " + sendResultRMQ.getLocalTransactionState());
             throw new RuntimeException("local transaction branch failed ,so transaction rollback");
         } else {
-            SendResult sendResult = new SendResult();
-            return sendResult;
+            return sendResultRMQ;
         }
     }
 

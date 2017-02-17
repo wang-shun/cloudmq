@@ -13,6 +13,7 @@ import com.gome.common.PropertiesConst;
  * @since 2016/6/27
  */
 public class ProducerTest {
+
     public static void main(String[] args) {
         Properties properties = new Properties();
         // 您在控制台创建的生产者组ID（ProducerGroupId）

@@ -1,8 +1,9 @@
 package com.gome.api.open.transaction;
 
-import com.alibaba.rocketmq.client.producer.SendResult;
+
 import com.gome.api.open.base.Admin;
 import com.gome.api.open.base.Msg;
+import com.gome.api.open.base.TransactionSendResult;
 
 /**
  * @author tantexian
@@ -13,5 +14,5 @@ public interface TransactionProducer extends Admin {
 
     void shutdown();
 
-    SendResult send(Msg msg, LocalTransactionExecuter localTransactionExecuter, Object obj);
+    TransactionSendResult send(Msg msg, LocalTransactionExecuter localTransactionExecuter, Object obj);
 }

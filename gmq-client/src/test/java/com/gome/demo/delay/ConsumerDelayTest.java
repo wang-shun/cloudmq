@@ -30,7 +30,7 @@ public class ConsumerDelayTest {
         // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
         // 延时模式（建议尽量使用常规模式，延时模式会降低性能及可靠性）
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        consumer.subscribe("TopicTestMQ", "*", new MsgListener() {
+        consumer.subscribe("TopicTestMQ", "TagA", new MsgListener() {
             public Action consume(Msg msg, ConsumeContext context) {
                 System.out.println("[NowTime:" + sdf.format(new Date()) + "] Receive Msg : " + new String(msg.getBody()));
                 try {

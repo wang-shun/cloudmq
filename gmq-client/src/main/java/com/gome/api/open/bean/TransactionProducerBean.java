@@ -2,6 +2,7 @@ package com.gome.api.open.bean;
 
 import com.gome.api.open.base.Msg;
 import com.gome.api.open.base.SendResult;
+import com.gome.api.open.base.TransactionSendResult;
 import com.gome.api.open.exception.GomeClientException;
 import com.gome.api.open.factory.MQFactory;
 import com.gome.api.open.transaction.LocalTransactionChecker;
@@ -16,7 +17,7 @@ import java.util.Properties;
  * @author tantexian
  * @since 2016/6/27
  */
-@Deprecated
+//@Deprecated
 public class TransactionProducerBean implements TransactionProducer {
     private Properties properties;
     private LocalTransactionChecker localTransactionChecker;
@@ -41,14 +42,9 @@ public class TransactionProducerBean implements TransactionProducer {
 
     }
 
-    public SendResult send(Msg msg, LocalTransactionExecuter executer, Object arg) {
-        com.alibaba.rocketmq.client.producer.SendResult sendResultRMQ = this.transactionProducer.send(msg, executer, arg);
-        SendResult sendResult = new SendResult();
-        sendResult.setMsgId(sendResultRMQ.getMsgId());
-        sendResult.setSendStatus(sendResultRMQ.getSendStatus());
-        sendResult.setMessageQueue(sendResultRMQ.getMessageQueue());
-        sendResult.setQueueOffset(sendResultRMQ.getQueueOffset());
-        return sendResult;
+    public TransactionSendResult send(Msg msg, LocalTransactionExecuter executer, Object arg) {
+        TransactionSendResult transactionSendResult = this.transactionProducer.send(msg, executer, arg);
+        return transactionSendResult;
     }
 
     public Properties getProperties() {
