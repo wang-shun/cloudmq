@@ -13,6 +13,8 @@
                 <prop key="ConsumerGroupId">ConsumerGroupId-test</prop>
                 <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
                 <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+                <!--设置消息队列为广播消费模型（不设置则默认为集群消费）-->
+                <!--<prop key="MessageModel">BROADCASTING</prop>-->
             </props>
         </property>
 
