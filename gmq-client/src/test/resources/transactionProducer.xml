@@ -2,14 +2,20 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="producer" class="com.gome.api.open.bean.ProducerBean" init-method="start" destroy-method="shutdown">
-        <property name="properties" > <!--生产者配置信息-->
+
+    <!-- 服务器回查客户端-->
+    <bean id="checker" class="com.gome.demo.transaction.LocalTransactionCheckerImpl"></bean>
+
+    <bean id="transactionProducer" class="com.gome.api.open.bean.TransactionProducerBean" init-method="start" destroy-method="shutdown">
+        <property name="properties">
             <props>
                 <prop key="ProducerGroupId">ProducerGroupId-test</prop>
                 <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
                 <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
             </props>
         </property>
+
+        <property name="localTransactionChecker" ref="checker"></property>
     </bean>
 
 </beans>

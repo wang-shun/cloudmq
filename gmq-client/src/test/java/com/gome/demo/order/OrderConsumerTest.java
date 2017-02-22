@@ -32,7 +32,7 @@ public class OrderConsumerTest {
 
         // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，
         // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
-        orderedConsumer.subscribe("TopicOrderTestMQ", "*", new MsgOrderListener() {
+        orderedConsumer.subscribe("TopicOrderTestMQ", "TagA", new MsgOrderListener() {
             @Override
             public OrderAction consume(Msg msg, ConsumeOrderContext consumeOrderContext) {
                 System.out.println(new String(msg.getBody()));

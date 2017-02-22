@@ -56,7 +56,7 @@ public class MQFactoryImpl implements MQFactoryAPI {
      * @since 2016/7/12
      * @params
      */
-    @Deprecated
+//    @Deprecated
     public TransactionProducer createTransactionProducer(Properties properties, final LocalTransactionChecker checker) {
         TransactionProducerImpl transactionProducer = new TransactionProducerImpl(properties, new TransactionCheckListener() {
             public LocalTransactionState checkLocalTransactionState(MessageExt msg) {
