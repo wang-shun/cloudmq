@@ -31,8 +31,7 @@ public class MQFactory {
         return mqFactoryInstance.createOrderProducer(properties);
     }
 
-    // 当前版本没有实现事务消息功能 2016/6/27 Add by tantexixan
-//    @Deprecated
+
     public static TransactionProducer createTransactionProducer(Properties properties,
                                                                 LocalTransactionChecker checker) {
         return mqFactoryInstance.createTransactionProducer(properties, checker);
