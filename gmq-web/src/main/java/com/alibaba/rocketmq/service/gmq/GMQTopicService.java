@@ -10,7 +10,6 @@ import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.tools.command.CommandUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.velocity.runtime.directive.Foreach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,10 +161,11 @@ public class GMQTopicService extends AbstractService {
 
     public void updateAllTopic(String clusterName, String[] excludeTopic) throws Throwable {
         DefaultMQAdminExt defaultMQAdminExt = getDefaultMQAdminExt();
+        Map<String, List<String>> mapError = new HashMap<>();
         try {
             defaultMQAdminExt.start();
             TopicList topicList = defaultMQAdminExt.fetchAllTopicList();
-            for (String topic : topicList.getTopicList()) {
+            for (final String topic : topicList.getTopicList()) {
                 if (!topic.contains("%RETRY%") && !topic.contains("%DLQ%") && !containsTopic(topic, excludeTopic)) {
                     List<QueueData> queueData = defaultMQAdminExt.examineTopicRouteInfo(topic).getQueueDatas();
                     if (null != queueData && !queueData.isEmpty()) {
@@ -176,14 +176,35 @@ public class GMQTopicService extends AbstractService {
                         topicConfig.setWriteQueueNums(qData.getWriteQueueNums());
                         Set<String> masterSet = CommandUtil.fetchMasterAddrByClusterName(defaultMQAdminExt, clusterName);
                         for (String addr : masterSet) {
-                            LOGGER.info("updateAllTopic topic. topic=" + topic + ",masterAddr=" + addr);
-                            defaultMQAdminExt.createAndUpdateTopicConfig(addr, topicConfig);
+                            try {
+                                LOGGER.info("updateAllTopic topic. topic=" + topic + ",masterAddr=" + addr);
+                                defaultMQAdminExt.createAndUpdateTopicConfig(addr, topicConfig);
+                            } catch (Exception e) {
+                                if (mapError.containsKey(e.getMessage())) {
+                                    mapError.get(e.getMessage()).add(topic);
+                                }else{
+                                    mapError.put(e.getMessage(),new ArrayList<String>(){{
+                                        add(topic);
+                                    }});
+                                }
+
+                            }
                         }
                     }
                 }
             }
         } finally {
             shutdownDefaultMQAdminExt(defaultMQAdminExt);
+        }
+        StringBuilder sb=new StringBuilder();
+        if(!mapError.isEmpty()){
+            for(Map.Entry<String,List<String>> entry:mapError.entrySet()){
+                sb.append(entry.getKey());
+                sb.append(":");
+                sb.append(org.apache.commons.lang.StringUtils.join(entry.getValue().toArray(),","));
+                sb.append(";");
+            }
+           throw  new Exception(sb.toString());
         }
     }
 
