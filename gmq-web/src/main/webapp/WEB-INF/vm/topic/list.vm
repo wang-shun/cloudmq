@@ -2,6 +2,7 @@
 
     <div class="btn-toolbar list-toolbar">
         <button class="btn btn-info" onclick="add()"><i class="fa fa-plus"></i> New Topic</button>
+        <button class="btn btn-info" onclick="updateAllTopic()"><i class="fa fa-warning"></i> Update All Topic</button>
         <div class="btn-group">
         </div>
     </div>
@@ -117,7 +118,9 @@
     function add() {
         XUI.gotoPageHref("$root/gmq/topic/add.do");
     }
-
+    function updateAllTopic() {
+        XUI.gotoPageHref("$root/gmq/topic/updateAll.do");
+    }
     function del() {
         var topicName = $("#txtTopic").val();
         var clusterName = $("#selectClusterName option:selected").val();

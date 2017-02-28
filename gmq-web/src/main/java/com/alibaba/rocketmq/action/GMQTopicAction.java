@@ -140,6 +140,26 @@ public class GMQTopicAction extends AbstractAction {
         return TEMPLATE;
     }
 
+    @RequestMapping(value = "/updateAll.do", method = RequestMethod.GET)
+    public String updateAll(ModelMap map) {
+        putPublicAttribute(map, "updateAll");
+        return TEMPLATE;
+    }
+
+    @RequestMapping(value = "/updateAll.do", method = RequestMethod.POST)
+    public String updatePost(ModelMap map, String topics) {
+        try {
+            gmqTopicService.updateAllTopic("DefaultCluster", topics.split(","));
+            return "redirect:/gmq/topic/list.do ";
+        } catch (Throwable e) {
+            Map<String, Object> params = Maps.newHashMap();
+            putPublicAttribute(map, "updateAll");
+            e.printStackTrace();
+            map.put("error", "更新异常:"+e.getMessage());
+            putTable(map, params);
+        }
+        return TEMPLATE;
+    }
 
     public Map<String, Object> getTopicAndCluster() throws Throwable {
         Map<String, Object> params = Maps.newHashMap();

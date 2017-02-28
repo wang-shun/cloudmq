@@ -10,6 +10,7 @@ import com.alibaba.rocketmq.tools.admin.DefaultMQAdminExt;
 import com.alibaba.rocketmq.tools.command.CommandUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.velocity.runtime.directive.Foreach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,6 +158,42 @@ public class GMQTopicService extends AbstractService {
             shutdownDefaultMQAdminExt(adminExt);
         }
         throw t;
+    }
+
+    public void updateAllTopic(String clusterName, String[] excludeTopic) throws Throwable {
+        DefaultMQAdminExt defaultMQAdminExt = getDefaultMQAdminExt();
+        try {
+            defaultMQAdminExt.start();
+            TopicList topicList = defaultMQAdminExt.fetchAllTopicList();
+            for (String topic : topicList.getTopicList()) {
+                if (!topic.contains("%RETRY%") && !topic.contains("%DLQ%") && !containsTopic(topic, excludeTopic)) {
+                    List<QueueData> queueData = defaultMQAdminExt.examineTopicRouteInfo(topic).getQueueDatas();
+                    if (null != queueData && !queueData.isEmpty()) {
+                        QueueData qData = queueData.get(0);
+                        TopicConfig topicConfig = new TopicConfig();
+                        topicConfig.setTopicName(topic);
+                        topicConfig.setReadQueueNums(qData.getReadQueueNums());
+                        topicConfig.setWriteQueueNums(qData.getWriteQueueNums());
+                        Set<String> masterSet = CommandUtil.fetchMasterAddrByClusterName(defaultMQAdminExt, clusterName);
+                        for (String addr : masterSet) {
+                            LOGGER.info("updateAllTopic topic. topic=" + topic + ",masterAddr=" + addr);
+                            defaultMQAdminExt.createAndUpdateTopicConfig(addr, topicConfig);
+                        }
+                    }
+                }
+            }
+        } finally {
+            shutdownDefaultMQAdminExt(defaultMQAdminExt);
+        }
+    }
+
+    private boolean containsTopic(String topic, String[] excludeTopic) {
+        for (String exTopic : excludeTopic) {
+            if (topic.equals(exTopic.trim())) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

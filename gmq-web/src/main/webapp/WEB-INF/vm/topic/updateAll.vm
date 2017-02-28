@@ -1,0 +1,24 @@
+<div class="main-content">
+    <form action="$root/gmq/topic/updateAll.do" method="post">
+        <table class="table table-bordered table-hover">
+            <tbody>
+            <tr>
+                <td>
+                    <label>exclude topic(多个以逗号隔开)</label>
+                    <textarea class="form-control" rows="3" name="topics" value="BenchmarkTest">
+BenchmarkTest,OFFSET_MOVED_EVENT,SELF_TEST_TOPIC,DefaultCluster,broker-master1,broker-master2,broker-master3,broker-master4
+                    </textarea>
+                    <span>此功能仅用于扩容并且仅支持DefaultCluster集群，慎用！</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-right">
+                    <label style="color:red">$!error</label>
+                    <button class="btn btn-info" type="submit"><i class="fa fa-sun-o"></i> Submit
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
