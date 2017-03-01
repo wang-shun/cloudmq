@@ -258,8 +258,8 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.gome</groupId>
-            <artifactId>gome-inc-sso-client</artifactId>
+            <groupId>com.gome.inc</groupId>
+            <artifactId>sso-client</artifactId>
             <version>${gome-inc-sso-client.version}</version>
         </dependency>
     </dependencies>
