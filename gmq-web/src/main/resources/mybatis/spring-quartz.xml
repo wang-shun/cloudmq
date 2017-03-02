@@ -5,7 +5,9 @@
     		http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-autowire="byName">
 
-    <bean id="brokerTask" class="com.alibaba.rocketmq.service.gmq.BrokerTaskService"></bean>
+    <bean id="brokerTask" class="com.alibaba.rocketmq.service.gmq.BrokerTaskService">
+        <property name="brokerScheduleEnable" value="${gmq.broker.schedule.enable}"></property>
+    </bean>
 
     <bean id="brokerJobDetailFactoryBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject">

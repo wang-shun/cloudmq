@@ -11,8 +11,8 @@
         <param-value>
             classpath:spring/applicationContext.xml,
             classpath:spring/spring-sso.xml,
+            classpath:mybatis/spring-quartz.xml,
             classpath:mybatis/spring-config-dao.xml
-            <!--  classpath:mybatis/spring-quartz.xml  -->
         </param-value>
     </context-param>
 

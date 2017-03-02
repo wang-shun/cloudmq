@@ -7,44 +7,132 @@
         </div>
     </div>
 
-    <table class="table table-bordered table-hover">
-        <thead>
-        <tr>
-            <th class="text-center">Sequence</th>
-            <th class="text-center">Topic</th>
-            <th class="text-center" colspan="3">operations</th>
-            <th class="text-center" style="width:35em;"></th>
-        </tr>
-        </thead>
-        <tbody>
-            #foreach($topicName in $!tbodyData.topics)
-            <tr>
-                <td class="text-center">$!{velocityCount}</td>
-                <td>$topicName</td>
-                <td class="text-center">
-                    <a href="javascript:void(0)" onclick="stats('$topicName')" role="button">
-                        <i class="fa fa-table"></i>
+
+    <div class="row">
+        <div class="col-md-9">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="javascript:void(0);" data-toggle="tab" class="input-lg">
+                        Topics&nbsp;&nbsp;&nbsp;&nbsp;
                     </a>
-                </td>
-                <td class="text-center">
-                    <a href="javascript:void(0)" onclick="showDelConfir('$topicName', 'Update')" role="button">
-                        <i class="fa fa-pencil"></i>
-                    </a>
-                </td>
-                <td class="text-center">
-                    <a href="javascript:void(0)" onclick="showDelConfir('$topicName', 'Delete')" role="button">
-                        <i class="fa fa-trash-o"></i>
-                    </a>
-                </td>
-                <td style="width:35em;">&nbsp;</td>
-            </tr>
-            #end
-        <tfoot>
-        <tr>
-            <td class="text-left" colspan="6">Total Topic:  $!tbodyData.topics.size()</td>
-        </tr>
-        </tfoot>
-    </table>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Sequence</th>
+                        <th class="text-center">Topic</th>
+                        <th class="text-center" colspan="4">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($topicName in $!tbodyData.topics)
+                        <tr>
+                            <td class="text-center">$!{velocityCount}</td>
+                            <td>$topicName</td>
+                            <td class="text-center">
+                                <a href="$root/guest/topicState.do?topic=$topicName">
+                                    存储状态&nbsp;<i class="fa fa-floppy-o"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="$root/guest/consumeGroup.do?topic=$topicName">
+                                    消费组&nbsp;<i class="fa fa-flag"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="javascript:void(0)" onclick="showDelConfir('$topicName', 'Update')" role="button">
+                                    更新&nbsp;<i class="fa fa-pencil"></i>
+                                </a>
+                            </td>
+                            <td class="text-center">
+                                <a href="javascript:void(0)" onclick="showDelConfir('$topicName', 'Delete')" role="button">
+                                    删除&nbsp;<i class="fa fa-trash-o"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        #end
+                    <tfoot>
+                    <tr>
+                        <td class="text-left" colspan="6">Total Topic:  $!tbodyData.topics.size()</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <br/><br/>
+    <div class="row">
+        <div class="col-md-7">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="javascript:void(0);" data-toggle="tab" class="input-lg">重试队列&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Sequence&nbsp;&nbsp;</th>
+                        <th class="text-center">Topic</th>
+                        <th class="text-center" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($topicName in $!tbodyData.retryTopics)
+                        <tr>
+                            <td class="text-center">$!{velocityCount}</td>
+                            <td>$topicName</td>
+                            <td class="text-center" colspan="2"></td>
+                        </tr>
+                        #end
+                    <tfoot>
+                    <tr>
+                        <td class="text-left" colspan="6">Total RetryTopic Size:  $!tbodyData.retryTopics.size()</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <br/><br/>
+    <div class="row">
+        <div class="col-md-7">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="javascript:void(0);" data-toggle="tab" class="input-lg">死信队列&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Sequence</th>
+                        <th class="text-center">Topic</th>
+                        <th class="text-center" colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($topicName in $!tbodyData.dlqTopics)
+                        <tr>
+                            <td class="text-center">$!{velocityCount}</td>
+                            <td>$topicName</td>
+                            <td class="text-center" colspan="2"></td>
+                        </tr>
+                        #end
+                    <tfoot>
+                    <tr>
+                        <td class="text-left" colspan="6">Total DLQTopic Size:  $!tbodyData.dlqTopics.size()</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <div class="modal small fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">

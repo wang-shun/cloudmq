@@ -23,8 +23,10 @@ public class BrokerTaskService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BrokerTaskService.class);
 
-    @Value("#{configProperties['gmq.broker.schedule.enable']}")
-    private String brokerScheduleEnable;
+    /**
+     * 是否开启Broker定时查询集群TPS任务 (从配置文件获取开关)
+     */
+    private Boolean brokerScheduleEnable;
 
     @Autowired
     private BrokerDao brokerDao;
@@ -47,7 +49,10 @@ public class BrokerTaskService extends AbstractService {
 
     public void batchSaveBroker() {
         try {
-            /*LOGGER.info("### start broker schedule ###");
+            if(brokerScheduleEnable == null || !brokerScheduleEnable){
+                return;  //屏蔽此处的log日志
+            }
+            LOGGER.info("### start broker schedule ###");
             List<BrokerExt> brokers = getBatchBrokers();
             if (CollectionUtils.isEmpty(brokers)) {
                 LOGGER.info("no brokers data to save.");
@@ -56,11 +61,19 @@ public class BrokerTaskService extends AbstractService {
             for (BrokerExt broker : brokers) {
                 this.saveBroker(broker);
             }
-            LOGGER.info("### end broker schedule ### batch count={}", brokers.size());*/
+            LOGGER.info("### end broker schedule ### batch count={}", brokers.size());
         } catch (Exception e) {
             LOGGER.error("### error broker schedule ### msg={}", e.getMessage(), e);
             // throw e; // ignore e;
         }
+    }
+
+    public Boolean getBrokerScheduleEnable() {
+        return brokerScheduleEnable;
+    }
+
+    public void setBrokerScheduleEnable(Boolean brokerScheduleEnable) {
+        this.brokerScheduleEnable = brokerScheduleEnable;
     }
 
 }
