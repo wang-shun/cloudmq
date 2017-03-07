@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/images/favicon.ico"/>
+    <title>gmq-login</title>
+</head>
+<body>
+</body>
+</html>
+
+<script type="text/javascript" src="static/js/common/util.js"></script>
+<script type="text/javascript">
+    var loginUrl = getUrlParameter("loginUrl");
+    var redirectUrl = getUrlParameter("redirectUrl");
+    var ssoUrl = "{0}?redirectUrl={1}&r={2}".format(loginUrl, encodeURI(redirectUrl), Math.random());
+    // top.location.href 最外层页面跳转，  window.location.href 本页面跳转
+    top.location.href = ssoUrl;
+</script>

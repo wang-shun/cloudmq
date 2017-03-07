@@ -25,6 +25,7 @@ import java.util.*;
  * @since: 2016/7/19
  */
 @Service
+@SuppressWarnings("unchecked")
 public class GMQGroupService extends AbstractService {
 
     static final Logger logger = LoggerFactory.getLogger(GMQGroupService.class);

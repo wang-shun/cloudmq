@@ -10,8 +10,9 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:spring/applicationContext.xml,
-            classpath:mybatis/spring-config-dao.xml,
-            classpath:mybatis/spring-quartz.xml
+            classpath:spring/spring-sso.xml,
+            classpath:mybatis/spring-quartz.xml,
+            classpath:mybatis/spring-config-dao.xml
         </param-value>
     </context-param>
 
@@ -31,16 +32,18 @@
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>/WEB-INF/index.html</welcome-file>
-        <welcome-file>/index.html</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
+    <context-param>
+        <param-name>indexApi</param-name>
+        <param-value>/gmq/index.do</param-value>
+    </context-param>
+
     <filter>
-        <description>字符集过滤器</description>
         <filter-name>EncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
         <init-param>
-            <description>字符集编码</description>
             <param-name>encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
@@ -56,18 +59,6 @@
     <filter-mapping>
         <filter-name>HiddenHttpMethodFilter</filter-name>
         <servlet-name>springmvc</servlet-name>
-    </filter-mapping>
-    <filter>
-        <filter-name>userFilter</filter-name>
-        <filter-class>com.alibaba.rocketmq.filter.UserFilter</filter-class>
-        <init-param>
-            <param-name>excluded</param-name>
-            <param-value>/demo/demo,/demo/demo</param-value>
-        </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>userFilter</filter-name>
-        <url-pattern>*.do</url-pattern>
     </filter-mapping>
 
 </web-app>

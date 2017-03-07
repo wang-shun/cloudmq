@@ -1,0 +1,78 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="gmq-breadcrumb">
+            <div class="row">
+                <div class="col-md-9"><img src="$root/static/images/logo.jpg" alt=""></div>
+                <div class="col-md-3 text-right">
+                    <label class="dropdown-toggle gmq-breadcrumb-right">
+                        <i class="glyphicon glyphicon-user padding-right-small"></i>$!userName
+                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="gmq-breadcrumb-right" href="$root/sso/logout.do"><i class="glyphicon glyphicon-log-out"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="sidebar-nav">
+    <ul id="navbarEl">
+        <li #if($topic_flag) class="$topic_flag" #end>
+            <a href="$root/guest/topic.do" class="nav-header" data-toggle="collapse" data-target=".dashboard-menu">
+                <i class="fa fa-fw fa-paragraph"></i> Topic
+            </a>
+        </li>
+
+
+        <li #if($group_flag) class="$!group_flag" #end data-popover="true" rel="popover" data-placement="right">
+            <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".group-menu">
+                <i class="fa fa-fw fa-outdent"></i> Group<i class="fa fa-collapse"></i>
+            </a>
+            <ul class="group-menu nav nav-list collapse">
+                <li><a href="$root/group/consumerProgress.do"><span class="fa fa-caret-right"></span> ConsumerProgress</a>
+                </li>
+                <li><a href="$root/connection/consumerConnection.do"><span class="fa fa-caret-right"></span>
+                    ConsumerConnection</a></li>
+                <li><a href="$root/connection/producerConnection.do"><span class="fa fa-caret-right"></span>
+                    ProducerConnection</a></li>
+            </ul>
+        </li>
+
+
+        <li #if($namesrv_flag) class="$!namesrv_flag" #end>
+            <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".namesrv-menu">
+                <i class="fa fa-fw fa-tags"></i> NameSrv<i class="fa fa-collapse"></i>
+            </a>
+            <ul class="namesrv-menu nav nav-list collapse">
+                <li><a href="$root/gmq/namesrv/getNameSrvAddr.do"><span class="fa fa-caret-right"></span> GetNameSrvAddr</a></li>
+            </ul>
+        </li>
+
+
+        <li #if($message_flag) class="$!message_flag" #end>
+            <a href="#navbarEl_message" class="nav-header collapsed" data-toggle="collapse" data-target=".message-menu"
+               id="navbarEl_message">
+                <i class="fa fa-fw fa-legal"></i> Message<i class="fa fa-collapse"></i>
+            </a>
+            <ul class="message-menu nav nav-list collapse">
+                <li><a href="$root/msg/queryMsgById.do"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
+            </ul>
+        </li>
+
+
+        <li #if($broker_flag) class="$!broker_flag" #end>
+            <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".broker-menu">
+                <i class="fa fa-fw fa-book"></i> Broker<i class="fa fa-collapse"></i>
+            </a>
+            <ul class="broker-menu nav nav-list collapse">
+                <li><a href="$root/guest/broker.do"><span class="fa fa-caret-right"></span> Cluster</a></li>
+            </ul>
+        </li>
+        <li #if($faq_flag) class="$!faq_flag" #end>
+            <a href="$root/gmq/other/faq.do" class="nav-header collapsed" data-toggle="collapse"
+               data-target=".dashboard-menu">
+                <i class="fa fa-fw fa-comment"></i> FAQ
+            </a>
+        </li>
+    </ul>
+</div> <!-- end of navigation  -->

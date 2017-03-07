@@ -7,7 +7,6 @@ import org.springframework.util.Assert;
  * @author gaoyanlei
  * @since 2016/7/25
  */
-
 public final class TenantIdHolder {
     private static final ThreadLocal<String> tenantIdHolder = new ThreadLocal<String>();
 

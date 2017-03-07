@@ -1,0 +1,72 @@
+/*
+Icon classes can be used entirely standalone. They are named after their original file names.
+
+Example usage in HTML:
+
+`display: block` sprite:
+<div class="icon-home"></div>
+
+To change `display` (e.g. `display: inline-block;`), we suggest using a common CSS class:
+
+// CSS
+.icon {
+  display: inline-block;
+}
+
+// HTML
+<i class="icon icon-home"></i>
+*/
+.icon-gome-logo-white {
+  background-image: url(../images/sprite.png);
+  background-position: 0px -52px;
+  width: 84px;
+  height: 38px;
+}
+.icon-gome-logo {
+  background-image: url(../images/sprite.png);
+  background-position: 0px 0px;
+  width: 115px;
+  height: 52px;
+}
+.icon-gome {
+  background-image: url(../images/sprite.png);
+  background-position: 0px -90px;
+  width: 71px;
+  height: 22px;
+}
+.icon-info {
+  background-image: url(../images/sprite.png);
+  background-position: -84px -52px;
+  width: 31px;
+  height: 25px;
+}
+.icon-lock-active {
+  background-image: url(../images/sprite.png);
+  background-position: -115px -48px;
+  width: 20px;
+  height: 25px;
+}
+.icon-lock {
+  background-image: url(../images/sprite.png);
+  background-position: -115px -73px;
+  width: 20px;
+  height: 25px;
+}
+.icon-revert {
+  background-image: url(../images/sprite.png);
+  background-position: -115px -98px;
+  width: 12px;
+  height: 14px;
+}
+.icon-user-active {
+  background-image: url(../images/sprite.png);
+  background-position: -115px 0px;
+  width: 22px;
+  height: 24px;
+}
+.icon-user {
+  background-image: url(../images/sprite.png);
+  background-position: -115px -24px;
+  width: 22px;
+  height: 24px;
+}

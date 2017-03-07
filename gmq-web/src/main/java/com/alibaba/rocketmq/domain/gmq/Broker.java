@@ -22,9 +22,9 @@ public class Broker extends BaseDomain {
 
     private String version;
 
-    private Double inTps;
+    private Long inTps;
 
-    private Double outTps;
+    private Long outTps;
 
     private Long inTotalYest;
 
@@ -74,19 +74,19 @@ public class Broker extends BaseDomain {
         this.version = version;
     }
 
-    public Double getInTps() {
+    public Long getInTps() {
         return inTps;
     }
 
-    public void setInTps(Double inTps) {
+    public void setInTps(Long inTps) {
         this.inTps = inTps;
     }
 
-    public Double getOutTps() {
+    public Long getOutTps() {
         return outTps;
     }
 
-    public void setOutTps(Double outTps) {
+    public void setOutTps(Long outTps) {
         this.outTps = outTps;
     }
 

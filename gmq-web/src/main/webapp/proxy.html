@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="static/images/favicon.ico"/>
+    <title>gmq-success</title>
+</head>
+<body>
+<form id="proxyForm" method="post">
+    <input type="hidden" name="sign" id="sign" value="" />
+    <input type="hidden" name="timesmap" id="timesmap" value="" />
+</form>
+</body>
+</html>
+
+<script type="text/javascript" src="static/js/jquery/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="static/js/common/ajax.data.controller.js"></script>
+<script type="text/javascript" src="static/js/common/util.js"></script>
+<script type="text/javascript" src="static/js/common/config.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        verify_sign();
+    });
+
+    function verify_sign() {
+        var sign = getUrlParameter("sign");
+        var ts = getUrlParameter("_t");
+        myConsoleLog("timesmap={0}, sign={1}".format(ts, sign));
+        $("#sign").val(sign);
+        $("#timesmap").val(ts);
+        $("#proxyForm").attr("action", globalApi("api.verify.sign"));
+        $("#proxyForm").submit();
+    }
+
+</script>

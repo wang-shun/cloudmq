@@ -12,6 +12,7 @@ import java.util.List;
  * @author gaoyanlei
  * @since 2016/7/12
  */
+@SuppressWarnings("unchecked")
 public class PropertyToArray {
 
     public static String[] EntityToPropertyArray(Class<?> t) {

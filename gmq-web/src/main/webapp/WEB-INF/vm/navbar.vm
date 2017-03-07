@@ -1,42 +1,17 @@
-<!--[if IE 7 ]> <body class="ie ie7 "> <![endif]-->
-<!--[if IE 8 ]> <body class="ie ie8 "> <![endif]-->
-<!--[if IE 9 ]> <body class="ie ie9 "> <![endif]-->
-
-<div class="navbar navbar-default" role="navigation">
-    <!-- start logo navbar -->
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a href="index.html">
-                <span class="navbar-brand">
-                    <img alt="" src="$root/images/gome_logo.png" class="img-rounded">&nbsp;&nbsp;GMQ Consonle
-                </span>
-        ## <span class="navbar-brand"><span class="fa fa-paper-plane"></span>&nbsp;&nbsp;GMQ Consonle</span>
-        </a>
+<div class="row">
+    <div class="col-md-12">
+        <div class="gmq-breadcrumb">
+            <div class="row">
+                <div class="col-md-9"><img src="$root/static/images/logo.jpg" alt=""></div>
+                <div class="col-md-3 text-right">
+                    <label class="dropdown-toggle gmq-breadcrumb-right">
+                        <i class="glyphicon glyphicon-user padding-right-small"></i>$!userName
+                    </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="gmq-breadcrumb-right" href="$root/sso/logout.do"><i class="glyphicon glyphicon-log-out"></i></a>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- end logo navbar -->
-
-    <!-- start user info -->
-    <div class="navbar-collapse collapse" style="height: 1px;">
-        <ul id="main-menu" class="nav navbar-nav navbar-right">
-            <li class="dropdown hidden-xs">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <span class="glyphicon glyphicon-user padding-right-small" style="position:relative;top: 3px;"/>&nbsp;
-                    $!userName <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu"> <!-- 下拉菜单class样式 -->
-                    <li><a href="$root/user/saveOrUpdate.do?id=$!userId">My Account</a></li>
-                    <li class="divider"></li>
-                    <li><a tabindex="-1" href="$root/gmq/logout.do">Logout</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <!-- end user info -->
 </div>
 
 <div class="sidebar-nav">
@@ -72,7 +47,7 @@
                 <i class="fa fa-fw fa-outdent"></i> Group<i class="fa fa-collapse"></i>
             </a>
             <ul class="group-menu nav nav-list collapse">
-                <li><a href="$root/group/consumerGroup.do"><span class="fa fa-caret-right"></span> ConsumerGroup</a>
+                <li><a href="$root/group/consumerProgress.do"><span class="fa fa-caret-right"></span> ConsumerProgress</a>
                 </li>
                 <li><a href="$root/connection/consumerConnection.do"><span class="fa fa-caret-right"></span>
                     ConsumerConnection</a></li>
@@ -80,18 +55,6 @@
                     ProducerConnection</a></li>
             </ul>
         </li>
-
-    #*<li #if($account_flag) class="$!account_flag" #end data-popover="true" rel="popover" data-placement="right">
-        <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".account-menu">
-            <i class="fa fa-fw fa-briefcase"></i> Account<i class="fa fa-collapse"></i>
-        </a>
-        <ul class="account-menu nav nav-list collapse">
-            <li><a href="#"><span class="fa fa-caret-right"></span> Sign In</a></li>
-            <li><a href="#"><span class="fa fa-caret-right"></span> Sign Up</a></li>
-            <li><a href="#"><span class="fa fa-caret-right"></span> Reset Password</a></li>
-        </ul>
-    </li>*#
-
 
         <li #if($namesrv_flag) class="$!namesrv_flag" #end>
             <a href="#" class="nav-header collapsed" data-toggle="collapse" data-target=".namesrv-menu">
@@ -124,8 +87,7 @@
             <ul class="message-menu nav nav-list collapse">
                 <li><a href="$root/msg/queryMsgById.do"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
                 <li><a href="$root/msg/queryMsgByKey.do"><span class="fa fa-caret-right"></span> QueryMsgByKey</a></li>
-                <li><a href="$root/msg/queryMsgByOffset.do"><span class="fa fa-caret-right"></span> QueryMsgByOffset</a>
-                </li>
+                <li><a href="$root/msg/queryMsgByOffset.do"><span class="fa fa-caret-right"></span> QueryMsgByOffset</a></li>
             </ul>
         </li>
 

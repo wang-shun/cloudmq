@@ -1,7 +1,7 @@
 package com.alibaba.rocketmq.action;
 
 import com.alibaba.rocketmq.domain.gmq.User;
-import com.alibaba.rocketmq.service.gmq.UserService;
+import com.alibaba.rocketmq.service.gmq.GMQUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserAction extends AbstractAction {
 
     @Autowired
-    UserService userService;
+    GMQUserService GMQUserService;
 
 
     @Override
@@ -38,7 +38,7 @@ public class UserAction extends AbstractAction {
     public String list(ModelMap map) {
         putPublicAttribute(map, "list");
         try {
-            putTable(map, userService.findAll());
+            putTable(map, GMQUserService.findAll());
         } catch (Throwable t) {
             putAlertMsg(t, map);
         }
@@ -50,7 +50,7 @@ public class UserAction extends AbstractAction {
     public String AddView(ModelMap map, @RequestParam(required = false) Integer id) {
         putPublicAttribute(map, "add");
         if (id != null) {
-            putTable(map, userService.findById(id));
+            putTable(map, GMQUserService.findById(id));
         }
         return TEMPLATE;
     }
@@ -62,7 +62,7 @@ public class UserAction extends AbstractAction {
         Integer result = 0;
         try {
             putPublicAttribute(map, "list");
-            result = userService.saveOrUpdate(user);
+            result = GMQUserService.saveOrUpdate(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,7 +73,7 @@ public class UserAction extends AbstractAction {
     @RequestMapping(value = "/login.do", method = RequestMethod.GET)
     public String list(@RequestParam(required = false) String userName,
                        @RequestParam(required = false) String password) {
-        userService.checkUserTest(userName, password);
+        GMQUserService.checkUserTest(userName, password);
         return TEMPLATE;
     }
 
@@ -83,7 +83,7 @@ public class UserAction extends AbstractAction {
         try {
             User user = new User(userId);
             user.setPassword(resetPassword);
-            userService.saveOrUpdate(user);
+            GMQUserService.saveOrUpdate(user);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -97,7 +97,7 @@ public class UserAction extends AbstractAction {
 
         try {
             putPublicAttribute(map, "list");
-            result = userService.delete(user.getId());
+            result = GMQUserService.delete(user.getId());
         } catch (Throwable t) {
             putAlertMsg(t, map);
         }

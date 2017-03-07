@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
     #set($root=$link.getContextPath())
 	#parse("head.vm")
 	#parse("head-js.vm")
 </head>
 <body class="theme-blue" role="document">
-    #parse("navbar.vm")
+    #if($!session.getAttribute("userType") && $!session.getAttribute("userType") == "1")
+        #parse("navbar.vm")
+    #else
+        #parse("navbar_guest.vm")
+    #end
+
     <div class="content" role="main">
         #parse("content-head.vm")
         #parse("msg.vm")

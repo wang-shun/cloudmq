@@ -8,8 +8,6 @@ import java.lang.annotation.*;
  * @author gaoyanlei
  * @since 2016/7/12
  */
-
-
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Documented

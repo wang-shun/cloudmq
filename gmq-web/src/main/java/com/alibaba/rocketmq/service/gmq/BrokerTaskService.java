@@ -7,6 +7,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,6 +22,11 @@ import java.util.List;
 public class BrokerTaskService extends AbstractService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BrokerTaskService.class);
+
+    /**
+     * 是否开启Broker定时查询集群TPS任务 (从配置文件获取开关)
+     */
+    private Boolean brokerScheduleEnable;
 
     @Autowired
     private BrokerDao brokerDao;
@@ -43,6 +49,9 @@ public class BrokerTaskService extends AbstractService {
 
     public void batchSaveBroker() {
         try {
+            if(brokerScheduleEnable == null || !brokerScheduleEnable){
+                return;  //屏蔽此处的log日志
+            }
             LOGGER.info("### start broker schedule ###");
             List<BrokerExt> brokers = getBatchBrokers();
             if (CollectionUtils.isEmpty(brokers)) {
@@ -57,6 +66,14 @@ public class BrokerTaskService extends AbstractService {
             LOGGER.error("### error broker schedule ### msg={}", e.getMessage(), e);
             // throw e; // ignore e;
         }
+    }
+
+    public Boolean getBrokerScheduleEnable() {
+        return brokerScheduleEnable;
+    }
+
+    public void setBrokerScheduleEnable(Boolean brokerScheduleEnable) {
+        this.brokerScheduleEnable = brokerScheduleEnable;
     }
 
 }

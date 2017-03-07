@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
  * @author gaoyanlei
  * @since 2016/7/25
  */
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class TenantIdRestTemplate extends RestTemplate implements TenantIdRestOperations {
 
     @Override

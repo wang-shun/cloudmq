@@ -137,11 +137,12 @@ public class GMQClusterService extends AbstractService {
     }
 
 
-    private double split(String string) {
+    private long split(String string) {
+        Double tps = 0D;
         String[] tpss = string.split(" ");
         if (tpss != null && tpss.length > 0) {
-            return Double.parseDouble(tpss[0]);
+            tps = Double.parseDouble(tpss[0]);
         }
-        return 0;
+        return tps.longValue();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/gmq/topic")
+@SuppressWarnings("unchecked")
 public class GMQTopicAction extends AbstractAction {
 
 
@@ -163,9 +165,15 @@ public class GMQTopicAction extends AbstractAction {
 
     public Map<String, Object> getTopicAndCluster() throws Throwable {
         Map<String, Object> params = Maps.newHashMap();
-        List<String> topics = gmqTopicService.list();
-        List<String> clusterNames = gmqTopicService.getClusterNames();
+        Map<String, Object> topicList = gmqTopicService.getTopicList();
+        List<String> topics = (ArrayList)topicList.get("topics");               // 正常topic
+        List<String> retryTopics = (ArrayList)topicList.get("retryTopics");      // 重试队列
+        List<String> dlqTopics = (ArrayList)topicList.get("dlqTopics");         // 死信队列
         params.put("topics", topics);
+        params.put("retryTopics", retryTopics);
+        params.put("dlqTopics", dlqTopics);
+
+        List<String> clusterNames = gmqTopicService.getClusterNames();
         params.put("clusterNames", clusterNames);
         return params;
     }

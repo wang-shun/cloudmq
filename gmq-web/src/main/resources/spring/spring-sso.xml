@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+       default-autowire="byName">
+
+    <mvc:annotation-driven/>
+
+    <context:property-placeholder location="classpath:conf/sso.properties" ignore-unresolvable="true"/>
+
+    <!--  gmq sso action autowired @Value target  -->
+    <bean id="ssoConfigProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:conf/sso.properties</value>
+            </list>
+        </property>
+    </bean>
+
+
+    <context:component-scan base-package="com.gome.sso">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <bean id="gomeSSOServerConfig" class="com.gome.sso.client.config.GomeSSOServerConfig">
+        <property name="tokenUrl" value="${sso.tokenUrl}"/>
+        <property name="loginUrl" value="${sso.loginUrl}"/>
+        <property name="logoutUrl" value="${sso.logoutUrl}"/>
+        <property name="appHomeUrl" value="${sso.app.homeUrl}"/>
+        <property name="appKey" value="${sso.app.appKey}"/>
+        <property name="excludeUrl" value="${sso.app.excludeUrl}"/>
+    </bean>
+
+    <bean id="gomeSSOService" class="com.gome.sso.client.service.impl.GomeSSOServiceImpl" init-method="init"/>
+
+
+    <bean id="gmqLoginConfigService" class="com.alibaba.rocketmq.service.gmq.GMQLoginConfigService">
+        <property name="indexApi" value="${app.index.api}"/>
+        <property name="loginApi" value="${app.verify.api}"/>
+        <property name="staticResouce" value="${app.static.resouce}"/>
+        <property name="appLoginUrl" value="${app.index.url}"/>
+        <property name="appRedirectUrl" value="${sso.app.homeUrl}"/>
+        <property name="ssoLoginUrl" value="${sso.loginUrl}"/>
+        <property name="appKey" value="${sso.app.appKey}"/>
+        <property name="tokenVerifyUrl" value="${sso.tokenUrl}"/>
+        <property name="maxInactiveInterval" value="${app.maxInactiveInterval}"/>
+        <property name="adminApi" value="${app.admin.api}"/>
+        <property name="guestApi" value="${app.guest.api}"/>
+    </bean>
+
+    <mvc:interceptors>
+        <bean class="com.alibaba.rocketmq.interceptor.LoginHandlerInterceptor" init-method="init"/>
+    </mvc:interceptors>
+
+</beans>
