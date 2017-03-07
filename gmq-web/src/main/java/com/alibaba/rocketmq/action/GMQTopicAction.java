@@ -151,6 +151,7 @@ public class GMQTopicAction extends AbstractAction {
     @RequestMapping(value = "/updateAll.do", method = RequestMethod.POST)
     public String updatePost(ModelMap map, String topics) {
         try {
+            // 写死DefaultCluster，后续有其他集群需要调整代码 2017/3/7 Add by yintongqiang
             gmqTopicService.updateAllTopic("DefaultCluster", topics.split(","));
             return "redirect:/gmq/topic/list.do ";
         } catch (Throwable e) {
