@@ -4,7 +4,7 @@
 # $Id: mqbroker 587 2012-11-20 03:26:56Z shijia.wxr $
 #
 
-if [ -z "$GMQ_HOME" ] ; then
+if [ -z "$CLOUDMQ_HOME" ] ; then
   ## resolve links - $0 may be a link to maven's home
   PRG="$0"
 
@@ -21,14 +21,14 @@ if [ -z "$GMQ_HOME" ] ; then
 
   saveddir=`pwd`
 
-  GMQ_HOME=`dirname "$PRG"`/..
+  CLOUDMQ_HOME=`dirname "$PRG"`/..
 
   # make it fully qualified
-  GMQ_HOME=`cd "$GMQ_HOME" && pwd`
+  CLOUDMQ_HOME=`cd "$CLOUDMQ_HOME" && pwd`
 
   cd "$saveddir"
 fi
 
-export GMQ_HOME
+export CLOUDMQ_HOME
 
-nohup sh ${GMQ_HOME}/bin/runserver.sh com.alibaba.rocketmq.filtersrv.FiltersrvStartup $@ &
+nohup sh ${CLOUDMQ_HOME}/bin/runserver.sh com.alibaba.rocketmq.filtersrv.FiltersrvStartup $@ &

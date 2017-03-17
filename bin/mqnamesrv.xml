@@ -9,7 +9,7 @@
 
 	<properties>
 		<java.ext.dirs>${cpd}/../lib</java.ext.dirs>
-		<gmq.home.dir>${cpd}/..</gmq.home.dir>
+		<cloudmq.home.dir>${cpd}/..</cloudmq.home.dir>
 	</properties>
 
 	<classpaths>

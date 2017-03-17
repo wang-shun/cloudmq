@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- Listener配置，此处监听器的class路径由使用者自行配置, cloudmq所提供的jar包并不包含此路径 -->
+    <bean id="orderMsgListener" class="com.gome.demo.springwithbean.OrderConsumerMsgListener"></bean>
+
+    <!-- Consumer配置 -->
+    <bean id="consumer" class="com.gome.api.open.bean.OrderConsumerBean" init-method="start" destroy-method="shutdown">
+        <property name="properties">
+            <props>
+                <prop key="ConsumerGroupId">ConsumerGroupId-test</prop>
+                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
+                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+            </props>
+        </property>
+
+        <property name="subscriptionTable">
+            <map>
+                <entry value-ref="orderMsgListener">
+                    <key>
+                        <bean class="com.gome.api.open.bean.Subscription">
+                            <property name="topic" value="TopicOrderTestMQ"/>
+                            <property name="expression" value="TagA"/>
+                        </bean>
+                    </key>
+                </entry>
+                <!--更多的订阅添加entry节点即可-->
+            </map>
+        </property>
+    </bean>
+
+</beans>

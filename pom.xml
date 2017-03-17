@@ -4,11 +4,11 @@
 
     <modelVersion>4.0.0</modelVersion>
     <inceptionYear>2012</inceptionYear>
-    <groupId>com.gome.coremq</groupId>
-    <artifactId>gmq-all</artifactId>
+    <groupId>com.cloudzone.coremq</groupId>
+    <artifactId>cloudmq-all</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>gmq-all ${project.version}</name>
+    <name>cloudmq ${project.version}</name>
     <url>https://github.com/alibaba/rocketmq</url>
     <description>https://github.com/alibaba/RocketMQ/blob/develop/README.md</description>
 
@@ -17,18 +17,18 @@
     </prerequisites>
 
     <modules>
-		<module>gmq-web</module>
-        <module>gmq-api</module>
-        <module>gmq-common</module>
-        <module>gmq-broker</module>
-        <module>gmq-tools</module>
-        <module>gmq-store</module>
-        <module>gmq-namesrv</module>
-        <module>gmq-remoting</module>
-        <module>gmq-example</module>
-        <module>gmq-filtersrv</module>
-        <module>gmq-srvutil</module>
-        <module>gmq-client</module>
+		<module>cloudmq-web</module>
+        <module>cloudmq-api</module>
+        <module>cloudmq-common</module>
+        <module>cloudmq-broker</module>
+        <module>cloudmq-tools</module>
+        <module>cloudmq-store</module>
+        <module>cloudmq-namesrv</module>
+        <module>cloudmq-remoting</module>
+        <module>cloudmq-example</module>
+        <module>cloudmq-filtersrv</module>
+        <module>cloudmq-srvutil</module>
+        <module>cloudmq-java-client</module>
     </modules>
 
     <developers>
@@ -202,7 +202,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
-                    <finalName>gmq-${project.version}</finalName>
+                    <finalName>cloudmq-${project.version}</finalName>
                     <descriptors>
                         <descriptor>release.xml</descriptor>
                     </descriptors>
@@ -311,52 +311,52 @@
         <dependencies>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-api</artifactId>
+                <artifactId>cloudmq-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-broker</artifactId>
+                <artifactId>cloudmq-broker</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-common</artifactId>
+                <artifactId>cloudmq-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-store</artifactId>
+                <artifactId>cloudmq-store</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-namesrv</artifactId>
+                <artifactId>cloudmq-namesrv</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-tools</artifactId>
+                <artifactId>cloudmq-tools</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-remoting</artifactId>
+                <artifactId>cloudmq-remoting</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-qatest</artifactId>
+                <artifactId>cloudmq-qatest</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-filtersrv</artifactId>
+                <artifactId>cloudmq-filtersrv</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>${project.groupId}</groupId>
-                <artifactId>gmq-srvutil</artifactId>
+                <artifactId>cloudmq-srvutil</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
