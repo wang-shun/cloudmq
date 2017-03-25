@@ -48,8 +48,8 @@ CloudMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式、�
 /**
  * 顺序消息的生产者（顺序消息的消费者与普通消费者一致）
  *
- * @author xxx
- * @since 2016/6/27 or v1.0.0
+ * @Author xxx
+ * @Since 2016/6/27 or v1.0.0
  */
 ```
 
