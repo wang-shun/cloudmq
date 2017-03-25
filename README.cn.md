@@ -42,7 +42,7 @@ CloudMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式、�
 
 ### 注释规范
 * 对于注释，请遵照以下规范：
-* 注释类型1、
+* 注释类型1（适用于类或者包或者方法注释）、
 
 ```
 /**
@@ -53,33 +53,34 @@ CloudMQ是基于阿里RocketMQ V3.2.6改进，二次封装的一款分布式、�
  */
 ```
 
-* 注释类型2、
+* 注释类型2（适用于结构体或者包名注释）、
 
 ```
 // 由于是顺序消息，因此只能选择一个queue生产和消费消息
 ```
 
-* 注释类型3、
+* 注释类型3（适用于结构体或者包名注释）、
 
 ```
-// xxx 2016/7/11 Add by xxx Or // xxx 2016/7/11 Edit by xxx
+// xxx  Modify: xxx, <xxx@gmail.com> Since: 2017-03-21 or v1.0.0
+// xxx  Add: xxx, <xxx@gmail.com> Since: 2017-03-21 or v1.0.0
 ```
   
 
 * 关于TODO、FIXME、XXX注释规范、
 
 ```
-// TODO: + 说明：
+// TODO: + 说明：xxx Author: xxx, <xxx@gmail.com>  Since: 2017-03-21 or v1.0.0
 ```
 如果代码中有TODO该标识，说明在标识处有功能代码待编写，待实现的功能在说明中会简略说明。
 
 ```
-// FIXME: + 说明：
+// FIXME: + 说明：xxx Author: xxx, <xxx@gmail.com>  Since: 2017-03-21 or v1.0.0
 ```
 如果代码中有FIXME该标识，说明标识处代码需要修正，甚至代码是错误的，不能工作，需要修复，如何修正会在说明中简略说明。
 
 ```
-// XXX: + 说明：
+// XXX: + 说明：xxx Author: xxx, <xxx@gmail.com>  Since: 2017-03-21 or v1.0.0
 ```
 如果代码中有XXX该标识，说明标识处代码虽然实现了功能，但是实现的方法有待商榷，希望将来能改进，要改进的地方会在说明中简略说明。
 
