@@ -25,13 +25,13 @@
 	<moduleSets>
 		<moduleSet>
 			<includes>
-				<include>com.cloud.coremq:cloudmq-broker</include>
-				<include>com.cloud.coremq:cloudmq-tools</include>
-				<include>com.cloud.coremq:cloudmq-api</include>
-				<include>com.cloud.coremq:cloudmq-namesrv</include>
-				<include>com.cloud.coremq:cloudmq-filtersrv</include>
-				<include>com.cloud.coremq:cloudmq-example</include>
-				<include>com.cloud.mq:cloudmq-java-client</include>
+				<include>com.cloudzone.coremq:cloudmq-broker</include>
+				<include>com.cloudzone.coremq:cloudmq-tools</include>
+				<include>com.cloudzone.coremq:cloudmq-api</include>
+				<include>com.cloudzone.coremq:cloudmq-namesrv</include>
+				<include>com.cloudzone.coremq:cloudmq-filtersrv</include>
+				<include>com.cloudzone.coremq:cloudmq-example</include>
+				<include>com.cloudzone.mq:cloudmq-java-client</include>
 			</includes>
 			<binaries>
 				<outputDirectory>lib/</outputDirectory>
