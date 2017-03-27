@@ -15,28 +15,7 @@
  */
 package com.alibaba.rocketmq.broker;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.rocketmq.broker.client.ClientHousekeepingService;
-import com.alibaba.rocketmq.broker.client.ConsumerIdsChangeListener;
-import com.alibaba.rocketmq.broker.client.ConsumerManager;
-import com.alibaba.rocketmq.broker.client.DefaultConsumerIdsChangeListener;
-import com.alibaba.rocketmq.broker.client.ProducerManager;
+import com.alibaba.rocketmq.broker.client.*;
 import com.alibaba.rocketmq.broker.client.net.Broker2Client;
 import com.alibaba.rocketmq.broker.client.rebalance.RebalanceLockManager;
 import com.alibaba.rocketmq.broker.filtersrv.FilterServerManager;
@@ -45,22 +24,12 @@ import com.alibaba.rocketmq.broker.mqtrace.ConsumeMessageHook;
 import com.alibaba.rocketmq.broker.mqtrace.SendMessageHook;
 import com.alibaba.rocketmq.broker.offset.ConsumerOffsetManager;
 import com.alibaba.rocketmq.broker.out.BrokerOuterAPI;
-import com.alibaba.rocketmq.broker.processor.AdminBrokerProcessor;
-import com.alibaba.rocketmq.broker.processor.ClientManageProcessor;
-import com.alibaba.rocketmq.broker.processor.EndTransactionProcessor;
-import com.alibaba.rocketmq.broker.processor.PullMessageProcessor;
-import com.alibaba.rocketmq.broker.processor.QueryMessageProcessor;
-import com.alibaba.rocketmq.broker.processor.SendMessageProcessor;
+import com.alibaba.rocketmq.broker.processor.*;
 import com.alibaba.rocketmq.broker.slave.SlaveSynchronize;
 import com.alibaba.rocketmq.broker.subscription.SubscriptionGroupManager;
 import com.alibaba.rocketmq.broker.topic.TopicConfigManager;
 import com.alibaba.rocketmq.broker.transaction.DefaultTransactionCheckExecuter;
-import com.alibaba.rocketmq.common.BrokerConfig;
-import com.alibaba.rocketmq.common.DataVersion;
-import com.alibaba.rocketmq.common.MixAll;
-import com.alibaba.rocketmq.common.ThreadFactoryImpl;
-import com.alibaba.rocketmq.common.TopicConfig;
-import com.alibaba.rocketmq.common.UtilAll;
+import com.alibaba.rocketmq.common.*;
 import com.alibaba.rocketmq.common.constant.LoggerName;
 import com.alibaba.rocketmq.common.constant.PermName;
 import com.alibaba.rocketmq.common.namesrv.RegisterBrokerResult;
@@ -78,8 +47,15 @@ import com.alibaba.rocketmq.store.config.BrokerRole;
 import com.alibaba.rocketmq.store.config.MessageStoreConfig;
 import com.alibaba.rocketmq.store.stats.BrokerStats;
 import com.alibaba.rocketmq.store.stats.BrokerStatsManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.*;
 
 
 /**
@@ -97,11 +73,9 @@ public class BrokerController {
     private final ConsumerManager consumerManager;
     private final ProducerManager producerManager;
     private final ClientHousekeepingService clientHousekeepingService;
-    /***************************add 事务  end  gaoyanlei **************************************************/
-    // Broker主动回查Producer事务状态
+    // Broker主动回查Producer事务状态 2016/12/13 Add by gaoyanlei
     private final DefaultTransactionCheckExecuter defaultTransactionCheckExecuter;
     private ScheduledFuture<?> slaveSyncScheduledFuture;
-    /***************************add 事务 begin gaoyanlei **************************************************/
     private final PullMessageProcessor pullMessageProcessor;
     private final PullRequestHoldService pullRequestHoldService;
     private final Broker2Client broker2Client;
@@ -146,6 +120,7 @@ public class BrokerController {
         this.topicConfigManager = new TopicConfigManager(this);
         this.pullMessageProcessor = new PullMessageProcessor(this);
         this.pullRequestHoldService = new PullRequestHoldService(this);
+		// 事务消息 2016/12/13 Add by gaoyanlei
         this.defaultTransactionCheckExecuter = new DefaultTransactionCheckExecuter(this);
         this.consumerIdsChangeListener = new DefaultConsumerIdsChangeListener(this);
         this.consumerManager = new ConsumerManager(this.consumerIdsChangeListener);

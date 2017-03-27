@@ -35,8 +35,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * clOffset - Commit Log Offset<br>
  * tsOffset - Transaction State Table Offset
  * 
- * @author shijia.wxr<vintage.wang@gmail.com>
- * @since 2013-7-21
+ * @author gaoyanlei
+ * @since 2016/12/13
  */
 public class TransactionStateService {
     // 存储单元大小

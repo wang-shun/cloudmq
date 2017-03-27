@@ -28,9 +28,9 @@ import com.alibaba.rocketmq.store.transaction.TransactionCheckExecuter;
 
 /**
  * 存储层回调此接口，用来主动回查Producer的事务状态
- * 
- * @author shijia.wxr<vintage.wang@gmail.com>
- * @since 2013-7-26
+ *
+ * @author gaoyanlei
+ * @since 2016/12/13
  */
 public class DefaultTransactionCheckExecuter implements TransactionCheckExecuter {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.BrokerLoggerName);

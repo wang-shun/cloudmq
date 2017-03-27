@@ -35,10 +35,9 @@ public class DispatchRequest {
      */
     private final int sysFlag;
     private final long preparedTransactionOffset;
-    /** ************************add 事务 begin gaoyanlei **********************************************/
+    // producerGroup&tranStateTableOffset 2016/12/13 Add by gaoyanlei
     private final String producerGroup;
     private final long tranStateTableOffset;
-    /** ************************add 事务  end  gaoyanlei *********************************************/
 
     public DispatchRequest(//
                            final String topic,// 1
@@ -56,9 +55,6 @@ public class DispatchRequest {
                            final long tranStateTableOffset,// 10
                            final long preparedTransactionOffset,// 11
                            final String producerGroup// 12
-                           // 如果producerGroup为空，表示是recover过程，所以不更新
-                           // Transaction state
-                           // table
     ) {
         this.topic = topic;
         this.queueId = queueId;
@@ -74,10 +70,9 @@ public class DispatchRequest {
          */
         this.sysFlag = sysFlag;
         this.preparedTransactionOffset = preparedTransactionOffset;
-        /***************************add 事务 begin gaoyanlei **************************************************/
+        // 事务消息 2016/12/13 Add by gaoyanlei
         this.tranStateTableOffset = tranStateTableOffset;
         this.producerGroup = producerGroup;
-        /***************************add 事务  end  gaoyanlei **************************************************/
     }
 
 
@@ -104,10 +99,9 @@ public class DispatchRequest {
          */
         this.sysFlag = 0;
         this.preparedTransactionOffset = 0;
-        /***************************add 事务 begin gaoyanlei **************************************************/
+        // 事务消息 2016/12/13 Add by gaoyanlei
         this.tranStateTableOffset = 0;
         this.producerGroup = "";
-        /***************************add 事务  end  gaoyanlei **************************************************/
     }
 
 

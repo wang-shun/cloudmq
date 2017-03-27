@@ -15,20 +15,18 @@
  */
 package com.alibaba.rocketmq.broker.client;
 
+import com.alibaba.rocketmq.common.constant.LoggerName;
+import com.alibaba.rocketmq.remoting.common.RemotingHelper;
+import com.alibaba.rocketmq.remoting.common.RemotingUtil;
 import io.netty.channel.Channel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.rocketmq.common.constant.LoggerName;
-import com.alibaba.rocketmq.remoting.common.RemotingHelper;
-import com.alibaba.rocketmq.remoting.common.RemotingUtil;
 
 
 /**
@@ -44,14 +42,13 @@ public class ProducerManager {
     private final Lock groupChannelLock = new ReentrantLock();
     private final HashMap<String /* group name */, HashMap<Channel, ClientChannelInfo>> groupChannelTable =
             new HashMap<String, HashMap<Channel, ClientChannelInfo>>();
-    /** ************************add 事务 begin gaoyanlei **************************************************/
+    // 事务消息 2016/12/13 Add by gaoyanlei
     private final Lock hashcodeChannelLock = new ReentrantLock();
     private final HashMap<Integer /* group hash code */, List<ClientChannelInfo>> hashcodeChannelTable =
             new HashMap<Integer, List<ClientChannelInfo>>();
     private final Random random = new Random(System.currentTimeMillis());
 
-    /**************************add 事务  end  gaoyanlei **************************************************/
-
+    
     public ProducerManager() {
     }
 
@@ -172,7 +169,7 @@ public class ProducerManager {
                 log.warn("ProducerManager registerProducer lock timeout");
             }
 
-            /***************************add 事务 begin gaoyanlei **************************************************/
+            // 事务消息 2016/12/13 Add by gaoyanlei
             boolean bClientChannelInfoFound = false;
 
             if (this.hashcodeChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
@@ -199,7 +196,6 @@ public class ProducerManager {
             } else {
                 log.warn("ProducerManager registerProducer hashcodeChannelLock timeout");
             }
-            /***************************add 事务  end  gaoyanlei **************************************************/
         } catch (InterruptedException e) {
             log.error("", e);
         }
@@ -229,7 +225,7 @@ public class ProducerManager {
             } else {
                 log.warn("ProducerManager unregisterProducer lock timeout");
             }
-            /***************************add 事务 begin gaoyanlei **************************************************/
+            // 事务消息 2016/12/13 Add by gaoyanlei
             if (this.hashcodeChannelLock.tryLock(LockTimeoutMillis, TimeUnit.MILLISECONDS)) {
                 try {
                     List<ClientChannelInfo> channelList = this.hashcodeChannelTable.get(group);
@@ -251,7 +247,6 @@ public class ProducerManager {
             } else {
                 log.warn("ProducerManager unregisterProducer hashcodeChannelLock timeout");
             }
-            /***************************add 事务  end  gaoyanlei **************************************************/
         } catch (InterruptedException e) {
             log.error("", e);
         }
@@ -259,7 +254,10 @@ public class ProducerManager {
 
 
     /**
-     * ************************add 事务 begin gaoyanlei *************************************************
+     * 事务消息
+     *
+     * @author gaoyanlei
+     * @since 2016/12/13
      */
 
     public ClientChannelInfo pickProducerChannelRandomly(final int producerGroupHashCode) {
@@ -296,5 +294,4 @@ public class ProducerManager {
         return value;
     }
 
-/***************************add 事务  end  gaoyanlei **************************************************/
 }

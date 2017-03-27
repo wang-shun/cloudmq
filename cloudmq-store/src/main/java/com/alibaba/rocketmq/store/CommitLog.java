@@ -15,18 +15,6 @@
  */
 package com.alibaba.rocketmq.store;
 
-import java.nio.BufferUnderflowException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alibaba.rocketmq.common.ServiceThread;
 import com.alibaba.rocketmq.common.UtilAll;
 import com.alibaba.rocketmq.common.constant.LoggerName;
@@ -39,6 +27,17 @@ import com.alibaba.rocketmq.store.config.BrokerRole;
 import com.alibaba.rocketmq.store.config.FlushDiskType;
 import com.alibaba.rocketmq.store.ha.HAService;
 import com.alibaba.rocketmq.store.schedule.ScheduleMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -992,19 +991,18 @@ public class CommitLog {
                 // Prepared and Rollback message is not consumed, will not enter the
                 // consumer queue
                 case MessageSysFlag.TransactionPreparedType:
-                /***************************add 事务 begin gaoyanlei **************************************************/
-                    queueOffset =
-                            CommitLog.this.defaultMessageStore.getTransactionStateService()
-                                    .getTranStateTableOffset().get();
-                    break;
-                /***************************add 事务  end  gaoyanlei **************************************************/
-                case MessageSysFlag.TransactionRollbackType:
-                    queueOffset = msgInner.getQueueOffset();;
-                    break;
-                case MessageSysFlag.TransactionNotType:
-                case MessageSysFlag.TransactionCommitType:
-                default:
-                    break;
+                // offset 2016/12/13 Add by gaoyanlei
+                queueOffset = CommitLog.this.defaultMessageStore.getTransactionStateService()
+                    .getTranStateTableOffset().get();
+                break;
+            case MessageSysFlag.TransactionRollbackType:
+                // offset 2016/12/13 Add by gaoyanlei
+                queueOffset = msgInner.getQueueOffset();
+                break;
+            case MessageSysFlag.TransactionNotType:
+            case MessageSysFlag.TransactionCommitType:
+            default:
+                break;
             }
 
             /**
