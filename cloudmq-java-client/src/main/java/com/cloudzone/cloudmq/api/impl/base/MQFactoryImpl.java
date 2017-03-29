@@ -111,12 +111,10 @@ public class MQFactoryImpl implements MQFactoryAPI {
             AuthKey authKey = Validators.checkTopicAndAuthKey(properties, groupKey);
             if (null != authKey) {
                 String keyPrefix = UtilAll.frontStringAtLeast(authKey.getAuthKey(), 1);
-                if ((authkeyStatus.getIndex() != Integer.valueOf(keyPrefix) &&
-                        (Integer.valueOf(keyPrefix) != AuthkeyStatus.TRANSACTION_MSG.getIndex()
-                                && authkeyStatus.getIndex() == AuthkeyStatus.NORMAL_MSG.getIndex()))) {
-                    AuthkeyStatus authStatus = AuthkeyStatus.getAuthkeyStatus(Integer.valueOf(keyPrefix));
-                    throw new AuthFailedException("调用方法错误，[" + authStatus.getName() + "]的topic，请调用[" + authStatus.getName() + "]的方法");
-                } else {
+                if (authkeyStatus.getIndex() == Integer.valueOf(keyPrefix) ||
+                        (Integer.valueOf(keyPrefix) == AuthkeyStatus.TRANSACTION_MSG.getIndex() &&
+                                authkeyStatus.getIndex() == AuthkeyStatus.NORMAL_MSG.getIndex()
+                        )) {
                     Properties prop = new Properties();
                     if (PropertiesConst.Keys.ProducerGroupId.equals(groupKey)) {
                         prop.put(PropertiesConst.Keys.ProducerGroupId, properties.get(PropertiesConst.Keys.ProducerGroupId));
@@ -127,6 +125,10 @@ public class MQFactoryImpl implements MQFactoryAPI {
                     prop.put(PropertiesConst.Keys.TOPIC_NAME, properties.get(PropertiesConst.Keys.TOPIC_NAME));
                     prop.put(PropertiesConst.Keys.NAMESRV_ADDR, authKey.getIpAndPort());
                     return prop;
+                } else {
+
+                    AuthkeyStatus authStatus = AuthkeyStatus.getAuthkeyStatus(Integer.valueOf(keyPrefix));
+                    throw new AuthFailedException("调用方法错误，[" + authStatus.getName() + "]的topic，请调用[" + authStatus.getName() + "]的方法");
                 }
             }
         } catch (Exception e) {
