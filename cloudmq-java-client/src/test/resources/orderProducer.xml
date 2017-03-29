@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="orderProducer" class="com.gome.api.open.bean.OrderProducerBean" init-method="start" destroy-method="shutdown">
+    <bean id="orderProducer" class="com.cloudzone.cloudmq.api.open.bean.OrderProducerBean" init-method="start" destroy-method="shutdown">
         <property name="properties" > <!--生产者配置信息-->
             <props>
                 <prop key="OrderProducerGroupId">OrderProducerGroupId-test</prop>

@@ -4,14 +4,16 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- 服务器回查客户端-->
-    <bean id="checker" class="com.gome.demo.transaction.LocalTransactionCheckerImpl"></bean>
+    <bean id="checker" class="com.cloudzone.cloudmq.demo.transaction.LocalTransactionCheckerImpl"></bean>
 
-    <bean id="transactionProducer" class="com.gome.api.open.bean.TransactionProducerBean" init-method="start" destroy-method="shutdown">
+    <bean id="transactionProducer" class="com.cloudzone.cloudmq.api.open.bean.TransactionProducerBean" init-method="start" destroy-method="shutdown">
         <property name="properties">
             <props>
                 <prop key="ProducerGroupId">ProducerGroupId-test</prop>
-                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
-                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+                <!--设置邮件反馈的topic名称-->
+                <prop key="TOPIC_NAME">jcpt-test-1423-200</prop>
+                <!--设置邮件反馈的认证密钥-->
+                <prop key="AUTH_KEY">0bf525b84c0474fef8bbc7f0b334b54a6</prop>
             </props>
         </property>
 

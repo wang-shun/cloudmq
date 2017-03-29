@@ -2,12 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean id="producer" class="com.gome.api.open.bean.ProducerBean" init-method="start" destroy-method="shutdown">
+    <bean id="producer" class="com.cloudzone.cloudmq.api.open.bean.ProducerBean" init-method="start" destroy-method="shutdown">
         <property name="properties" > <!--生产者配置信息-->
             <props>
                 <prop key="ProducerGroupId">ProducerGroupId-test</prop>
-                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
-                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+                <!--设置邮件反馈的topic名称-->
+                <prop key="TOPIC_NAME">jcpt-test-1423-200</prop>
+                <!--设置邮件反馈的认证密钥-->
+                <prop key="AUTH_KEY">0bf525b84c0474fef8bbc7f0b334b54a6</prop>
             </props>
         </property>
     </bean>

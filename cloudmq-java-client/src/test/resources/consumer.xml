@@ -4,10 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <!-- Listener配置，此处监听器的class路径由使用者自行配置, cloudmq所提供的jar包并不包含此路径 -->
-    <bean id="msgListener" class="com.gome.demo.springwithbean.ConsumerMessageListener"></bean>
+    <bean id="msgListener" class="com.cloudzone.cloudmq.demo.springwithbean.ConsumerMessageListener"></bean>
 
     <!-- Consumer配置 -->
-    <bean id="consumer" class="com.gome.api.open.bean.ConsumerBean" init-method="start" destroy-method="shutdown">
+    <bean id="consumer" class="com.cloudzone.cloudmq.api.open.bean.ConsumerBean" init-method="start" destroy-method="shutdown">
         <property name="properties">
             <props>
                 <prop key="ConsumerGroupId">ConsumerGroupId-test</prop>
@@ -22,7 +22,7 @@
             <map>
                 <entry value-ref="msgListener">
                     <key>
-                        <bean class="com.gome.api.open.bean.Subscription">
+                        <bean class="com.cloudzone.cloudmq.api.open.bean.Subscription">
                             <property name="topic" value="TopicTestMQ"/>
                             <property name="expression" value="*"/>
                         </bean>
