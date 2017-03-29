@@ -111,12 +111,18 @@ public class MQFactoryImpl implements MQFactoryAPI {
             AuthKey authKey = Validators.checkTopicAndAuthKey(properties, groupKey);
             if (null != authKey) {
                 String keyPrefix = UtilAll.frontStringAtLeast(authKey.getAuthKey(), 1);
-                // TODO: 2017/3/29 事务消息，延迟消息，sendoneway都是调用的普通消息的消费需特殊处理 
                 if (authkeyStatus.getIndex() == Integer.valueOf(keyPrefix) ||
+                        // TODO: 2017/3/29 事务消息，延迟消息，sendoneway，普通消息的消费都是一个类型需特殊处理
                         ((Integer.valueOf(keyPrefix) == AuthkeyStatus.TRANSACTION_MSG.getIndex() ||
                                 Integer.valueOf(keyPrefix) == AuthkeyStatus.DELAY_MSG.getIndex() ||
                                 Integer.valueOf(keyPrefix) == AuthkeyStatus.SENDONEWAY.getIndex()) &&
-                                authkeyStatus.getIndex() == AuthkeyStatus.NORMAL_MSG.getIndex()
+                                authkeyStatus.getIndex() == AuthkeyStatus.NORMAL_MSG.getIndex() &&
+                                groupKey.equals(PropertiesConst.Keys.ConsumerGroupId)) ||
+                        // TODO: 2017/3/29 延迟消息，sendoneway普通消息的发送时一个类型需特殊处理
+                        ((Integer.valueOf(keyPrefix) == AuthkeyStatus.DELAY_MSG.getIndex() ||
+                                Integer.valueOf(keyPrefix) == AuthkeyStatus.SENDONEWAY.getIndex()) &&
+                                authkeyStatus.getIndex() == AuthkeyStatus.NORMAL_MSG.getIndex() &&
+                                groupKey.equals(PropertiesConst.Keys.ProducerGroupId)
                         )) {
                     Properties prop = new Properties();
                     if (PropertiesConst.Keys.ProducerGroupId.equals(groupKey)) {
@@ -129,7 +135,6 @@ public class MQFactoryImpl implements MQFactoryAPI {
                     prop.put(PropertiesConst.Keys.NAMESRV_ADDR, authKey.getIpAndPort());
                     return prop;
                 } else {
-
                     AuthkeyStatus authStatus = AuthkeyStatus.getAuthkeyStatus(Integer.valueOf(keyPrefix));
                     throw new AuthFailedException("调用方法错误，[" + authStatus.getName() + "]的topic，请调用[" + authStatus.getName() + "]的方法");
                 }
