@@ -111,8 +111,11 @@ public class MQFactoryImpl implements MQFactoryAPI {
             AuthKey authKey = Validators.checkTopicAndAuthKey(properties, groupKey);
             if (null != authKey) {
                 String keyPrefix = UtilAll.frontStringAtLeast(authKey.getAuthKey(), 1);
+                // TODO: 2017/3/29 事务消息，延迟消息，sendoneway都是调用的普通消息的消费需特殊处理 
                 if (authkeyStatus.getIndex() == Integer.valueOf(keyPrefix) ||
-                        (Integer.valueOf(keyPrefix) == AuthkeyStatus.TRANSACTION_MSG.getIndex() &&
+                        ((Integer.valueOf(keyPrefix) == AuthkeyStatus.TRANSACTION_MSG.getIndex() ||
+                                Integer.valueOf(keyPrefix) == AuthkeyStatus.DELAY_MSG.getIndex() ||
+                                Integer.valueOf(keyPrefix) == AuthkeyStatus.SENDONEWAY.getIndex()) &&
                                 authkeyStatus.getIndex() == AuthkeyStatus.NORMAL_MSG.getIndex()
                         )) {
                     Properties prop = new Properties();

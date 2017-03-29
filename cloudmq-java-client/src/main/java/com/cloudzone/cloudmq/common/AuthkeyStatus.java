@@ -11,8 +11,8 @@ public enum AuthkeyStatus {
 
     NORMAL_MSG("普通消息", 0),
     ORDER_MSG("顺序消息", 1),
-    SENDONEWAY("sendoneway", 2),
-    DELAY_MSG("sendoneway", 3),
+    DELAY_MSG("延迟消息", 2),
+    SENDONEWAY("sendoneway", 3),
     TRANSACTION_MSG("事务消息", 4);
 
     // 成员变量
