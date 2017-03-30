@@ -39,9 +39,16 @@ public class PropertiesConst {
         public static final String TYPE = "appType";
         public static final String PROPERTIES_PATH = "client.properties";
         public static final String WSADDR_AUTH = "wsaddrAuth";
+        //解决客户端多个订阅的问题
+        public static final String TOPIC_NAME_AND_AUTH_KEY = "TOPIC_NAME_AND_AUTH_KEY";
+        //内部用
+        public static final String TopicAndAuthKey = "topicAndAuthKey";
+
 
         private Keys() {
-        };
+        }
+
+        ;
     }
 
     public class Values {
@@ -53,10 +60,14 @@ public class PropertiesConst {
         public static final int CLOUDMQ = 1;
 
         private Values() {
-        };
+        }
+
+        ;
     }
 
 
     private PropertiesConst() {
-    };
+    }
+
+    ;
 }

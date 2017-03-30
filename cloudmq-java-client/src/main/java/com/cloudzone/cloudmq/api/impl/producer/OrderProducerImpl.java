@@ -9,6 +9,7 @@ import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.api.open.order.OrderProducer;
 import com.cloudzone.cloudmq.common.PropertiesConst;
+import com.cloudzone.cloudmq.common.TopicAndAuthKey;
 import org.slf4j.Logger;
 
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
@@ -73,8 +74,9 @@ public class OrderProducerImpl extends MQClientAbstract implements OrderProducer
     }
 
     public SendResult send(Msg msg, String shardingKey) {
-        if (null != msg.getTopic() && !msg.getTopic().equals(this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME))) {
-            throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME) + "],发送的topic为[" + msg.getTopic() + "]");
+        TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) this.properties.get(PropertiesConst.Keys.TopicAndAuthKey);
+        if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(msg.getTopic())) {
+            throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],发送的topic为[" + msg.getTopic() + "]");
         }
         if (UtilAll.isBlank(shardingKey)) {
             throw new GomeClientException("\'shardingKey\' is blank.");

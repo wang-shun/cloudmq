@@ -23,12 +23,14 @@ public class BroadcastingConsumerTest {
         // 设置为广播消费模式（不设置则默认为集群消费模式）
         properties.put(PropertiesConst.Keys.MessageModel, PropertiesConst.Values.BROADCASTING);
         // 设置nameserver地址，不设置则默认为127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
+        properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
+                "jcpt-t-500:062489eca3c394a15b70fe500cdd942a0;a-200:2130d474c2c6a487eae496ee22dfbb878;b-300:" +
+                        "38b60e940b83745a994a99520a93b295f");
 
         // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，
         // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
         Consumer consumer = MQFactory.createConsumer(properties);
-        consumer.subscribe("TopicTestMQ", "*", new MsgListener() {
+        consumer.subscribe("jcpt-t-500", "*", new MsgListener() {
             public Action consume(Msg msg, ConsumeContext context) {
                 System.out.println("Receive: " + new String(msg.getBody()));
                 try {

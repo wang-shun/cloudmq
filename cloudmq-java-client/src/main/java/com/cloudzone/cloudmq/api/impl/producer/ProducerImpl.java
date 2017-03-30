@@ -1,25 +1,25 @@
 package com.cloudzone.cloudmq.api.impl.producer;
 
-import java.util.Properties;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import com.alibaba.rocketmq.client.exception.MQBrokerException;
+import com.alibaba.rocketmq.client.exception.MQClientException;
+import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
 import com.alibaba.rocketmq.remoting.common.RemotingHelper;
+import com.alibaba.rocketmq.remoting.exception.RemotingConnectException;
+import com.alibaba.rocketmq.remoting.exception.RemotingTimeoutException;
+import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
 import com.cloudzone.cloudmq.api.open.base.Msg;
+import com.cloudzone.cloudmq.api.open.base.Producer;
+import com.cloudzone.cloudmq.api.open.base.SendResult;
 import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.common.CloudmqFAQ;
 import com.cloudzone.cloudmq.common.PropertiesConst;
+import com.cloudzone.cloudmq.common.TopicAndAuthKey;
+import com.cloudzone.cloudmq.log.GClientLogger;
 import org.slf4j.Logger;
 
-import com.alibaba.rocketmq.client.exception.MQBrokerException;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
-import com.alibaba.rocketmq.remoting.exception.RemotingConnectException;
-import com.alibaba.rocketmq.remoting.exception.RemotingTimeoutException;
-import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
-import com.cloudzone.cloudmq.api.open.base.Producer;
-import com.cloudzone.cloudmq.api.open.base.SendResult;
-import com.cloudzone.cloudmq.log.GClientLogger;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 ;
 
@@ -86,11 +86,12 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
 
 
     public SendResult send(Msg msg) {
-        //this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProducerImpl());
+        //this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProduceImpl());
 
         try {
-            if (null != msg.getTopic() && !msg.getTopic().equals(this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME))) {
-                throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME) + "],发送的topic为[" + msg.getTopic() + "]");
+            TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) this.properties.get(PropertiesConst.Keys.TopicAndAuthKey);
+            if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(msg.getTopic())) {
+                throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],发送的topic为[" + msg.getTopic() + "]");
             }
             com.alibaba.rocketmq.client.producer.SendResult sendResultRMQ = this.defaultMQProducer.send(msg);
             SendResult sendResult = new SendResult();
@@ -179,8 +180,9 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
         this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProducerImpl());
 
         try {
-            if (null != msg.getTopic() && !msg.getTopic().equals(this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME))) {
-                throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME) + "],发送的topic为[" + msg.getTopic() + "]");
+            TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) this.properties.get(PropertiesConst.Keys.TopicAndAuthKey);
+            if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(msg.getTopic())) {
+                throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],发送的topic为[" + msg.getTopic() + "]");
             }
             this.defaultMQProducer.sendOneway(msg);
         } catch (Exception e) {

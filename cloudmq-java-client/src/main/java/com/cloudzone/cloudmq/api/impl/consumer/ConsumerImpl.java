@@ -9,6 +9,7 @@ import com.cloudzone.cloudmq.api.open.base.Consumer;
 import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.common.PropertiesConst;
+import com.cloudzone.cloudmq.common.TopicAndAuthKey;
 import org.slf4j.Logger;
 
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -104,10 +105,9 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
             throw new GomeClientException("listener is null");
         } else {
             try {
-                if (!topic.equals(this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME))) {
-                    throw new AuthFailedException("申请的topic和消费的topic不匹配,申请的topic为[" +
-                            this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME) +
-                            "],消费的topic为[" + topic + "]");
+                TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) this.properties.get(PropertiesConst.Keys.TopicAndAuthKey);
+                if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(topic)) {
+                    throw new AuthFailedException("申请的topic和消费的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],发送的topic为[" + topic + "]");
                 }
                 this.subscribeTable.put(topic, listener);
                 this.defaultMQPushConsumer.subscribe(topic, subExpression);

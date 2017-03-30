@@ -25,6 +25,7 @@ import com.cloudzone.cloudmq.api.impl.consumer.OrderConsumerImpl;
 import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
 import com.cloudzone.cloudmq.util.UtilAll;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -99,46 +100,43 @@ public class MQFactoryImpl implements MQFactoryAPI {
             if (properties.containsKey(PropertiesConst.Keys.NAMESRV_ADDR)) {
                 throw new AuthFailedException("Please remove NAMESRV_ADDR in properties");
             }
-            // TODO: 2017/3/28 为了是兼容spring的对接方便
-            if (!properties.containsKey(PropertiesConst.Keys.TOPIC_NAME) && properties.containsKey("TOPIC_NAME")) {
-                properties.setProperty(PropertiesConst.Keys.TOPIC_NAME, properties.getProperty("TOPIC_NAME"));
-                properties.remove("TOPIC_NAME");
-            }
-            if (!properties.containsKey(PropertiesConst.Keys.AUTH_KEY) && properties.containsKey("AUTH_KEY")) {
-                properties.setProperty(PropertiesConst.Keys.AUTH_KEY, properties.getProperty("AUTH_KEY"));
-                properties.remove("AUTH_KEY");
-            }
             AuthKey authKey = Validators.checkTopicAndAuthKey(properties, groupKey);
             if (null != authKey) {
-                String keyPrefix = UtilAll.frontStringAtLeast(authKey.getAuthKey(), 1);
-                if (authkeyStatus.getIndex() == Integer.valueOf(keyPrefix) ||
-                        // TODO: 2017/3/29 事务消息，延迟消息，sendoneway，普通消息的消费都是一个类型需特殊处理
-                        ((Integer.valueOf(keyPrefix) == AuthkeyStatus.TRANSACTION_MSG.getIndex() ||
-                                Integer.valueOf(keyPrefix) == AuthkeyStatus.DELAY_MSG.getIndex() ||
-                                Integer.valueOf(keyPrefix) == AuthkeyStatus.SENDONEWAY.getIndex()) &&
-                                authkeyStatus.getIndex() == AuthkeyStatus.NORMAL_MSG.getIndex() &&
-                                groupKey.equals(PropertiesConst.Keys.ConsumerGroupId)) ||
-                        // TODO: 2017/3/29 延迟消息，sendoneway普通消息的发送时一个类型需特殊处理
-                        ((Integer.valueOf(keyPrefix) == AuthkeyStatus.DELAY_MSG.getIndex() ||
-                                Integer.valueOf(keyPrefix) == AuthkeyStatus.SENDONEWAY.getIndex()) &&
-                                authkeyStatus.getIndex() == AuthkeyStatus.NORMAL_MSG.getIndex() &&
-                                groupKey.equals(PropertiesConst.Keys.ProducerGroupId)
-                        )) {
-                    Properties prop = new Properties();
-                    if (PropertiesConst.Keys.ProducerGroupId.equals(groupKey)) {
-                        prop.put(PropertiesConst.Keys.ProducerGroupId, properties.get(PropertiesConst.Keys.ProducerGroupId));
+                for (Map.Entry<String, String> entry : authKey.getTopicAndAuthKey().getTopicAuthKeyMap().entrySet()) {
+                    String aKey = entry.getValue();
+                    String keyPrefix = UtilAll.frontStringAtLeast(aKey, 1);
+                    if (authkeyStatus.getIndex() != Integer.valueOf(keyPrefix) &&
+                            // TODO: 2017/3/29 事务消息，延迟消息，sendoneway，普通消息的消费都是一个类型需特殊处理
+                            ((Integer.valueOf(keyPrefix) != AuthkeyStatus.TRANSACTION_MSG.getIndex() &&
+                                    Integer.valueOf(keyPrefix) != AuthkeyStatus.DELAY_MSG.getIndex() &&
+                                    Integer.valueOf(keyPrefix) != AuthkeyStatus.SENDONEWAY.getIndex()) ||
+                                    authkeyStatus.getIndex() != AuthkeyStatus.NORMAL_MSG.getIndex() ||
+                                    !groupKey.equals(PropertiesConst.Keys.ConsumerGroupId)) &&
+                            // TODO: 2017/3/29 延迟消息，sendoneway普通消息的发送时一个类型需特殊处理
+                            ((Integer.valueOf(keyPrefix) != AuthkeyStatus.DELAY_MSG.getIndex() &&
+                                    Integer.valueOf(keyPrefix) != AuthkeyStatus.SENDONEWAY.getIndex()) ||
+                                    authkeyStatus.getIndex() != AuthkeyStatus.NORMAL_MSG.getIndex() ||
+                                    !groupKey.equals(PropertiesConst.Keys.ProducerGroupId)
+                            )) {
+                        AuthkeyStatus authStatus = AuthkeyStatus.getAuthkeyStatus(Integer.valueOf(keyPrefix));
+                        throw new AuthFailedException("调用方法错误，[" + authStatus.getName() + "]的topic，请调用[" + authStatus.getName() + "]的方法");
                     }
-                    if (PropertiesConst.Keys.ConsumerGroupId.equals(groupKey)) {
-                        prop.put(PropertiesConst.Keys.ConsumerGroupId, properties.get(PropertiesConst.Keys.ConsumerGroupId));
-                    }
-                    prop.put(PropertiesConst.Keys.TOPIC_NAME, properties.get(PropertiesConst.Keys.TOPIC_NAME));
-                    prop.put(PropertiesConst.Keys.NAMESRV_ADDR, authKey.getIpAndPort());
-                    return prop;
-                } else {
-                    AuthkeyStatus authStatus = AuthkeyStatus.getAuthkeyStatus(Integer.valueOf(keyPrefix));
-                    throw new AuthFailedException("调用方法错误，[" + authStatus.getName() + "]的topic，请调用[" + authStatus.getName() + "]的方法");
                 }
+                Properties prop = new Properties();
+                if (PropertiesConst.Keys.ProducerGroupId.equals(groupKey)) {
+                    prop.put(PropertiesConst.Keys.ProducerGroupId, properties.get(PropertiesConst.Keys.ProducerGroupId));
+                }
+                if (PropertiesConst.Keys.ConsumerGroupId.equals(groupKey)) {
+                    prop.put(PropertiesConst.Keys.ConsumerGroupId, properties.get(PropertiesConst.Keys.ConsumerGroupId));
+                }
+                if (properties.containsKey(PropertiesConst.Keys.MessageModel)) {
+                    prop.put(PropertiesConst.Keys.MessageModel, properties.get(PropertiesConst.Keys.MessageModel));
+                }
+                prop.put(PropertiesConst.Keys.TopicAndAuthKey, authKey.getTopicAndAuthKey());
+                prop.put(PropertiesConst.Keys.NAMESRV_ADDR, authKey.getIpAndPort());
+                return prop;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

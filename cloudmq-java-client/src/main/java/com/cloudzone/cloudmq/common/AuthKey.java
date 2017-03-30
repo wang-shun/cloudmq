@@ -1,5 +1,9 @@
 package com.cloudzone.cloudmq.common;
 
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.oracle.jrockit.jfr.Transition.To;
+
 /**
  * @author tantexian
  * @since 2017/1/6
@@ -11,6 +15,8 @@ public class AuthKey {
     private AuthkeyStatus authkeyStatus = null;
 
     private String ipAndPort;
+
+    private TopicAndAuthKey topicAndAuthKey;
 
     public AuthKey(String authKey, AuthkeyStatus authkeyStatus, String ipAndPort) {
         this.authKey = authKey;
@@ -53,4 +59,13 @@ public class AuthKey {
     public void setAuthkeyStatus(AuthkeyStatus authkeyStatus) {
         this.authkeyStatus = authkeyStatus;
     }
+
+    public TopicAndAuthKey getTopicAndAuthKey() {
+        return topicAndAuthKey;
+    }
+
+    public void setTopicAndAuthKey(TopicAndAuthKey topicAndAuthKey) {
+        this.topicAndAuthKey = topicAndAuthKey;
+    }
+
 }

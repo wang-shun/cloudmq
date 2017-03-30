@@ -6,13 +6,18 @@ import com.cloudzone.cloudmq.api.open.base.Msg;
 import com.cloudzone.cloudmq.api.open.base.Producer;
 import com.cloudzone.cloudmq.api.open.factory.MQFactory;
 import com.cloudzone.cloudmq.common.PropertiesConst;
+import com.cloudzone.cloudmq.common.TopicAndAuthKey;
 
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
+
+import static javafx.scene.input.KeyCode.H;
+import static javafx.scene.input.KeyCode.T;
 
 /**
  * Created by yintongjiang on 2016/7/18.
@@ -21,9 +26,9 @@ public class DilatationOldTopicProducer {
 
     public static void main(String[] args) throws MQClientException {
 
-        final int nThreads = args.length >= 1 ? Integer.parseInt(args[0]) : 100;
-        final int topicNums = args.length >= 2 ? Integer.parseInt(args[1]) : 100;
-        final String topicName = args.length >= 3 ? args[2] : "aaa-800";
+        final int nThreads = args.length >= 1 ? Integer.parseInt(args[0]) : 10;
+        final int topicNums = args.length >= 2 ? Integer.parseInt(args[1]) : 10;
+        final String topicName = args.length >= 3 ? args[2] : "jcpt-t-500";
         final String tag = args.length >= 4 ? args[3] : "A";
         final String group = args.length >= 5 ? args[4] : "testProducer";
 
@@ -35,8 +40,9 @@ public class DilatationOldTopicProducer {
         final AtomicLong flushSlaveTimeOutCount = new AtomicLong(0L);
         Properties properties = new Properties();
         properties.put(PropertiesConst.Keys.ProducerGroupId, group);
-        properties.put(PropertiesConst.Keys.TOPIC_NAME, "aaa-800");
-        properties.put(PropertiesConst.Keys.AUTH_KEY, "1d2ac86e038cf4f058d59d144aef8065f");
+        properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
+                "jcpt-t-500:062489eca3c394a15b70fe500cdd942a0;a-200:2130d474c2c6a487eae496ee22dfbb878;b-300:" +
+                        "38b60e940b83745a994a99520a93b295f");
         final Producer producer = MQFactory.createProducer(properties);
         producer.start();
         final ExecutorService exec = Executors.newFixedThreadPool(nThreads);

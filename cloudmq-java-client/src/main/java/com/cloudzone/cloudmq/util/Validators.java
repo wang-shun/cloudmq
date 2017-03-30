@@ -2,10 +2,11 @@ package com.cloudzone.cloudmq.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cloudzone.cloudmq.common.AuthKey;
 import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
+import com.cloudzone.cloudmq.common.AuthKey;
 import com.cloudzone.cloudmq.common.PropertiesConst;
 import com.cloudzone.cloudmq.common.ResultContent;
+import com.cloudzone.cloudmq.common.TopicAndAuthKey;
 
 import java.net.HttpURLConnection;
 import java.net.Socket;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.alibaba.fastjson.JSON.parseObject;
 
@@ -37,26 +39,45 @@ public class Validators {
         try {
             String pGroupId = properties.getProperty(PropertiesConst.Keys.ProducerGroupId);
             String cGroupId = properties.getProperty(PropertiesConst.Keys.ConsumerGroupId);
-            String topic = properties.getProperty(PropertiesConst.Keys.TOPIC_NAME);
-            String authKey = properties.getProperty(PropertiesConst.Keys.AUTH_KEY);
-
+            String topicAndAuthKey = properties.getProperty(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY);
+            String authKeyMsg = "You must set the AUTH_KEY first.";
+            String topicMsg = "You must set the TOPIC_NAME first.";
             String pGroupIdMsg = "You must set the ProducerGroupId first.";
             String cGroupIdMsg = "You must set the ConsumerGroupId first.";
-            String topicMsg = "You must set the TOPIC_NAME first.";
-            String authKeyMsg = "You must set the AUTH_KEY first.";
             if (groupKey.equals(PropertiesConst.Keys.ProducerGroupId) && UtilAll.isBlank(pGroupId)) {
                 throw new AuthFailedException(pGroupIdMsg);
             }
             if (groupKey.equals(PropertiesConst.Keys.ConsumerGroupId) && UtilAll.isBlank(cGroupId)) {
                 throw new AuthFailedException(cGroupIdMsg);
             }
-            if (UtilAll.isBlank(topic)) {
-                throw new AuthFailedException(topicMsg);
+            ConcurrentHashMap<String, String> topicAndAuthKeyMap = new ConcurrentHashMap<>();
+            List<String> topicList = new ArrayList<>();
+            String ipAndPort = null;
+            for (String topicAuthKey : topicAndAuthKey.split(";")) {
+                String topic = topicAuthKey.split(":")[0];
+                String authKey = topicAuthKey.split(":")[1];
+                if (UtilAll.isBlank(topic)) {
+                    throw new AuthFailedException(topicMsg);
+                }
+                if (UtilAll.isBlank(authKey)) {
+                    throw new AuthFailedException(authKeyMsg);
+                }
+                AuthKey aKey = verifyTopicAndAuthKey(topic, authKey);
+                if (null == ipAndPort) {
+                    ipAndPort = aKey.getIpAndPort();
+                } else {
+                    if (!ipAndPort.equals(aKey.getIpAndPort())) {
+                        throw new AuthFailedException("订阅的topic不在同一个环境，请联系管理员！");
+                    }
+                }
+                topicAndAuthKeyMap.put(topic, authKey);
+                topicList.add(topic);
+
             }
-            if (UtilAll.isBlank(authKey)) {
-                throw new AuthFailedException(authKeyMsg);
-            }
-            return verifyTopicAndAuthKey(topic, authKey);
+            AuthKey authKey = new AuthKey("", ipAndPort);
+            authKey.setTopicAndAuthKey(new TopicAndAuthKey(topicAndAuthKeyMap, topicList.toArray(new String[topicList.size()])));
+            return authKey;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,7 +117,7 @@ public class Validators {
         if (!UtilAll.isBlank(responseStr)) {
             ResultContent resultContent = parseObject(responseStr, ResultContent.class);
             if (HttpURLConnection.HTTP_OK != resultContent.getCode() || null == resultContent.body) {
-                throw new AuthFailedException(authMsg);
+                throw new AuthFailedException("TOPIC_NAME: " + topic + " AUTH_KEY: " + authKey + ", " + authMsg);
             } else {
                 JSONObject jsonObject = JSON.parseObject(resultContent.getBody());
                 //多个地址用|隔开需约定好
