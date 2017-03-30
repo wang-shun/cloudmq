@@ -8,24 +8,19 @@ import com.alibaba.rocketmq.client.producer.TransactionMQProducer;
 import com.alibaba.rocketmq.common.message.MessageAccessor;
 import com.alibaba.rocketmq.remoting.RPCHook;
 import com.alibaba.rocketmq.remoting.protocol.RemotingCommand;
-import com.cloudzone.cloudmq.api.open.base.Msg;
-import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
-import com.cloudzone.cloudmq.api.open.transaction.TransactionProducer;
-import com.cloudzone.cloudmq.api.open.transaction.TransactionStatus;
 import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
+import com.cloudzone.cloudmq.api.open.base.Msg;
 import com.cloudzone.cloudmq.api.open.base.TransactionSendResult;
 import com.cloudzone.cloudmq.api.open.transaction.LocalTransactionExecuter;
+import com.cloudzone.cloudmq.api.open.transaction.TransactionProducer;
+import com.cloudzone.cloudmq.api.open.transaction.TransactionStatus;
 import com.cloudzone.cloudmq.common.MQTraceConstants;
 import com.cloudzone.cloudmq.common.MyUtils;
-import com.cloudzone.cloudmq.common.PropertiesConst;
-import com.cloudzone.cloudmq.common.TopicAndAuthKey;
 import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
 
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static javafx.scene.input.KeyCode.V;
 
 /**
  * @author tantexian

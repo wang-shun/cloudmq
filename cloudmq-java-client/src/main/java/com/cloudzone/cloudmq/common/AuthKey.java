@@ -10,9 +10,9 @@ import static com.oracle.jrockit.jfr.Transition.To;
  */
 public class AuthKey {
 
-    private String authKey = null;
+    private String authKey;
 
-    private AuthkeyStatus authkeyStatus = null;
+    private AuthkeyStatus authkeyStatus;
 
     private String ipAndPort;
 
@@ -27,6 +27,11 @@ public class AuthKey {
     public AuthKey(String authKey, String ipAndPort) {
         this.authKey = authKey;
         this.ipAndPort = ipAndPort;
+    }
+
+    public AuthKey(String ipAndPort, TopicAndAuthKey topicAndAuthKey) {
+        this.ipAndPort = ipAndPort;
+        this.topicAndAuthKey = topicAndAuthKey;
     }
 
     public String getIpAndPort() {

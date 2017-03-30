@@ -98,7 +98,7 @@ public class MQFactoryImpl implements MQFactoryAPI {
     private Properties checkTopicAndAuthKey(Properties properties, AuthkeyStatus authkeyStatus, String groupKey) {
         try {
             if (properties.containsKey(PropertiesConst.Keys.NAMESRV_ADDR)) {
-                throw new AuthFailedException("Please remove NAMESRV_ADDR in properties");
+                throw new AuthFailedException("请移除 NAMESRV_ADDR in properties ！");
             }
             AuthKey authKey = Validators.checkTopicAndAuthKey(properties, groupKey);
             if (null != authKey) {
@@ -119,7 +119,7 @@ public class MQFactoryImpl implements MQFactoryAPI {
                                     !groupKey.equals(PropertiesConst.Keys.ProducerGroupId)
                             )) {
                         AuthkeyStatus authStatus = AuthkeyStatus.getAuthkeyStatus(Integer.valueOf(keyPrefix));
-                        throw new AuthFailedException("调用方法错误，[" + authStatus.getName() + "]的topic，请调用[" + authStatus.getName() + "]的方法");
+                        throw new AuthFailedException("调用方法错误，[" + authStatus.getName() + "]的topic，请调用[" + authStatus.getName() + "]的方法！");
                     }
                 }
                 Properties prop = new Properties();
