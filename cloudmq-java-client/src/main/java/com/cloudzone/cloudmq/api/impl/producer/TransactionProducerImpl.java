@@ -18,10 +18,14 @@ import com.cloudzone.cloudmq.api.open.transaction.LocalTransactionExecuter;
 import com.cloudzone.cloudmq.common.MQTraceConstants;
 import com.cloudzone.cloudmq.common.MyUtils;
 import com.cloudzone.cloudmq.common.PropertiesConst;
+import com.cloudzone.cloudmq.common.TopicAndAuthKey;
+import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
 
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static javafx.scene.input.KeyCode.V;
 
 /**
  * @author tantexian
@@ -89,9 +93,7 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
     }
 
     public TransactionSendResult send(final Msg message, final LocalTransactionExecuter executer, Object arg) throws RuntimeException {
-        if (null != message.getTopic() && !message.getTopic().equals(this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME))) {
-            throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + this.properties.getProperty(PropertiesConst.Keys.TOPIC_NAME) + "],发送的topic为[" + message.getTopic() + "]");
-        }
+        Validators.checkTopic(this.properties, message.getTopic());
         this.checkONSProducerServiceState(this.transactionMQProducer.getDefaultMQProducerImpl());
         com.alibaba.rocketmq.common.message.Message msgRMQ = MyUtils.msgConvert(message);
         MessageAccessor.putProperty(msgRMQ, "ProducerGroupId", (String) this.properties.get("ProducerGroupId"));

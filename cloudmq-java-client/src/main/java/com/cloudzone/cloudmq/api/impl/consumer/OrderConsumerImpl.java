@@ -17,6 +17,7 @@ import com.cloudzone.cloudmq.api.open.order.OrderConsumer;
 import com.cloudzone.cloudmq.common.MyUtils;
 import com.cloudzone.cloudmq.common.PropertiesConst;
 import com.cloudzone.cloudmq.common.TopicAndAuthKey;
+import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -131,10 +132,7 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
             throw new GomeClientException("listener is null");
         } else {
             try {
-                TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) this.properties.get(PropertiesConst.Keys.TopicAndAuthKey);
-                if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(topic)) {
-                    throw new AuthFailedException("申请的topic和消费的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],发送的topic为[" + topic + "]");
-                }
+                Validators.checkTopic(this.properties, topic);
                 this.subscribeTable.put(topic, listener);
                 this.defaultMQPushConsumer.subscribe(topic, subExpression);
             } catch (MQClientException var5) {

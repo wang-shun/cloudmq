@@ -16,6 +16,7 @@ import com.cloudzone.cloudmq.common.CloudmqFAQ;
 import com.cloudzone.cloudmq.common.PropertiesConst;
 import com.cloudzone.cloudmq.common.TopicAndAuthKey;
 import com.cloudzone.cloudmq.log.GClientLogger;
+import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
 
 import java.util.Properties;
@@ -89,10 +90,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
         //this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProduceImpl());
 
         try {
-            TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) this.properties.get(PropertiesConst.Keys.TopicAndAuthKey);
-            if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(msg.getTopic())) {
-                throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],发送的topic为[" + msg.getTopic() + "]");
-            }
+            Validators.checkTopic(this.properties, msg.getTopic());
             com.alibaba.rocketmq.client.producer.SendResult sendResultRMQ = this.defaultMQProducer.send(msg);
             SendResult sendResult = new SendResult();
             sendResult.setMsgId(sendResultRMQ.getMsgId());

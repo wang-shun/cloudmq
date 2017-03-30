@@ -41,8 +41,7 @@ public class DilatationOldTopicProducer {
         Properties properties = new Properties();
         properties.put(PropertiesConst.Keys.ProducerGroupId, group);
         properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
-                "jcpt-t-500:062489eca3c394a15b70fe500cdd942a0;a-200:2130d474c2c6a487eae496ee22dfbb878;b-300:" +
-                        "38b60e940b83745a994a99520a93b295f");
+                "jcpt-t-500:062489eca3c394a15b70fe500cdd942a0;a-200:2130d474c2c6a487eae496ee22dfbb878;b-300:38b60e940b83745a994a99520a93b295f");
         final Producer producer = MQFactory.createProducer(properties);
         producer.start();
         final ExecutorService exec = Executors.newFixedThreadPool(nThreads);

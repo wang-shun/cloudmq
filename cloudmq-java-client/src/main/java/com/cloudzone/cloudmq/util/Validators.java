@@ -157,4 +157,11 @@ public class Validators {
                     + "] 异常，请检测IP，端口是否开通网络权限!!!\n");
         }
     }
+
+    public static void checkTopic(Properties properties,String topic) {
+        TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) properties.get(PropertiesConst.Keys.TopicAndAuthKey);
+        if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(topic)) {
+            throw new AuthFailedException("申请的topic和操作的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],操作的topic为[" + topic + "]");
+        }
+    }
 }
