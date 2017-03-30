@@ -1,9 +1,5 @@
 package com.cloudzone.cloudmq.common;
 
-import java.util.concurrent.ConcurrentHashMap;
-
-import static com.oracle.jrockit.jfr.Transition.To;
-
 /**
  * @author tantexian
  * @since 2017/1/6

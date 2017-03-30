@@ -10,10 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TopicAndAuthKey {
     private ConcurrentHashMap<String, String> topicAuthKeyMap;
     private String[] topicArray;
+    private ProcessMsgType processMsgType;
 
-    public TopicAndAuthKey(ConcurrentHashMap<String, String> topicAuthKeyMap, String[] topicList) {
+    public TopicAndAuthKey(ConcurrentHashMap<String, String> topicAuthKeyMap, String[] topicList, ProcessMsgType processMsgType) {
         this.topicAuthKeyMap = topicAuthKeyMap;
         this.topicArray = topicList;
+        this.processMsgType = processMsgType;
     }
 
     public ConcurrentHashMap<String, String> getTopicAuthKeyMap() {
@@ -24,8 +26,15 @@ public class TopicAndAuthKey {
         this.topicAuthKeyMap = topicAuthKeyMap;
     }
 
-    public String topicArrayToString() {
+    public ProcessMsgType getProcessMsgType() {
+        return processMsgType;
+    }
 
+    public void setProcessMsgType(ProcessMsgType processMsgType) {
+        this.processMsgType = processMsgType;
+    }
+
+    public String topicArrayToString() {
         return org.apache.commons.lang.StringUtils.join(topicArray, ",");
     }
 }

@@ -3,10 +3,7 @@ package com.cloudzone.cloudmq.util;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
-import com.cloudzone.cloudmq.common.AuthKey;
-import com.cloudzone.cloudmq.common.PropertiesConst;
-import com.cloudzone.cloudmq.common.ResultContent;
-import com.cloudzone.cloudmq.common.TopicAndAuthKey;
+import com.cloudzone.cloudmq.common.*;
 
 import java.net.HttpURLConnection;
 import java.net.Socket;
@@ -35,7 +32,7 @@ public class Validators {
      * @author yintongqiang
      * @since 2017/1/10
      */
-    public static AuthKey checkTopicAndAuthKey(Properties properties, String groupKey) {
+    public static AuthKey checkTopicAndAuthKey(Properties properties, ProcessMsgType processMsgType) {
         try {
             String pGroupId = properties.getProperty(PropertiesConst.Keys.ProducerGroupId);
             String cGroupId = properties.getProperty(PropertiesConst.Keys.ConsumerGroupId);
@@ -44,10 +41,11 @@ public class Validators {
             String authKeyMsg = "AUTH_KEY 不能为空！";
             String pGroupIdMsg = "ProducerGroupId 不能为空！";
             String cGroupIdMsg = "ConsumerGroupId 不能为空！";
-            if (groupKey.equals(PropertiesConst.Keys.ProducerGroupId) && UtilAll.isBlank(pGroupId)) {
+
+            if (processMsgType.getCode() == ProcessMsgType.PRODUCER_MSG.getCode() && UtilAll.isBlank(pGroupId)) {
                 throw new AuthFailedException(pGroupIdMsg);
             }
-            if (groupKey.equals(PropertiesConst.Keys.ConsumerGroupId) && UtilAll.isBlank(cGroupId)) {
+            if (processMsgType.getCode() == ProcessMsgType.CONSUMER_MSG.getCode() && UtilAll.isBlank(cGroupId)) {
                 throw new AuthFailedException(cGroupIdMsg);
             }
             ConcurrentHashMap<String, String> topicAndAuthKeyMap = new ConcurrentHashMap<>();
@@ -74,7 +72,7 @@ public class Validators {
                 topicList.add(topic);
 
             }
-            return new AuthKey(ipAndPort, new TopicAndAuthKey(topicAndAuthKeyMap, topicList.toArray(new String[topicList.size()])));
+            return new AuthKey(ipAndPort, new TopicAndAuthKey(topicAndAuthKeyMap, topicList.toArray(new String[topicList.size()]), processMsgType));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,10 +154,11 @@ public class Validators {
         }
     }
 
+    // TODO: 2017/3/30 还需做TPS的统计
     public static void checkTopic(Properties properties, String topic) {
         TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) properties.get(PropertiesConst.Keys.TopicAndAuthKey);
         if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(topic)) {
-            throw new AuthFailedException("申请的topic和操作的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],操作的topic为[" + topic + "]");
+            throw new AuthFailedException("申请的topic和" + topicAndAuthKey.getProcessMsgType().getDes() + "的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "]," + topicAndAuthKey.getProcessMsgType().getDes() + "的topic为[" + topic + "]");
         }
     }
 }
