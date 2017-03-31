@@ -41,12 +41,15 @@ public class Validators {
             String authKeyMsg = "AUTH_KEY 不能为空！";
             String pGroupIdMsg = "ProducerGroupId 不能为空！";
             String cGroupIdMsg = "ConsumerGroupId 不能为空！";
-
+            String topicAndAuthKeyMsg = "TOPIC_NAME_AND_AUTH_KEY 不能为空！";
             if (processMsgType.getCode() == ProcessMsgType.PRODUCER_MSG.getCode() && UtilAll.isBlank(pGroupId)) {
                 throw new AuthFailedException(pGroupIdMsg);
             }
             if (processMsgType.getCode() == ProcessMsgType.CONSUMER_MSG.getCode() && UtilAll.isBlank(cGroupId)) {
                 throw new AuthFailedException(cGroupIdMsg);
+            }
+            if (null==topicAndAuthKey) {
+                throw new AuthFailedException(topicAndAuthKeyMsg);
             }
             ConcurrentHashMap<String, String> topicAndAuthKeyMap = new ConcurrentHashMap<>();
             List<String> topicList = new ArrayList<>();
@@ -156,7 +159,7 @@ public class Validators {
 
     // TODO: 2017/3/30 还需做TPS的统计
     public static void checkTopic(Properties properties, String topic) {
-        TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) properties.get(PropertiesConst.Keys.TopicAndAuthKey);
+        TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) properties.get(PropertiesConst.Keys.InnerTopicAndAuthKey);
         if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(topic)) {
             throw new AuthFailedException("申请的topic和" + topicAndAuthKey.getProcessMsgType().getDes() + "的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "]," + topicAndAuthKey.getProcessMsgType().getDes() + "的topic为[" + topic + "]");
         }

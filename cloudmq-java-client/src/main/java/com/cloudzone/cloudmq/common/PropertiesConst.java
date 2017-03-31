@@ -42,7 +42,7 @@ public class PropertiesConst {
         //解决客户端多个订阅的问题
         public static final String TOPIC_NAME_AND_AUTH_KEY = "TOPIC_NAME_AND_AUTH_KEY";
         //内部用
-        public static final String TopicAndAuthKey = "topicAndAuthKey";
+        public static final String InnerTopicAndAuthKey = "InnerTopicAndAuthKey";
 
 
         private Keys() {

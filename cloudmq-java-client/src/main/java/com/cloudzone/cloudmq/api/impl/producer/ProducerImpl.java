@@ -10,11 +10,9 @@ import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
 import com.cloudzone.cloudmq.api.open.base.Msg;
 import com.cloudzone.cloudmq.api.open.base.Producer;
 import com.cloudzone.cloudmq.api.open.base.SendResult;
-import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.common.CloudmqFAQ;
 import com.cloudzone.cloudmq.common.PropertiesConst;
-import com.cloudzone.cloudmq.common.TopicAndAuthKey;
 import com.cloudzone.cloudmq.log.GClientLogger;
 import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
@@ -178,10 +176,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
         this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProducerImpl());
 
         try {
-            TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) this.properties.get(PropertiesConst.Keys.TopicAndAuthKey);
-            if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(msg.getTopic())) {
-                throw new AuthFailedException("申请的topic和发送的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "],发送的topic为[" + msg.getTopic() + "]");
-            }
+            Validators.checkTopic(this.properties,msg.getTopic());
             this.defaultMQProducer.sendOneway(msg);
         } catch (Exception e) {
             log.error(String.format("Send msg oneway Exception, %s", new Object[]{msg}), e);

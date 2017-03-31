@@ -129,7 +129,7 @@ public class MQFactoryImpl implements MQFactoryAPI {
                 if (properties.containsKey(PropertiesConst.Keys.MessageModel)) {
                     prop.put(PropertiesConst.Keys.MessageModel, properties.get(PropertiesConst.Keys.MessageModel));
                 }
-                prop.put(PropertiesConst.Keys.TopicAndAuthKey, authKey.getTopicAndAuthKey());
+                prop.put(PropertiesConst.Keys.InnerTopicAndAuthKey, authKey.getTopicAndAuthKey());
                 prop.put(PropertiesConst.Keys.NAMESRV_ADDR, authKey.getIpAndPort());
                 return prop;
             }

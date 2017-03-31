@@ -1,18 +1,5 @@
 package com.cloudzone.cloudmq.api.impl.consumer;
 
-import java.util.List;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.cloudzone.cloudmq.api.open.base.Consumer;
-import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
-import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
-import com.cloudzone.cloudmq.common.PropertiesConst;
-import com.cloudzone.cloudmq.common.TopicAndAuthKey;
-import com.cloudzone.cloudmq.util.Validators;
-import org.slf4j.Logger;
-
 import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -23,10 +10,19 @@ import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
 import com.cloudzone.cloudmq.api.open.base.Action;
 import com.cloudzone.cloudmq.api.open.base.ConsumeContext;
+import com.cloudzone.cloudmq.api.open.base.Consumer;
 import com.cloudzone.cloudmq.api.open.base.MsgListener;
+import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.common.MQTraceConstants;
 import com.cloudzone.cloudmq.common.MyUtils;
 import com.cloudzone.cloudmq.log.GClientLogger;
+import com.cloudzone.cloudmq.util.Validators;
+import org.slf4j.Logger;
+
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**

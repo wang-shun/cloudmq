@@ -8,15 +8,12 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.log.ClientLogger;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
-import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.api.open.order.ConsumeOrderContext;
 import com.cloudzone.cloudmq.api.open.order.MsgOrderListener;
 import com.cloudzone.cloudmq.api.open.order.OrderAction;
 import com.cloudzone.cloudmq.api.open.order.OrderConsumer;
 import com.cloudzone.cloudmq.common.MyUtils;
-import com.cloudzone.cloudmq.common.PropertiesConst;
-import com.cloudzone.cloudmq.common.TopicAndAuthKey;
 import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
 
