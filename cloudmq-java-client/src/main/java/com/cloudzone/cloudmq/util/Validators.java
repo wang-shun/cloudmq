@@ -48,7 +48,7 @@ public class Validators {
             if (processMsgType.getCode() == ProcessMsgType.CONSUMER_MSG.getCode() && UtilAll.isBlank(cGroupId)) {
                 throw new AuthFailedException(cGroupIdMsg);
             }
-            if (null==topicAndAuthKey) {
+            if (null == topicAndAuthKey) {
                 throw new AuthFailedException(topicAndAuthKeyMsg);
             }
             ConcurrentHashMap<String, String> topicAndAuthKeyMap = new ConcurrentHashMap<>();
@@ -108,7 +108,7 @@ public class Validators {
         HttpTinyClient.HttpResult result =
                 HttpTinyClient.httpPost(authUrl, null, verifyObject, "UTF-8", WSADDR_INTERNAL_TIMEOUTMILLS);
         if (result == null || result.code != HTTP_STATUS_SUCCESS) {
-            throw new AuthFailedException(authMsg);
+            throw new AuthFailedException((result != null ? result.content + "，" : "") + authMsg);
         }
 
         // 验证是否成功
