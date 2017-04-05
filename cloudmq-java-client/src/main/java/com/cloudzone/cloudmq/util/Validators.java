@@ -55,24 +55,28 @@ public class Validators {
             List<String> topicList = new ArrayList<>();
             String ipAndPort = null;
             for (String topicAuthKey : topicAndAuthKey.split(";")) {
-                String topic = topicAuthKey.split(":", 2)[0];
-                String authKey = topicAuthKey.split(":", 2)[1];
-                if (UtilAll.isBlank(topic)) {
-                    throw new AuthFailedException(topicMsg);
-                }
-                if (UtilAll.isBlank(authKey)) {
-                    throw new AuthFailedException(authKeyMsg);
-                }
-                AuthKey aKey = verifyTopicAndAuthKey(topic, authKey);
-                if (null == ipAndPort) {
-                    ipAndPort = aKey.getIpAndPort();
-                } else {
-                    if (!ipAndPort.equals(aKey.getIpAndPort())) {
-                        throw new AuthFailedException("申请的topic不在同一个环境，请联系管理员！");
+                if(topicAuthKey.contains(":")) {
+                    String topic = topicAuthKey.split(":", 2)[0];
+                    String authKey = topicAuthKey.split(":", 2)[1];
+                    if (UtilAll.isBlank(topic)) {
+                        throw new AuthFailedException(topicMsg);
                     }
+                    if (UtilAll.isBlank(authKey)) {
+                        throw new AuthFailedException(authKeyMsg);
+                    }
+                    AuthKey aKey = verifyTopicAndAuthKey(topic, authKey);
+                    if (null == ipAndPort) {
+                        ipAndPort = aKey.getIpAndPort();
+                    } else {
+                        if (!ipAndPort.equals(aKey.getIpAndPort())) {
+                            throw new AuthFailedException("申请的topic不在同一个环境，请联系管理员！");
+                        }
+                    }
+                    topicAndAuthKeyMap.put(topic, authKey);
+                    topicList.add(topic);
+                }else{
+                    throw new AuthFailedException("格式错误，TOPIC_NAME和AUTH_KEY之间用半角冒号(:)隔开！");
                 }
-                topicAndAuthKeyMap.put(topic, authKey);
-                topicList.add(topic);
 
             }
             return new AuthKey(ipAndPort, new TopicAndAuthKey(topicAndAuthKeyMap, topicList.toArray(new String[topicList.size()]), processMsgType));
