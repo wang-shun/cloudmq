@@ -23,13 +23,12 @@ import java.util.concurrent.Executors;
  */
 public class TpsProducerQueue {
 
-    static final String topic = "simpleTpsTopic";
-
     public static void main(String[] args) throws MQClientException {
         final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 1;
-        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 128;
+        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 12;
+        final String topic = args.length >= 3 ? args[0].trim() : "simpleTpsTopic";
 
-        final Message msg = buildMessage(messageSize);
+        final Message msg = buildMessage(messageSize, topic);
         final ExecutorService sendThreadPool = Executors.newFixedThreadPool(threadCount);
         final TpsStatsProducer tpsStats = new TpsStatsProducer();
         final Timer timer = new Timer("TpsTimerThread", true);
@@ -143,9 +142,9 @@ public class TpsProducerQueue {
     }
 
 
-    private static Message buildMessage(final int messageSize) {
+    private static Message buildMessage(final int messageSize, final String defaultTopic) {
         Message msg = new Message();
-        msg.setTopic(topic);
+        msg.setTopic(defaultTopic);
         StringBuilder sb = new StringBuilder(messageSize + 1);
         for (int i = 0; i < messageSize; i += 10) {
             sb.append("hello baby");
