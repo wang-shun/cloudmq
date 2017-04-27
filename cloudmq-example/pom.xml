@@ -161,7 +161,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.plux.web.example.JettyResourceServerExample</mainClass>
+                            <mainClass>com.gome.rocketmq.example.tyl.simple.TpsProducerQueue</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
