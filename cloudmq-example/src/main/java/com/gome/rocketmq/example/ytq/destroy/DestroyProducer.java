@@ -21,10 +21,10 @@ import java.util.concurrent.atomic.AtomicLong;
 public class DestroyProducer {
 
     private final static String group = "destroyConsumerGroup";
-    private final static String topicName = "flow_topic_9";
-    private final static String tags = "A";
-    private final static int nThreads = 1000;
-    private final static int topicNums = 10;
+    private final static String topicName = "TestCloudMQ1-500";
+    private final static String tags = "mq";
+    private final static int nThreads = 1;
+    private final static int topicNums = 20;
     private final static int defaultTopicQueueNums = 64;
     private final static Object obj = new Object();
     private final static boolean isBreak = false;
@@ -70,6 +70,16 @@ public class DestroyProducer {
                 public void run() {
                     try {
                         for (int j = 0; j < topicNums; j++) {
+                            String msg = "{\"d_type\":1,\"id\":\"192.168.56.1#395812\",\"name\":\"CloudTopicTest-200\",\"key\":\"02865ea17c4eb4186854ab95bdc07f842\",\"num\":456,\"time\":"+System.currentTimeMillis()+",\"type\":0,\"unit\":1}";
+                            if (j % 2 == 0) {
+                                 msg = "{\"d_type\":0,\"id\":\"192.168.56.1#395812\",\"name\":\"CloudTopicTest-200\",\"key\":\"02865ea17c4eb4186854ab95bdc07f842\",\"num\":4,\"time\":"+System.currentTimeMillis()+",\"type\":0,\"unit\":1}";
+                            }
+                            if (j % 3 == 0) {
+                                msg = "{\"d_type\":0,\"id\":\"192.168.56.1#395812\",\"name\":\"CloudTopicTest-200\",\"key\":\"02865ea17c4eb4186854ab95bdc07f842\",\"num\":4,\"time\":"+System.currentTimeMillis()+",\"type\":1,\"unit\":1}";
+                            }
+                            if (j % 4 == 0) {
+                                msg = "{\"d_type\":1,\"id\":\"192.168.56.1#395812\",\"name\":\"CloudTopicTest-200\",\"key\":\"02865ea17c4eb4186854ab95bdc07f842\",\"num\":4,\"time\":"+System.currentTimeMillis()+",\"type\":1,\"unit\":1}";
+                            }
                             if (isBreak && atomicMsgIds.get() == 40000L) {
                                 synchronized (obj) {
                                     if (!stopBroker.get()) {
@@ -82,8 +92,9 @@ public class DestroyProducer {
                                     }
                                 }
                             }
+//                            Thread.sleep(500);
                             atomicMsgIds.incrementAndGet();
-                            final Message message = new Message(topicName, tags, ("body" + finalI + "--" + j).getBytes());
+                            final Message message = new Message(topicName, tags, msg.getBytes());
                             message.setKeys(UUID.randomUUID().toString());
                             try {
                                 SendResult sendResult = producer.send(message);

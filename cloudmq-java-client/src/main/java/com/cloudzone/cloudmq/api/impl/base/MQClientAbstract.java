@@ -1,16 +1,33 @@
 package com.cloudzone.cloudmq.api.impl.base;
 
-import java.util.Properties;
-
-import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
-import com.cloudzone.cloudmq.common.CloudmqFAQ;
-import com.cloudzone.cloudmq.common.MyUtils;
-import org.slf4j.Logger;
-
 import com.alibaba.rocketmq.client.impl.producer.DefaultMQProducerImpl;
 import com.alibaba.rocketmq.common.UtilAll;
 import com.alibaba.rocketmq.common.namesrv.TopAddressing;
+import com.cloudzone.cloudlimiter.base.FlowUnit;
+import com.cloudzone.cloudlimiter.factory.CloudFactory;
+import com.cloudzone.cloudlimiter.limiter.FlowLimiter;
+import com.cloudzone.cloudlimiter.limiter.LimiterDelayConstants;
+import com.cloudzone.cloudlimiter.limiter.RealTimeLimiter;
+import com.cloudzone.cloudlimiter.meter.CloudMeter;
+import com.cloudzone.cloudmq.api.impl.heartbeat.MQHeartbeatListenerImpl;
+import com.cloudzone.cloudmq.api.impl.meter.MeterTopicExt;
+import com.cloudzone.cloudmq.api.impl.producer.ProducerFactory;
+import com.cloudzone.cloudmq.api.impl.synctime.MQSyncTimeListenerImpl;
+import com.cloudzone.cloudmq.api.impl.synctime.SyncTimeFactory;
+import com.cloudzone.cloudmq.api.open.base.Msg;
+import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
+import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
+import com.cloudzone.cloudmq.api.impl.meter.MeterFactory;
+import com.cloudzone.cloudmq.common.*;
 import com.cloudzone.cloudmq.log.GClientLogger;
+import org.slf4j.Logger;
+
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /**
@@ -20,34 +37,61 @@ import com.cloudzone.cloudmq.log.GClientLogger;
 public abstract class MQClientAbstract {
     protected static final String WSADDR_INTERNAL =
             System.getProperty("com.aliyun.openservices.ons.addr.internal",
-                "http://onsaddr-internal.aliyun.com:8080/rocketmq/nsaddr4client-internal");
+                    "http://onsaddr-internal.aliyun.com:8080/rocketmq/nsaddr4client-internal");
     protected static final String WSADDR_INTERNET =
             System.getProperty("com.aliyun.openservices.ons.addr.internet",
-                "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
+                    "http://onsaddr-internet.aliyun.com/rocketmq/nsaddr4client-internet");
     protected static final long WSADDR_INTERNAL_TIMEOUTMILLS = Long
-        .parseLong(System.getProperty("com.aliyun.openservices.ons.addr.internal.timeoutmills", "3000"));
+            .parseLong(System.getProperty("com.aliyun.openservices.ons.addr.internal.timeoutmills", "3000"));
     protected static final long WSADDR_INTERNET_TIMEOUTMILLS = Long
-        .parseLong(System.getProperty("com.aliyun.openservices.ons.addr.internet.timeoutmills", "5000"));
+            .parseLong(System.getProperty("com.aliyun.openservices.ons.addr.internet.timeoutmills", "5000"));
     private static final Logger log = GClientLogger.getLog();
     protected final Properties properties;
     //protected final SessionCredentials sessionCredentials = new SessionCredentials();
     protected String nameServerAddr = MyUtils.getNamesrvAddr();
 
+    private final AtomicBoolean startScheduleFlag = new AtomicBoolean(false);
+    private final AtomicBoolean startSyncTimeScheduleFlag = new AtomicBoolean(false);
+    private ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(
+            new ThreadFactoryImpl("CLOUDMQ_JAVA_CLIENT_"));
+    private ScheduledExecutorService scheduledExecutorSyncTimeService = Executors.newSingleThreadScheduledExecutor(
+            new ThreadFactoryImpl("CLOUDMQ_JAVA_CLIENT_SYNCTIME_"));
+    private final CloudMeter cloudMeter = MeterFactory.getCloudMeterSingleton();
+    private final ConcurrentHashMap<String, RealTimeLimiter> topicLimiterMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, FlowLimiter> topicFlowLimiterMap = new ConcurrentHashMap<>();
+    private TopicAndAuthKey topicAndAuthKey;
+    private MQHeartbeatListener mqHeartbeatListener;
+    private MQSyncTimeListener mqSyncTimeListener;
+    private final static int ORG_STEP = 30;
+    private final static int SYNC_TIME_STEP = 10;
+    //默认或出现异常限制一万的TPS
+    private final static int DEFAULT_PERMITS_PER_SECOND = 10000;
+    //默认或出现异常限制的128*1024*1000 Byte的流量
+    private final static int DEFAULT_FLOW_PERMITS_PER_SECOND = 128 * 1024 * 10000;
+
+    private void registerListener(MQHeartbeatListener mqHeartbeatListener) {
+        this.mqHeartbeatListener = mqHeartbeatListener;
+    }
+
+    private void registerListener(MQSyncTimeListener mqSyncTimeListener) {
+        this.mqSyncTimeListener = mqSyncTimeListener;
+    }
 
     public MQClientAbstract(Properties properties) {
+        topicAndAuthKey = (TopicAndAuthKey) properties.get(PropertiesConst.Keys.InnerTopicAndAuthKey);
         this.properties = properties;
         String property = this.properties.getProperty("NAMESRV_ADDR");
-        if(property != null) {
+        if (property != null) {
             this.nameServerAddr = property;
         } else {
-            if(null == this.nameServerAddr) {
+            if (null == this.nameServerAddr) {
                 String addr = this.fetchNameServerAddr();
-                if(null != addr) {
+                if (null != addr) {
                     this.nameServerAddr = addr;
                 }
             }
 
-            if(null == this.nameServerAddr) {
+            if (null == this.nameServerAddr) {
                 // 修改异常信息 2016/7/5 Add by GaoYanLei
                 // throw new GomeClientException(FAQ.errorMessage("Can not find
                 // name server, May be your network problem.",
@@ -64,22 +108,19 @@ public abstract class MQClientAbstract {
         if (property != null) {
             top = new TopAddressing(property);
             return top.fetchNSAddr();
-        }
-        else {
+        } else {
             top = new TopAddressing(WSADDR_INTERNAL);
             String nsAddrs = top.fetchNSAddr(false, WSADDR_INTERNAL_TIMEOUTMILLS);
             if (nsAddrs != null) {
                 log.info("connected to internal server, {} success, {}", WSADDR_INTERNAL, nsAddrs);
                 return nsAddrs;
-            }
-            else {
+            } else {
                 top = new TopAddressing(WSADDR_INTERNET);
                 nsAddrs = top.fetchNSAddr(false, WSADDR_INTERNET_TIMEOUTMILLS);
                 if (nsAddrs != null) {
                     log.info("connected to internet server, {} success, {}", WSADDR_INTERNET, nsAddrs);
                     return nsAddrs;
-                }
-                else {
+                } else {
                     return null;
                 }
             }
@@ -101,17 +142,128 @@ public abstract class MQClientAbstract {
         // 修改异常信息 2016/7/5 Add by GaoYanLei
 
         switch (producer.getServiceState()) {
-        case CREATE_JUST:
-            throw new GomeClientException(CloudmqFAQ.errorMessage(
-                    String.format(CloudmqFAQ.PRODUCER_NOT_START, new Object[]{producer.getServiceState()})));
-        case SHUTDOWN_ALREADY:
-            throw new GomeClientException(CloudmqFAQ.errorMessage(
-                    String.format(CloudmqFAQ.PRODUCER_SHUT_DOWN, new Object[]{producer.getServiceState()})));
-        case START_FAILED:
-            throw new GomeClientException(CloudmqFAQ.errorMessage(
-                    String.format(CloudmqFAQ.SERVICE_EXCEPTION, new Object[]{producer.getServiceState()})));
-        default:
+            case CREATE_JUST:
+                throw new GomeClientException(CloudmqFAQ.errorMessage(
+                        String.format(CloudmqFAQ.PRODUCER_NOT_START, new Object[]{producer.getServiceState()})));
+            case SHUTDOWN_ALREADY:
+                throw new GomeClientException(CloudmqFAQ.errorMessage(
+                        String.format(CloudmqFAQ.PRODUCER_SHUT_DOWN, new Object[]{producer.getServiceState()})));
+            case START_FAILED:
+                throw new GomeClientException(CloudmqFAQ.errorMessage(
+                        String.format(CloudmqFAQ.SERVICE_EXCEPTION, new Object[]{producer.getServiceState()})));
+            default:
         }
     }
 
+    protected void shutdownSchedule() {
+        // 关闭统计定时器 2017/4/14 Add by yintongqiang
+        cloudMeter.shutdown();
+        // 关闭内部使用的producer 2017/4/14 Add by yintongqiang
+        ProducerFactory.getProducerSingleton().shutdown();
+        if (this.startScheduleFlag.compareAndSet(true, false)) {
+            this.scheduledExecutorService.shutdown();
+        }
+        if (this.startSyncTimeScheduleFlag.compareAndSet(true, false)) {
+            this.scheduledExecutorSyncTimeService.shutdown();
+        }
+    }
+
+    protected void startSchedule() {
+        // 开启内部使用的producer 2017/4/14 Add by yintongqiang
+        ProducerFactory.getProducerSingleton().start();
+        for (String topic : topicAndAuthKey.getTopicArray()) {
+//            topicLimiterMap.put(topic, CloudFactory.createRealTimeLimiter(LimiterDelayConstants.ONCE_PER_SECOND));
+//            topicFlowLimiterMap.put(topic, CloudFactory.createFlowLimiterPerSecond(1, FlowUnit.BYTE));
+            topicLimiterMap.put(topic, CloudFactory.createRealTimeLimiter(DEFAULT_PERMITS_PER_SECOND));
+            topicFlowLimiterMap.put(topic, CloudFactory.createFlowLimiterPerSecond(DEFAULT_FLOW_PERMITS_PER_SECOND, FlowUnit.BYTE));
+        }
+        if (this.startScheduleFlag.compareAndSet(false, true)) {
+            startHeartbeat();
+        }
+        if (this.startSyncTimeScheduleFlag.compareAndSet(false, true)) {
+            startSyncTime();
+        }
+    }
+
+    private void startSyncTime() {
+        if (!SyncTimeFactory.isRegister()) {
+            this.registerListener(SyncTimeFactory.getSyncTimeListenerSingleton());
+            this.scheduledExecutorSyncTimeService.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    mqSyncTimeListener.syncTime(System.currentTimeMillis());
+                }
+            }, 0, SYNC_TIME_STEP, TimeUnit.SECONDS);
+        }
+    }
+
+    private void startHeartbeat() {
+        this.registerListener(new MQHeartbeatListenerImpl());
+        this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    for (String topic : topicAndAuthKey.getTopicArray()) {
+                        HeartbeatData heartbeatData = mqHeartbeatListener.doHeartbeat(topic, topicAndAuthKey.getTopicAuthKeyMap().get(topic));
+                        if (null == heartbeatData) {
+                            heartbeatData = new HeartbeatData(DEFAULT_PERMITS_PER_SECOND, DEFAULT_FLOW_PERMITS_PER_SECOND, 1, 1);
+                        }
+                        boolean isUseUp = heartbeatData.getTps() == 0 || heartbeatData.getFlowTps() == 0 ||
+                                heartbeatData.getSurplusFlow() == 0 || heartbeatData.getSurplusTime() == 0;
+                        if (isUseUp) {
+                            if (topicLimiterMap.containsKey(topic)) {
+                                topicLimiterMap.get(topic).setRate(LimiterDelayConstants.ONCE_PER_SECOND);
+                            } else {
+                                topicLimiterMap.put(topic, CloudFactory.createRealTimeLimiter(LimiterDelayConstants.ONCE_PER_SECOND));
+                            }
+                            if (topicFlowLimiterMap.containsKey(topic)) {
+                                topicFlowLimiterMap.get(topic).setRate(1, FlowUnit.BYTE);
+                            } else {
+                                topicFlowLimiterMap.put(topic, CloudFactory.createFlowLimiterPerSecond(1, FlowUnit.BYTE));
+                            }
+                        }
+                        if (heartbeatData.getTps() > 0 && !isUseUp) {
+                            if (!topicLimiterMap.containsKey(topic)) {
+                                topicLimiterMap.put(topic, CloudFactory.createRealTimeLimiter(heartbeatData.getTps()));
+                            } else if (heartbeatData.getTps() != topicLimiterMap.get(topic).getRate()) {
+                                topicLimiterMap.get(topic).setRate(heartbeatData.getTps());
+                            }
+
+                        }
+                        if (heartbeatData.getFlowTps() > 0 && !isUseUp) {
+                            if (!topicFlowLimiterMap.containsKey(topic)) {
+                                topicFlowLimiterMap.put(topic, CloudFactory.createFlowLimiterPerSecond(heartbeatData.getFlowTps(), FlowUnit.BYTE));
+                            } else if (heartbeatData.getFlowTps() != topicFlowLimiterMap.get(topic).getRate()) {
+                                topicFlowLimiterMap.get(topic).setRate(heartbeatData.getFlowTps(), FlowUnit.BYTE);
+                            }
+
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, ORG_STEP, TimeUnit.SECONDS);
+    }
+
+    protected void checkTopic(Properties properties, String topic, Msg msg) {
+        if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(topic)) {
+            throw new AuthFailedException("申请的topic和" + topicAndAuthKey.getProcessMsgType().getDes() + "的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "]," + topicAndAuthKey.getProcessMsgType().getDes() + "的topic为[" + topic + "]");
+        }
+        String authKey = topicAndAuthKey.getTopicAuthKeyMap().get(topic);
+        //限制tps
+        if (topicLimiterMap.containsKey(topic)) {
+            topicLimiterMap.get(topic).acquire();
+        }
+        //限制流量
+        if (null != msg && topicFlowLimiterMap.containsKey(topic)) {
+            topicFlowLimiterMap.get(topic).acquire(msg.getBody().length, FlowUnit.BYTE);
+        }
+        //统计tps
+        cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.TPS.getDes(), topicAndAuthKey.getProcessMsgType().getCode()));
+        //统计流量
+        if (null != msg) {
+            cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.FLOW.getDes(), topicAndAuthKey.getProcessMsgType().getCode()), msg.getBody().length);
+        }
+    }
 }

@@ -67,6 +67,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
         try {
             if (this.started.compareAndSet(false, true)) {
                 this.defaultMQProducer.start();
+                this.startSchedule();
             }
 
         } catch (Exception e) {
@@ -79,6 +80,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
     public void shutdown() {
         if (this.started.compareAndSet(true, false)) {
             this.defaultMQProducer.shutdown();
+            this.shutdownSchedule();
         }
 
     }
@@ -88,7 +90,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
         //this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProduceImpl());
 
         try {
-            Validators.checkTopic(this.properties, msg.getTopic());
+            this.checkTopic(this.properties, msg.getTopic(),msg);
             com.alibaba.rocketmq.client.producer.SendResult sendResultRMQ = this.defaultMQProducer.send(msg);
             SendResult sendResult = new SendResult();
             sendResult.setMsgId(sendResultRMQ.getMsgId());
@@ -176,7 +178,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
         this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProducerImpl());
 
         try {
-            Validators.checkTopic(this.properties,msg.getTopic());
+            this.checkTopic(this.properties,msg.getTopic(),msg);
             this.defaultMQProducer.sendOneway(msg);
         } catch (Exception e) {
             log.error(String.format("Send msg oneway Exception, %s", new Object[]{msg}), e);

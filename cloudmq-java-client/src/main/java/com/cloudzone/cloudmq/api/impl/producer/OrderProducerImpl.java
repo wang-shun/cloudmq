@@ -60,6 +60,7 @@ public class OrderProducerImpl extends MQClientAbstract implements OrderProducer
         try {
             if (this.started.compareAndSet(false, true)) {
                 this.defaultMQProducer.start();
+                this.startSchedule();
             }
 
         } catch (Exception exception) {
@@ -70,12 +71,13 @@ public class OrderProducerImpl extends MQClientAbstract implements OrderProducer
     public void shutdown() {
         if (this.started.compareAndSet(true, false)) {
             this.defaultMQProducer.shutdown();
+            this.shutdownSchedule();
         }
 
     }
 
     public SendResult send(Msg msg, String shardingKey) {
-        Validators.checkTopic(this.properties, msg.getTopic());
+        this.checkTopic(this.properties, msg.getTopic(),msg);
         if (UtilAll.isBlank(shardingKey)) {
             throw new GomeClientException("\'shardingKey\' is blank.");
         } else {

@@ -160,12 +160,4 @@ public class Validators {
                     + "] 异常，请检测IP，端口是否开通网络权限!!!\n");
         }
     }
-
-    // TODO: 2017/3/30 还需做TPS的统计
-    public static void checkTopic(Properties properties, String topic) {
-        TopicAndAuthKey topicAndAuthKey = (TopicAndAuthKey) properties.get(PropertiesConst.Keys.InnerTopicAndAuthKey);
-        if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(topic)) {
-            throw new AuthFailedException("申请的topic和" + topicAndAuthKey.getProcessMsgType().getDes() + "的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "]," + topicAndAuthKey.getProcessMsgType().getDes() + "的topic为[" + topic + "]");
-        }
-    }
 }

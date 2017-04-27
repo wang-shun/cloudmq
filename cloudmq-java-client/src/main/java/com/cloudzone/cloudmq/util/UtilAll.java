@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2010-2013 Alibaba Group Holding Limited
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.net.InetAddress;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,12 +44,18 @@ public class UtilAll {
         String name = runtime.getName(); // format: "pid@hostname"
         try {
             return Integer.parseInt(name.substring(0, name.indexOf('@')));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return -1;
         }
     }
 
+    public static String getIp() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {
+            return "127.0.0.1";
+        }
+    }
 
     public static String currentStackTrace() {
         StringBuilder sb = new StringBuilder();
@@ -108,8 +115,8 @@ public class UtilAll {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(t);
         return String.format("%04d%02d%02d%02d%02d%02d%03d", cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY),
-            cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND), cal.get(Calendar.MILLISECOND));
+                cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY),
+                cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND), cal.get(Calendar.MILLISECOND));
     }
 
 
@@ -169,13 +176,13 @@ public class UtilAll {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(t);
         return String.format("%04d-%02d-%02d %02d:%02d:%02d,%03d", //
-            cal.get(Calendar.YEAR), //
-            cal.get(Calendar.MONTH) + 1, //
-            cal.get(Calendar.DAY_OF_MONTH), //
-            cal.get(Calendar.HOUR_OF_DAY), //
-            cal.get(Calendar.MINUTE), //
-            cal.get(Calendar.SECOND), //
-            cal.get(Calendar.MILLISECOND));
+                cal.get(Calendar.YEAR), //
+                cal.get(Calendar.MONTH) + 1, //
+                cal.get(Calendar.DAY_OF_MONTH), //
+                cal.get(Calendar.HOUR_OF_DAY), //
+                cal.get(Calendar.MINUTE), //
+                cal.get(Calendar.SECOND), //
+                cal.get(Calendar.MILLISECOND));
     }
 
 
@@ -190,12 +197,12 @@ public class UtilAll {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(t);
         return String.format("%04d%02d%02d%02d%02d%02d", //
-            cal.get(Calendar.YEAR), //
-            cal.get(Calendar.MONTH) + 1, //
-            cal.get(Calendar.DAY_OF_MONTH), //
-            cal.get(Calendar.HOUR_OF_DAY), //
-            cal.get(Calendar.MINUTE), //
-            cal.get(Calendar.SECOND));
+                cal.get(Calendar.YEAR), //
+                cal.get(Calendar.MONTH) + 1, //
+                cal.get(Calendar.DAY_OF_MONTH), //
+                cal.get(Calendar.HOUR_OF_DAY), //
+                cal.get(Calendar.MINUTE), //
+                cal.get(Calendar.SECOND));
     }
 
 
@@ -221,8 +228,7 @@ public class UtilAll {
             if (totalSpace > 0) {
                 return usedSpace / (double) totalSpace;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return -1;
         }
 
@@ -291,25 +297,20 @@ public class UtilAll {
             }
             byteArrayOutputStream.flush();
             result = byteArrayOutputStream.toByteArray();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw e;
-        }
-        finally {
+        } finally {
             try {
                 byteArrayInputStream.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
             }
             try {
                 inflaterInputStream.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
             }
             try {
                 byteArrayOutputStream.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
             }
         }
 
@@ -327,16 +328,13 @@ public class UtilAll {
             deflaterOutputStream.finish();
             deflaterOutputStream.close();
             result = byteArrayOutputStream.toByteArray();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             deflater.end();
             throw e;
-        }
-        finally {
+        } finally {
             try {
                 byteArrayOutputStream.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
             }
 
             deflater.end();
@@ -349,8 +347,7 @@ public class UtilAll {
     public static int asInt(String str, int defaultValue) {
         try {
             return Integer.parseInt(str);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -359,8 +356,7 @@ public class UtilAll {
     public static long asLong(String str, long defaultValue) {
         try {
             return Long.parseLong(str);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return defaultValue;
         }
     }
@@ -376,8 +372,7 @@ public class UtilAll {
         SimpleDateFormat df = new SimpleDateFormat(pattern);
         try {
             return df.parse(date);
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             return null;
         }
     }
@@ -434,8 +429,7 @@ public class UtilAll {
         String[] s = newString.split(regex);
         if (s.length > 0) {
             return s;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -471,7 +465,7 @@ public class UtilAll {
 
 
     public static String getValue4Properties(String propertiesName, String key) throws IOException {
-        final String clientResourceFile = System.getProperty("CloudMQ.client.resource.fileName", "client.properties");
+        final String clientResourceFile = System.getProperty("cloudmq.config.resource.fileName", "mq_sdk_inner_config.properties");
         InputStream inputStream = UtilAll.class.getClassLoader().getResourceAsStream(clientResourceFile);
         Properties properties = new Properties();
         properties.load(inputStream);

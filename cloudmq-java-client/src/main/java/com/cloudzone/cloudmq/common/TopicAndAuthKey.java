@@ -1,5 +1,6 @@
 package com.cloudzone.cloudmq.common;
 
+
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -11,6 +12,14 @@ public class TopicAndAuthKey {
     private ConcurrentHashMap<String, String> topicAuthKeyMap;
     private String[] topicArray;
     private ProcessMsgType processMsgType;
+
+    public String[] getTopicArray() {
+        return topicArray;
+    }
+
+    public void setTopicArray(String[] topicArray) {
+        this.topicArray = topicArray;
+    }
 
     public TopicAndAuthKey(ConcurrentHashMap<String, String> topicAuthKeyMap, String[] topicList, ProcessMsgType processMsgType) {
         this.topicAuthKeyMap = topicAuthKeyMap;
