@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+    <!--项目标识，设置的话，生成后的war文件会加上此后缀-->
+    <id>jar-with-dependencies</id>
+    <!--打包格式-->
+    <formats>
+        <format>war</format>
+    </formats>
+    <!--是否包含根目录文件夹-->
+    <includeBaseDirectory>true</includeBaseDirectory>
+
+    <!--外部配置文件打包
+    <fileSets>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources</directory>
+            <outputDirectory>/lib/resources/</outputDirectory>
+            <includes>
+                <include>*.*</include>
+            </includes>
+            <fileMode>0755</fileMode>
+        </fileSet>
+    </fileSets> -->
+
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>true</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>
