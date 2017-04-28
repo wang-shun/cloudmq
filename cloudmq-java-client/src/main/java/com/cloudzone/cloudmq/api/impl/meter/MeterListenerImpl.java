@@ -4,6 +4,10 @@ import com.cloudzone.cloudlimiter.base.AcquireStatus;
 import com.cloudzone.cloudlimiter.base.MeterListener;
 import com.cloudzone.cloudlimiter.meter.Meterinfo;
 import com.cloudzone.cloudmq.api.impl.base.TransferAdapter;
+import com.cloudzone.cloudmq.api.impl.producer.ProducerFactory;
+import com.cloudzone.cloudmq.api.open.base.Producer;
+import com.cloudzone.cloudmq.log.GClientLogger;
+import org.slf4j.Logger;
 
 import java.util.List;
 
@@ -13,6 +17,7 @@ import java.util.List;
  * @since 2017/4/12
  */
 public class MeterListenerImpl implements MeterListener {
+    private static final Logger log = GClientLogger.getLog();
     private TransferAdapter<Meterinfo> transferAdapter;
 
     public MeterListenerImpl(TransferAdapter<Meterinfo> transferAdapter) {
@@ -27,8 +32,8 @@ public class MeterListenerImpl implements MeterListener {
                     case SECONDS:
                         break;
                     case MINUTES:
-                        if (info.getTag().equals("jcpt-client-to-cloudzone-800")) {
-                            System.out.println(info);
+                        if (!ProducerFactory.TOPIC.equals(info.getTag())) {
+                            log.info(info.toString());
                         }
                         transferAdapter.transfer(info);
                         break;
