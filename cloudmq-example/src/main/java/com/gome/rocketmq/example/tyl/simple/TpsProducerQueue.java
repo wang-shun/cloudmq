@@ -24,9 +24,9 @@ import java.util.concurrent.Executors;
 public class TpsProducerQueue {
 
     public static void main(String[] args) throws MQClientException {
-        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 1;
-        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 12;
-        final String topic = args.length >= 3 ? args[0].trim() : "simpleTpsTopic";
+        final int threadCount = args.length >= 1 ? Integer.parseInt(args[0]) : 900;
+        final int messageSize = args.length >= 2 ? Integer.parseInt(args[1]) : 1;
+        final String topic = args.length >= 3 ? args[2].trim() : "jcpt-cloudmd-tps-200";
 
         final Message msg = buildMessage(messageSize, topic);
         final ExecutorService sendThreadPool = Executors.newFixedThreadPool(threadCount);
@@ -80,7 +80,10 @@ public class TpsProducerQueue {
         producer.start();
 
         System.out.println("threadCount=" + threadCount + ", messageSize=" + messageSize);
-        System.out.println("producerGroup=" + producer.getProducerGroup() + ", instanceName=" + producer.getInstanceName() + ", producer started.");
+        System.out.println("producerGroup=" + producer.getProducerGroup()
+                + ", instanceName=" + producer.getInstanceName()
+                + ", topic=" + topic
+                + ", producer started.");
 
         for (int i = 0; i < threadCount; i++) {
             sendThreadPool.execute(new Runnable() {
