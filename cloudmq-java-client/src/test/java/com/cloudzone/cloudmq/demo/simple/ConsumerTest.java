@@ -22,14 +22,15 @@ public class ConsumerTest {
         // 您在控制台创建的消费者组ID（ConsumerGroupId）
         // 集群模式下消费，该ConsumerGroupId必须相同
         properties.put(PropertiesConst.Keys.ConsumerGroupId, "SimpleConsumerGroupId-test");
-        // 设置nameserver地址，不设置则默认为127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
+        // 设置topic名称和认证key
+        properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
+                "CloudTopicTest-200:02865ea17c4eb4186854ab95bdc07f842");
 
         // 创建普通类型消费者
         Consumer consumer = MQFactory.createConsumer(properties);
         // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，
         // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
-        consumer.subscribe("TopicTestMQ", "*", new MsgListener() {
+        consumer.subscribe("CloudTopicTest-200", "*", new MsgListener() {
             public Action consume(Msg msg, ConsumeContext context) {
                 //TODO: 此处为线程池调用，使用过程中请注意线程安全问题！！！
                 System.out.println(Thread.currentThread().getName() + "Receive Msg : " + new String(msg.getBody()));

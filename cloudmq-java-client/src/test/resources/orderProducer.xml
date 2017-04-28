@@ -5,9 +5,8 @@
     <bean id="orderProducer" class="com.cloudzone.cloudmq.api.open.bean.OrderProducerBean" init-method="start" destroy-method="shutdown">
         <property name="properties" > <!--生产者配置信息-->
             <props>
-                <prop key="OrderProducerGroupId">OrderProducerGroupId-test</prop>
-                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
-                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+                <prop key="ProducerGroupId">OrderProducerGroupId-test</prop>
+                <prop key="TOPIC_NAME_AND_AUTH_KEY">lm-test-order-500:113c4ac80684f430fb00c43a27c3ceb6a</prop>
             </props>
         </property>
     </bean>

@@ -11,8 +11,7 @@
         <property name="properties">
             <props>
                 <prop key="ConsumerGroupId">ConsumerGroupId-test</prop>
-                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
-                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+                <prop key="TOPIC_NAME_AND_AUTH_KEY">test-lj-300:45bc24e561c1b4aa7b69ce69e146eb18e</prop>
                 <!--设置消息队列为广播消费模型，（不设置则默认为集群消费） -->
                 <!--<prop key="MessageModel">BROADCASTING</prop>-->
             </props>
@@ -23,7 +22,7 @@
                 <entry value-ref="msgListener">
                     <key>
                         <bean class="com.cloudzone.cloudmq.api.open.bean.Subscription">
-                            <property name="topic" value="TransactionTopicTestMQ"/>
+                            <property name="topic" value="test-lj-300"/>
                             <property name="expression" value="*"/>
                         </bean>
                     </key>

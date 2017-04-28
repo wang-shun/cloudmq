@@ -10,8 +10,7 @@
         <property name="properties">
             <props>
                 <prop key="ConsumerGroupId">ConsumerGroupId-test</prop>
-                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
-                <prop key="NAMESRV_ADDR">127.0.0.1:9876</prop>
+                <prop key="TOPIC_NAME_AND_AUTH_KEY">lm-test-order-500:113c4ac80684f430fb00c43a27c3ceb6a</prop>
             </props>
         </property>
 
@@ -20,7 +19,7 @@
                 <entry value-ref="orderMsgListener">
                     <key>
                         <bean class="com.cloudzone.cloudmq.api.open.bean.Subscription">
-                            <property name="topic" value="TopicOrderTestMQ"/>
+                            <property name="topic" value="lm-test-order-500"/>
                             <property name="expression" value="TagA"/>
                         </bean>
                     </key>

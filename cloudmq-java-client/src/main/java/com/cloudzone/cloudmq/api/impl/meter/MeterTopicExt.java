@@ -27,6 +27,12 @@ public class MeterTopicExt extends MeterTopic {
         this.processType = processType;
     }
 
+    /**
+     * @param tag topic名称
+     * @param authKey authKey
+     * @param type StatDataType枚举的des
+     * @param processType ProcessMsgType枚举的code
+     */
     public MeterTopicExt(String tag, String authKey, String type, int processType) {
         this.setTag(tag);
         this.authKey = authKey;

@@ -1,16 +1,16 @@
 package com.cloudzone.cloudmq.demo.delay;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Random;
-
 import com.cloudzone.cloudmq.api.open.base.Msg;
 import com.cloudzone.cloudmq.api.open.base.Producer;
 import com.cloudzone.cloudmq.api.open.base.SendResult;
 import com.cloudzone.cloudmq.api.open.factory.MQFactory;
 import com.cloudzone.cloudmq.common.DelayLevelConst;
 import com.cloudzone.cloudmq.common.PropertiesConst;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
+import java.util.Random;
 
 
 /**
@@ -24,8 +24,9 @@ public class ProducerDelayTest {
         Properties properties = new Properties();
         // 您在控制台创建的生产者组ID（ProducerGroupId）
         properties.put(PropertiesConst.Keys.ProducerGroupId, "DelayProducerGroupId-test");
-        // 设置nameserver地址，不设置则默认为127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.NAMESRV_ADDR, "127.0.0.1:9876");
+        // 设置topic名称和认证key
+        properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
+                "CloudTopicTest-200:02865ea17c4eb4186854ab95bdc07f842");
 
         Producer producer = MQFactory.createProducer(properties);
         // 在发送消息前，必须调用start方法来启动Producer，只需调用一次即可。
@@ -41,7 +42,7 @@ public class ProducerDelayTest {
             }
             Msg msg = new Msg( //
                     // Msg Topic
-                    "TopicTestMQ",
+                    "CloudTopicTest-200",
                     // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤
                     "TagA",
                     // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，

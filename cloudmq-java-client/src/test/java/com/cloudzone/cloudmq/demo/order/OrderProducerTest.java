@@ -20,9 +20,9 @@ public class OrderProducerTest {
         Properties properties = new Properties();
         // 您在控制台创建的生产者组ID（ProducerGroupId）
         properties.put(PropertiesConst.Keys.ProducerGroupId, "OrderProducerGroupId-test");
-        // 设置nameserver地址，不设置则默认为 127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.TOPIC_NAME, "aaa-800");
-        properties.put(PropertiesConst.Keys.AUTH_KEY, "1d2ac86e038cf4f058d59d144aef8065f");
+        // 设置topic名称和认证key
+        properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
+                "lm-test-order-500:113c4ac80684f430fb00c43a27c3ceb6a");
 
         // 创建顺序类型生产者（建议尽量使用常规模式，顺序类型会降低性能及可靠性）
         OrderProducer orderProducer = MQFactory.createOrderProducer(properties);
@@ -33,7 +33,7 @@ public class OrderProducerTest {
         for (int i = 0; i < 10; i++) {
             Msg msg = new Msg( //
                 // Msg Topic
-                "aaa-800",
+                "lm-test-order-500",
                 // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，方便Consumer指定过滤条件在MQ服务器过滤
                 "TagA",
                 // Msg Body 可以是任何二进制形式的数据， MQ不做任何干预，
