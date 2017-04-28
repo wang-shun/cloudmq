@@ -37,8 +37,10 @@ public class PropertiesConst {
         public static final String TOPIC_NAME = "appMetaName";
         public static final String AUTH_KEY = "authKey";
         public static final String TYPE = "appType";
-        public static final String PROPERTIES_PATH = "client.properties";
+        public static final String PROPERTIES_PATH = "mq_sdk_inner_config.properties";
         public static final String WSADDR_AUTH = "wsaddrAuth";
+        public static final String HEARTBEAT_URL = "heartbeatUrl";
+        public static final String SYNCTIME_URL = "syncTimeUrl";
         //解决客户端多个订阅的问题
         public static final String TOPIC_NAME_AND_AUTH_KEY = "TOPIC_NAME_AND_AUTH_KEY";
         //内部用

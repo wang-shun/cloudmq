@@ -6,7 +6,7 @@
         <property name="properties" > <!--生产者配置信息-->
             <props>
                 <prop key="ProducerGroupId">ProducerGroupId-test</prop>
-                <prop key="TOPIC_NAME_AND_AUTH_KEY">jcpt-t-500:062489eca3c394a15b70fe500cdd942a0;a-200:2130d474c2c6a487eae496ee22dfbb878;b-300:38b60e940b83745a994a99520a93b295f</prop>
+                <prop key="TOPIC_NAME_AND_AUTH_KEY">CloudTopicTest-200:02865ea17c4eb4186854ab95bdc07f842</prop>
             </props>
         </property>
     </bean>

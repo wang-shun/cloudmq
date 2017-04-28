@@ -73,6 +73,7 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
 
             try {
                 this.transactionMQProducer.start();
+                this.startSchedule();
             } catch (MQClientException exception) {
                 throw new RuntimeException(exception);
             }
@@ -83,12 +84,13 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
     public void shutdown() {
         if (this.started.compareAndSet(true, false)) {
             this.transactionMQProducer.shutdown();
+            this.shutdownSchedule();
         }
 
     }
 
     public TransactionSendResult send(final Msg message, final LocalTransactionExecuter executer, Object arg) throws RuntimeException {
-        Validators.checkTopic(this.properties, message.getTopic());
+        this.checkTopic(this.properties, message.getTopic(), message);
         this.checkONSProducerServiceState(this.transactionMQProducer.getDefaultMQProducerImpl());
         com.alibaba.rocketmq.common.message.Message msgRMQ = MyUtils.msgConvert(message);
         MessageAccessor.putProperty(msgRMQ, "ProducerGroupId", (String) this.properties.get("ProducerGroupId"));

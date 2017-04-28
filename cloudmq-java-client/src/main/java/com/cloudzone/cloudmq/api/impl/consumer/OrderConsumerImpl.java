@@ -8,13 +8,13 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.client.log.ClientLogger;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
+import com.cloudzone.cloudmq.api.open.base.Msg;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.api.open.order.ConsumeOrderContext;
 import com.cloudzone.cloudmq.api.open.order.MsgOrderListener;
 import com.cloudzone.cloudmq.api.open.order.OrderAction;
 import com.cloudzone.cloudmq.api.open.order.OrderConsumer;
 import com.cloudzone.cloudmq.common.MyUtils;
-import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -106,6 +106,7 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
         try {
             if (this.started.compareAndSet(false, true)) {
                 this.defaultMQPushConsumer.start();
+                this.startSchedule();
             }
 
         } catch (Exception var2) {
@@ -117,6 +118,7 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
     public void shutdown() {
         if (this.started.compareAndSet(true, false)) {
             this.defaultMQPushConsumer.shutdown();
+            this.shutdownSchedule();
         }
 
     }
@@ -129,7 +131,7 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
             throw new GomeClientException("listener is null");
         } else {
             try {
-                Validators.checkTopic(this.properties, topic);
+                this.checkTopic(this.properties, topic, null);
                 this.subscribeTable.put(topic, listener);
                 this.defaultMQPushConsumer.subscribe(topic, subExpression);
             } catch (MQClientException var5) {
@@ -161,9 +163,10 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
             if (null == listener) {
                 throw new GomeClientException("MsgOrderListener is null");
             } else {
-
                 ConsumeOrderContext context = new ConsumeOrderContext();
-                OrderAction action = listener.consume(MyUtils.msgConvert(msg, msgId), context);
+                Msg m = MyUtils.msgConvert(msg, msgId);
+                OrderAction action = listener.consume(m, context);
+                checkTopic(properties, msg.getTopic(), m);
                 if (action != null) {
                     switch (action) {
                         case Success:

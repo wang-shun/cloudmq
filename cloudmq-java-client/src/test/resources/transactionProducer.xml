@@ -10,10 +10,7 @@
         <property name="properties">
             <props>
                 <prop key="ProducerGroupId">ProducerGroupId-test</prop>
-                <!--设置邮件反馈的topic名称-->
-                <prop key="TOPIC_NAME">jcpt-test-1423-200</prop>
-                <!--设置邮件反馈的认证密钥-->
-                <prop key="AUTH_KEY">0bf525b84c0474fef8bbc7f0b334b54a6</prop>
+                <prop key="TOPIC_NAME_AND_AUTH_KEY">test-lj-300:45bc24e561c1b4aa7b69ce69e146eb18e</prop>
             </props>
         </property>
 

@@ -8,10 +8,7 @@ import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.message.MessageExt;
 import com.alibaba.rocketmq.common.protocol.heartbeat.MessageModel;
 import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
-import com.cloudzone.cloudmq.api.open.base.Action;
-import com.cloudzone.cloudmq.api.open.base.ConsumeContext;
-import com.cloudzone.cloudmq.api.open.base.Consumer;
-import com.cloudzone.cloudmq.api.open.base.MsgListener;
+import com.cloudzone.cloudmq.api.open.base.*;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.common.MQTraceConstants;
 import com.cloudzone.cloudmq.common.MyUtils;
@@ -79,6 +76,7 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
         try {
             if (this.started.compareAndSet(false, true)) {
                 this.defaultMQPushConsumer.start();
+                this.startSchedule();
             }
 
         } catch (Exception e) {
@@ -90,6 +88,7 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
     public void shutdown() {
         if (this.started.compareAndSet(true, false)) {
             this.defaultMQPushConsumer.shutdown();
+            this.shutdownSchedule();
         }
 
     }
@@ -102,7 +101,7 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
             throw new GomeClientException("listener is null");
         } else {
             try {
-                Validators.checkTopic(this.properties, topic);
+                checkTopic(this.properties, topic, null);
                 this.subscribeTable.put(topic, listener);
                 this.defaultMQPushConsumer.subscribe(topic, subExpression);
             } catch (MQClientException var5) {
@@ -143,8 +142,9 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
                 throw new GomeClientException("MsgListener is null");
             } else {
                 ConsumeContext context = new ConsumeContext();
-                Action action = listener.consume(MyUtils.msgConvert(msg, msgId), context);
-
+                Msg m = MyUtils.msgConvert(msg, msgId);
+                Action action = listener.consume(m, context);
+                checkTopic(properties, msg.getTopic(), m);
                 switch (action) {
                     case CommitMessage:
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

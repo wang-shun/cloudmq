@@ -24,16 +24,16 @@ public class OrderConsumerTest {
         Properties properties = new Properties();
         // 您在控制台创建的消费者组ID（consumerGroupId）
         properties.put(PropertiesConst.Keys.ConsumerGroupId, "OrderProducerGroupId-test");
-        // 设置nameserver地址，不设置则默认为127.0.0.1:9876
-        properties.put(PropertiesConst.Keys.TOPIC_NAME, "aaa-800");
-        properties.put(PropertiesConst.Keys.AUTH_KEY, "1d2ac86e038cf4f058d59d144aef8065f");
+        // 设置topic名称和认证key
+        properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
+                "lm-test-order-500:113c4ac80684f430fb00c43a27c3ceb6a");
 
         // 创建顺序类型消费者（建议尽量使用常规模式，顺序类型会降低性能及可靠性）
         OrderConsumer orderedConsumer = MQFactory.createOrderedConsumer(properties);
 
         // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，
         // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
-        orderedConsumer.subscribe("aaa-800", "TagA", new MsgOrderListener() {
+        orderedConsumer.subscribe("lm-test-order-500", "TagA", new MsgOrderListener() {
             @Override
             public OrderAction consume(Msg msg, ConsumeOrderContext consumeOrderContext) {
                 System.out.println(new String(msg.getBody()));

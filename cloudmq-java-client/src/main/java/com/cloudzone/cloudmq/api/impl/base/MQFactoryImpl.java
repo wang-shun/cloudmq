@@ -30,6 +30,7 @@ import java.util.Properties;
  * @since 2016/6/27
  */
 public class MQFactoryImpl implements MQFactoryAPI {
+
     public MQFactoryImpl() {
     }
 

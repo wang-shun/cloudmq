@@ -5,15 +5,14 @@ package com.cloudzone.cloudmq.common;
  * @params
  * @since 2017/3/30
  */
-public enum ProcessMsgType {
-    PRODUCER_MSG(0, "发送"),
-    CONSUMER_MSG(1, "消费");
-    // 成员变量
+public enum TimeUnitType {
+    SECONDS(0, "秒"),
+    MINUTES(1, "分");
     private int code;
     private String des;
 
 
-    ProcessMsgType(int code, String des) {
+    TimeUnitType(int code, String des) {
         this.code = code;
         this.des = des;
     }

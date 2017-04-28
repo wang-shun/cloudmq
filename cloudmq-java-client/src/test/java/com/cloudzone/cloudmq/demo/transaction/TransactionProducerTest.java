@@ -20,8 +20,9 @@ public class TransactionProducerTest {
         Properties properties = new Properties();
         // 您在控制台创建的生产者组ID（ProducerGroupId）
         properties.put(PropertiesConst.Keys.ProducerGroupId, "TransactionProducerGroupId-test");
-        properties.put(PropertiesConst.Keys.TOPIC_NAME, "bbb-800");
-        properties.put(PropertiesConst.Keys.AUTH_KEY, "493e507a4fedb4dce923ddd030a7649a5");
+        // 设置topic名称和认证key
+        properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
+                "test-lj-300:45bc24e561c1b4aa7b69ce69e146eb18e");
 
         //LocalTransactionChecker: 服务器回查客户端
         LocalTransactionChecker checker = new LocalTransactionCheckerImpl();
@@ -36,7 +37,7 @@ public class TransactionProducerTest {
         for (int i = 0; i < 10; i++) {
             Msg msg = new Msg(
                     // Msg Topic
-                    "bbb-800",
+                    "test-lj-300",
                     // Msg Tag 可理解为Gmail中的标签，对消息进行再归类，
                     // 方便Consumer指定过滤条件在MQ服务器过滤
                     "TagA",
