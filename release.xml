@@ -31,7 +31,9 @@
 				<include>com.cloudzone.coremq:cloudmq-namesrv</include>
 				<include>com.cloudzone.coremq:cloudmq-filtersrv</include>
 				<include>com.cloudzone.coremq:cloudmq-example</include>
+				<include>com.cloudzone.cloudmq:cloudmq-java-client</include>
 				<include>com.cloudzone.cloudmq:cloudmq-java-client-dev</include>
+				<include>com.cloudzone.cloudmq:cloudmq-java-client-qa</include>
 			</includes>
 			<binaries>
 				<outputDirectory>lib/</outputDirectory>
