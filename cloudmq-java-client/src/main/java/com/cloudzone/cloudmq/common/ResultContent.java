@@ -2,7 +2,7 @@ package com.cloudzone.cloudmq.common;
 
 /**
  * 验证接口返回对象
- * 
+ *
  * @author gaoyanlei
  * @since 2017/2/23
  */
@@ -39,5 +39,14 @@ public class ResultContent {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    @Override
+    public String toString() {
+        return "ResultContent{" +
+                "code=" + code +
+                ", body='" + body + '\'' +
+                ", msg='" + msg + '\'' +
+                '}';
     }
 }

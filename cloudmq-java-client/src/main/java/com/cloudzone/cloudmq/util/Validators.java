@@ -21,9 +21,8 @@ import static com.alibaba.fastjson.JSON.parseObject;
  * @since 2017/1/9
  */
 public class Validators {
-    protected static final long WSADDR_INTERNAL_TIMEOUTMILLS = 3000;
-    protected static final int HTTP_STATUS_SUCCESS = 200;
-    protected static final String WSADDR_HOST_AND_PORTS = "http:xxx";
+    private static final long WSADDR_INTERNAL_TIMEOUTMILLS = 3000;
+    private static final int HTTP_STATUS_SUCCESS = 200;
 
 
     /**
@@ -42,39 +41,48 @@ public class Validators {
             String pGroupIdMsg = "ProducerGroupId 不能为空！";
             String cGroupIdMsg = "ConsumerGroupId 不能为空！";
             String topicAndAuthKeyMsg = "TOPIC_NAME_AND_AUTH_KEY 不能为空！";
+            // 检查ProducerGroupId是否为空 2017/5/5 Add by yintongqiang
             if (processMsgType.getCode() == ProcessMsgType.PRODUCER_MSG.getCode() && UtilAll.isBlank(pGroupId)) {
                 throw new AuthFailedException(pGroupIdMsg);
             }
+            // 检查ConsumerGroupId是否为空 2017/5/5 Add by yintongqiang
             if (processMsgType.getCode() == ProcessMsgType.CONSUMER_MSG.getCode() && UtilAll.isBlank(cGroupId)) {
                 throw new AuthFailedException(cGroupIdMsg);
             }
+            // 检查TOPIC_NAME_AND_AUTH_KEY是否为空 2017/5/5 Add by yintongqiang
             if (null == topicAndAuthKey) {
                 throw new AuthFailedException(topicAndAuthKeyMsg);
             }
             ConcurrentHashMap<String, String> topicAndAuthKeyMap = new ConcurrentHashMap<>();
             List<String> topicList = new ArrayList<>();
             String ipAndPort = null;
+            // 解析TOPIC_NAME_AND_AUTH_KEY，多个topic和authKey必须用分号隔开
             for (String topicAuthKey : topicAndAuthKey.split(";")) {
-                if(topicAuthKey.contains(":")) {
+                if (topicAuthKey.contains(":")) {
                     String topic = topicAuthKey.split(":", 2)[0];
                     String authKey = topicAuthKey.split(":", 2)[1];
+                    // 校验topic是否为空
                     if (UtilAll.isBlank(topic)) {
                         throw new AuthFailedException(topicMsg);
                     }
+                    // 校验authkey是否为空
                     if (UtilAll.isBlank(authKey)) {
                         throw new AuthFailedException(authKeyMsg);
                     }
+                    // 认证topic和authKey
                     AuthKey aKey = verifyTopicAndAuthKey(topic, authKey);
                     if (null == ipAndPort) {
                         ipAndPort = aKey.getIpAndPort();
                     } else {
+                        // 主要用于处理同时认证多个topic导致返回的ipAndPort不在同一个环境的问题
                         if (!ipAndPort.equals(aKey.getIpAndPort())) {
                             throw new AuthFailedException("申请的topic不在同一个环境，请联系管理员！");
                         }
                     }
+                    // 保存topic和authkey到集合供内部使用
                     topicAndAuthKeyMap.put(topic, authKey);
                     topicList.add(topic);
-                }else{
+                } else {
                     throw new AuthFailedException("格式错误，TOPIC_NAME和AUTH_KEY之间用半角冒号(:)隔开！");
                 }
 
@@ -88,7 +96,7 @@ public class Validators {
     }
 
     /**
-     * 认证
+     * 认证topic和authkey
      *
      * @author yintongjiang
      * @since 2017/3/23
@@ -105,6 +113,7 @@ public class Validators {
         String authUrl = UtilAll.getValue4Properties(PropertiesConst.Keys.PROPERTIES_PATH,
                 PropertiesConst.Keys.WSADDR_AUTH);
         final URL url = new URL(authUrl);
+        //  检查ip和端口是否可通
         checkIpPortIsOpen(new ArrayList<String>() {{
             add(url.getHost() + ":" + url.getPort());
         }});
@@ -123,7 +132,7 @@ public class Validators {
                 throw new AuthFailedException(topic + ":" + authKey + "," + authMsg);
             } else {
                 JSONObject jsonObject = JSON.parseObject(resultContent.getBody());
-                //多个地址用|隔开需约定好
+                // 多个地址用|隔开需约定好
                 String[] ipPortArray = jsonObject.getString("ipAndPort").split("\\|");
                 for (String ipPort : ipPortArray) {
                     checkIpPortIsOpen(java.util.Arrays.asList(ipPort.split(";")));

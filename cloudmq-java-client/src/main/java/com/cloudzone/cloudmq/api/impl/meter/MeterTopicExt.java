@@ -1,6 +1,8 @@
 package com.cloudzone.cloudmq.api.impl.meter;
 
 import com.cloudzone.cloudlimiter.meter.MeterTopic;
+import com.cloudzone.cloudmq.common.ProcessMsgType;
+import com.cloudzone.cloudmq.common.StatDataType;
 
 /**
  * @author yintongjiang
@@ -9,6 +11,7 @@ import com.cloudzone.cloudlimiter.meter.MeterTopic;
  */
 public class MeterTopicExt extends MeterTopic {
     private String authKey;
+    // 消息处理类型1，消费，0，发送
     private int processType;
 
     public String getAuthKey() {
@@ -28,16 +31,16 @@ public class MeterTopicExt extends MeterTopic {
     }
 
     /**
-     * @param tag topic名称
-     * @param authKey authKey
-     * @param type StatDataType枚举的des
-     * @param processType ProcessMsgType枚举的code
+     * @param tag         topic名称
+     * @param authKey     authKey
+     * @param type        StatDataType枚举
+     * @param processType ProcessMsgType枚举
      */
-    public MeterTopicExt(String tag, String authKey, String type, int processType) {
+    public MeterTopicExt(String tag, String authKey, StatDataType type, ProcessMsgType processType) {
         this.setTag(tag);
         this.authKey = authKey;
-        this.setType(type);
-        this.processType = processType;
+        this.setType(type.getDes());
+        this.processType = processType.getCode();
     }
 
     @Override

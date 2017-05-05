@@ -2,7 +2,7 @@ package com.cloudzone.cloudmq.common;
 
 /**
  * @author yintongjiang
- * @params
+ * @params 统计单位
  * @since 2017/3/30
  */
 public enum TimeUnitType {

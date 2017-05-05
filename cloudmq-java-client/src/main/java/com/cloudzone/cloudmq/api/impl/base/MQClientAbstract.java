@@ -10,14 +10,13 @@ import com.cloudzone.cloudlimiter.limiter.LimiterDelayConstants;
 import com.cloudzone.cloudlimiter.limiter.RealTimeLimiter;
 import com.cloudzone.cloudlimiter.meter.CloudMeter;
 import com.cloudzone.cloudmq.api.impl.heartbeat.MQHeartbeatListenerImpl;
+import com.cloudzone.cloudmq.api.impl.meter.MeterFactory;
 import com.cloudzone.cloudmq.api.impl.meter.MeterTopicExt;
 import com.cloudzone.cloudmq.api.impl.producer.ProducerFactory;
-import com.cloudzone.cloudmq.api.impl.synctime.MQSyncTimeListenerImpl;
 import com.cloudzone.cloudmq.api.impl.synctime.SyncTimeFactory;
 import com.cloudzone.cloudmq.api.open.base.Msg;
 import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
-import com.cloudzone.cloudmq.api.impl.meter.MeterFactory;
 import com.cloudzone.cloudmq.common.*;
 import com.cloudzone.cloudmq.log.GClientLogger;
 import org.slf4j.Logger;
@@ -62,8 +61,8 @@ public abstract class MQClientAbstract {
     private TopicAndAuthKey topicAndAuthKey;
     private MQHeartbeatListener mqHeartbeatListener;
     private MQSyncTimeListener mqSyncTimeListener;
-    private final static int ORG_STEP = 30;
-    private final static int SYNC_TIME_STEP = 10;
+    private final static int ORG_STEP = 60;
+    private final static int SYNC_TIME_STEP = 60;
     //默认或出现异常限制一万的TPS
     private final static int DEFAULT_PERMITS_PER_SECOND = 10000;
     //默认或出现异常限制的128*1024*1000 Byte的流量
@@ -172,8 +171,6 @@ public abstract class MQClientAbstract {
         // 开启内部使用的producer 2017/4/14 Add by yintongqiang
         ProducerFactory.getProducerSingleton().start();
         for (String topic : topicAndAuthKey.getTopicArray()) {
-//            topicLimiterMap.put(topic, CloudFactory.createRealTimeLimiter(LimiterDelayConstants.ONCE_PER_SECOND));
-//            topicFlowLimiterMap.put(topic, CloudFactory.createFlowLimiterPerSecond(1, FlowUnit.BYTE));
             topicLimiterMap.put(topic, CloudFactory.createRealTimeLimiter(DEFAULT_PERMITS_PER_SECOND));
             topicFlowLimiterMap.put(topic, CloudFactory.createFlowLimiterPerSecond(DEFAULT_FLOW_PERMITS_PER_SECOND, FlowUnit.BYTE));
         }
@@ -185,6 +182,7 @@ public abstract class MQClientAbstract {
         }
     }
 
+    // 定时同步服务端和客户端的时间
     private void startSyncTime() {
         if (!SyncTimeFactory.isRegister()) {
             this.registerListener(SyncTimeFactory.getSyncTimeListenerSingleton());
@@ -197,6 +195,7 @@ public abstract class MQClientAbstract {
         }
     }
 
+    // 心跳定时任务，定时去cloudzone获取心跳信息进行限流操作
     private void startHeartbeat() {
         this.registerListener(new MQHeartbeatListenerImpl());
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
@@ -205,34 +204,43 @@ public abstract class MQClientAbstract {
                 try {
                     for (String topic : topicAndAuthKey.getTopicArray()) {
                         HeartbeatData heartbeatData = mqHeartbeatListener.doHeartbeat(topic, topicAndAuthKey.getTopicAuthKeyMap().get(topic));
+                        // 为了不影响客户端使用，客户端连不上服务端时，设置默认值
                         if (null == heartbeatData) {
                             heartbeatData = new HeartbeatData(DEFAULT_PERMITS_PER_SECOND, DEFAULT_FLOW_PERMITS_PER_SECOND, 1, 1);
                         }
+                        // 判断是否用尽，剩余时间是否用尽
                         boolean isUseUp = heartbeatData.getTps() == 0 || heartbeatData.getFlowTps() == 0 ||
                                 heartbeatData.getSurplusFlow() == 0 || heartbeatData.getSurplusTime() == 0;
+                        // 用尽
                         if (isUseUp) {
+                            // tps限成一秒钟一条
                             if (topicLimiterMap.containsKey(topic)) {
                                 topicLimiterMap.get(topic).setRate(LimiterDelayConstants.ONCE_PER_SECOND);
                             } else {
                                 topicLimiterMap.put(topic, CloudFactory.createRealTimeLimiter(LimiterDelayConstants.ONCE_PER_SECOND));
                             }
+                            // 流量限成一秒钟一字节
                             if (topicFlowLimiterMap.containsKey(topic)) {
                                 topicFlowLimiterMap.get(topic).setRate(1, FlowUnit.BYTE);
                             } else {
                                 topicFlowLimiterMap.put(topic, CloudFactory.createFlowLimiterPerSecond(1, FlowUnit.BYTE));
                             }
                         }
+                        // tps没有用尽，并且tps大于0，(限流的rate不能设置为小于0的值，不然要报错)
                         if (heartbeatData.getTps() > 0 && !isUseUp) {
                             if (!topicLimiterMap.containsKey(topic)) {
                                 topicLimiterMap.put(topic, CloudFactory.createRealTimeLimiter(heartbeatData.getTps()));
+                                // 当前tps和rate不等，才进行重新设值，不然会导致统计有波动
                             } else if (heartbeatData.getTps() != topicLimiterMap.get(topic).getRate()) {
                                 topicLimiterMap.get(topic).setRate(heartbeatData.getTps());
                             }
 
                         }
+                        // 流量tps没有用尽，并且流量tps大于0，(限流的rate不能设置为小于0的值，不然要报错)
                         if (heartbeatData.getFlowTps() > 0 && !isUseUp) {
                             if (!topicFlowLimiterMap.containsKey(topic)) {
                                 topicFlowLimiterMap.put(topic, CloudFactory.createFlowLimiterPerSecond(heartbeatData.getFlowTps(), FlowUnit.BYTE));
+                                // 当前流量tps和rate不等，才进行重新设值，不然会导致统计有波动
                             } else if (heartbeatData.getFlowTps() != topicFlowLimiterMap.get(topic).getRate()) {
                                 topicFlowLimiterMap.get(topic).setRate(heartbeatData.getFlowTps(), FlowUnit.BYTE);
                             }
@@ -246,24 +254,25 @@ public abstract class MQClientAbstract {
         }, 0, ORG_STEP, TimeUnit.SECONDS);
     }
 
+    // 发送或消费消息时候对topic进行校验和统计限流 2017/3/29 Add by yintongqiang
     protected void checkTopic(Properties properties, String topic, Msg msg) {
         if (!topicAndAuthKey.getTopicAuthKeyMap().containsKey(topic)) {
             throw new AuthFailedException("申请的topic和" + topicAndAuthKey.getProcessMsgType().getDes() + "的topic不匹配,申请的topic为[" + topicAndAuthKey.topicArrayToString() + "]," + topicAndAuthKey.getProcessMsgType().getDes() + "的topic为[" + topic + "]");
         }
         String authKey = topicAndAuthKey.getTopicAuthKeyMap().get(topic);
-        //限制tps
+        // 限制tps
         if (topicLimiterMap.containsKey(topic)) {
             topicLimiterMap.get(topic).acquire();
         }
-        //限制流量
+        // 限制流量
         if (null != msg && topicFlowLimiterMap.containsKey(topic)) {
             topicFlowLimiterMap.get(topic).acquire(msg.getBody().length, FlowUnit.BYTE);
         }
-        //统计tps
-        cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.TPS.getDes(), topicAndAuthKey.getProcessMsgType().getCode()));
-        //统计流量
+        // 统计tps
+        cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.TPS, topicAndAuthKey.getProcessMsgType()));
+        // 统计流量
         if (null != msg) {
-            cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.FLOW.getDes(), topicAndAuthKey.getProcessMsgType().getCode()), msg.getBody().length);
+            cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.FLOW, topicAndAuthKey.getProcessMsgType()), msg.getBody().length);
         }
     }
 }

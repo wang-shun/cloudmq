@@ -5,7 +5,6 @@ import com.cloudzone.cloudlimiter.base.MeterListener;
 import com.cloudzone.cloudlimiter.meter.Meterinfo;
 import com.cloudzone.cloudmq.api.impl.base.TransferAdapter;
 import com.cloudzone.cloudmq.api.impl.producer.ProducerFactory;
-import com.cloudzone.cloudmq.api.open.base.Producer;
 import com.cloudzone.cloudmq.log.GClientLogger;
 import org.slf4j.Logger;
 
@@ -13,7 +12,7 @@ import java.util.List;
 
 /**
  * @author yintongjiang
- * @params
+ * @params MeterListener监听实现
  * @since 2017/4/12
  */
 public class MeterListenerImpl implements MeterListener {
@@ -46,6 +45,5 @@ public class MeterListenerImpl implements MeterListener {
         }
         return AcquireStatus.ACQUIRE_SUCCESS;
     }
-
 
 }

@@ -1,8 +1,8 @@
 package com.cloudzone.cloudmq.common;
 
 /**
- * 权限状态枚举类 <br/>
- * 0-只读，1-可读写，2-可持久化
+ * 消息类型的枚举
+ * 注意这是和cloudzone数据库的类型一一对应不能随意更改index
  *
  * @author tantexian
  * @since 2017/1/9

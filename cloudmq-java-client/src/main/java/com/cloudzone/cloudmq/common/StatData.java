@@ -6,28 +6,28 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class StatData {
-    //namespace或者topic
+    // namespace或者topic
     @JSONField(name = "name")
     private String name;
-    //authKey
+    // authKey
     @JSONField(name = "key")
     private String authKey;
-    //ip和进程号格式ip#pid
+    // ip和进程号格式ip#pid
     @JSONField(name = "id")
     private String ipAndPid;
-    //数量泡
+    // 数量
     @JSONField(name = "num")
     private Long dataNum;
-    //上传数据类型(0:为TPS，1：为流量）
+    // 上传数据类型(0:为TPS，1：为流量）
     @JSONField(name = "d_type")
     private int dataType;
-    //统计的单位,0,1等
+    // 统计的单位,0,1等
     @JSONField(name = "unit")
     private Integer timeUnit;
-    //统计类型,0流入,1流出
+    // 统计类型,0流入,1流出
     @JSONField(name = "type")
     private Integer type;
-    //时间戳
+    // 时间戳
     @JSONField(name = "time")
     private Date timeStamp;
 
@@ -114,5 +114,19 @@ public class StatData {
 
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    @Override
+    public String toString() {
+        return "StatData{" +
+                "name='" + name + '\'' +
+                ", authKey='" + authKey + '\'' +
+                ", ipAndPid='" + ipAndPid + '\'' +
+                ", dataNum=" + dataNum +
+                ", dataType=" + dataType +
+                ", timeUnit=" + timeUnit +
+                ", type=" + type +
+                ", timeStamp=" + timeStamp +
+                '}';
     }
 }

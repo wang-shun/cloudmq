@@ -2,7 +2,7 @@ package com.cloudzone.cloudmq.api.open.exception;
 
 /**
  * @author yintongjiang
- * @params
+ * @params 认证异常类
  * @since 2017/3/23
  */
 public class AuthFailedException extends RuntimeException {

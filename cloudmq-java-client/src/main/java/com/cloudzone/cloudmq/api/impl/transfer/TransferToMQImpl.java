@@ -13,7 +13,7 @@ import com.cloudzone.cloudmq.util.UtilAll;
 
 /**
  * @author yintongjiang
- * @params
+ * @params 转换消息到MQ的实现
  * @since 2017/4/13
  */
 public class TransferToMQImpl implements TransferAdapter<Meterinfo> {

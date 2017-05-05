@@ -7,13 +7,11 @@ import com.cloudzone.cloudlimiter.factory.CloudFactory;
 import com.cloudzone.cloudlimiter.limiter.RealTimeLimiter;
 import com.cloudzone.cloudlimiter.meter.CloudMeter;
 import com.cloudzone.cloudlimiter.meter.Meterinfo;
-import com.cloudzone.cloudmq.api.impl.meter.MeterTopicExt;
 import com.cloudzone.cloudmq.api.open.base.Msg;
 import com.cloudzone.cloudmq.api.open.base.Producer;
 import com.cloudzone.cloudmq.api.open.base.SendResult;
 import com.cloudzone.cloudmq.api.open.factory.MQFactory;
 import com.cloudzone.cloudmq.common.PropertiesConst;
-import com.cloudzone.cloudmq.common.StatDataType;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +34,7 @@ public class SendMsgTPSWithMeter {
         final AtomicLong meterResultMin = new AtomicLong(0);
         RealTimeLimiter realTimeLimiter = CloudFactory.createRealTimeLimiter(10);
         CloudMeter cloudMeter = CloudFactory.createCloudMeter();
-        cloudMeter.setIntervalModel(IntervalModel.MINUTE);
+        cloudMeter.setIntervalModel(IntervalModel.SECOND);
         cloudMeter.registerListener(new MeterListener() {
             @Override
             public AcquireStatus acquireStats(List<Meterinfo> meterinfos) {
@@ -57,8 +55,6 @@ public class SendMsgTPSWithMeter {
         Producer producer = MQFactory.createProducer(properties);
         // 在发送消息前，必须调用 start 方法来启动 Producer，只需调用一次即可。
         producer.start();
-
-        MeterTopicExt meterTopicExt = new MeterTopicExt("ttx-test-tps-200", "0592547a64ceb483b9173da139440a53e", StatDataType.TPS.getDes(), 0);
 
         while (true) {
             Calendar calendar = Calendar.getInstance();
@@ -85,7 +81,7 @@ public class SendMsgTPSWithMeter {
                 System.out.println(min + "s -> setRate == " + rate + " " + (rate * 60L) + "/minute");
             }
             realTimeLimiter.acquire();
-            cloudMeter.request(meterTopicExt);
+            cloudMeter.request();
             Msg msg = new Msg(
                     // Msg Topic
                     "ttx-test-tps-200",

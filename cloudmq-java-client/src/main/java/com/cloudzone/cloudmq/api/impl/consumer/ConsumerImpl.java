@@ -101,6 +101,7 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
             throw new GomeClientException("listener is null");
         } else {
             try {
+                // 订阅消息时候对topic进行校验 2017/3/29 Add by yintongqiang
                 checkTopic(this.properties, topic, null);
                 this.subscribeTable.put(topic, listener);
                 this.defaultMQPushConsumer.subscribe(topic, subExpression);
@@ -144,6 +145,7 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
                 ConsumeContext context = new ConsumeContext();
                 Msg m = MyUtils.msgConvert(msg, msgId);
                 Action action = listener.consume(m, context);
+                // 消费消息时候对topic进行校验和统计限流 2017/3/29 Add by yintongqiang
                 checkTopic(properties, msg.getTopic(), m);
                 switch (action) {
                     case CommitMessage:

@@ -77,7 +77,8 @@ public class OrderProducerImpl extends MQClientAbstract implements OrderProducer
     }
 
     public SendResult send(Msg msg, String shardingKey) {
-        this.checkTopic(this.properties, msg.getTopic(),msg);
+        // 发送消息时候对topic进行校验和统计限流 2017/3/29 Add by yintongqiang
+        this.checkTopic(this.properties, msg.getTopic(), msg);
         if (UtilAll.isBlank(shardingKey)) {
             throw new GomeClientException("\'shardingKey\' is blank.");
         } else {

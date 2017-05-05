@@ -131,6 +131,7 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
             throw new GomeClientException("listener is null");
         } else {
             try {
+                // 订阅消息时候对topic进行校验 2017/3/29 Add by yintongqiang
                 this.checkTopic(this.properties, topic, null);
                 this.subscribeTable.put(topic, listener);
                 this.defaultMQPushConsumer.subscribe(topic, subExpression);
@@ -166,6 +167,7 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
                 ConsumeOrderContext context = new ConsumeOrderContext();
                 Msg m = MyUtils.msgConvert(msg, msgId);
                 OrderAction action = listener.consume(m, context);
+                // 消费消息时候对topic进行校验和统计限流 2017/3/29 Add by yintongqiang
                 checkTopic(properties, msg.getTopic(), m);
                 if (action != null) {
                     switch (action) {

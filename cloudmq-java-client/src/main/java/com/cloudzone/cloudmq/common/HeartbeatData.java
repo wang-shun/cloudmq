@@ -63,4 +63,14 @@ public class HeartbeatData {
     public void setSurplusTime(int surplusTime) {
         this.surplusTime = surplusTime;
     }
+
+    @Override
+    public String toString() {
+        return "HeartbeatData{" +
+                "tps=" + tps +
+                ", flowTps=" + flowTps +
+                ", surplusFlow=" + surplusFlow +
+                ", surplusTime=" + surplusTime +
+                '}';
+    }
 }

@@ -12,7 +12,7 @@ import static com.alibaba.fastjson.JSON.parseObject;
 
 /**
  * @author yintongjiang
- * @params
+ * @params 同步时间的实现
  * @since 2017/4/25
  */
 public class MQSyncTimeListenerImpl implements MQSyncTimeListener {
@@ -34,7 +34,7 @@ public class MQSyncTimeListenerImpl implements MQSyncTimeListener {
                 }
             }
         } catch (Exception e) {
-            log.error("###请求同步时间口异常！error={}###", e.getMessage());
+            log.error("###请求同步时间接口异常！error={}###", e.getMessage());
         }
     }
 }

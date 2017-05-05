@@ -7,7 +7,7 @@ package com.cloudzone.cloudmq.common;
 public class AuthKey {
 
     private String authKey;
-
+    // authkey类型枚举
     private AuthkeyStatus authkeyStatus;
 
     private String ipAndPort;

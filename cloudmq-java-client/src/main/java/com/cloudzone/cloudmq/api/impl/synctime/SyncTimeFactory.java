@@ -9,8 +9,8 @@ import com.cloudzone.cloudmq.api.impl.transfer.TransferToMQImpl;
 
 /**
  * @author yintongjiang
- * @params
- * @since 2017/4/12
+ * @params 同步时间工厂
+ * @since 2017/4/25
  */
 public class SyncTimeFactory {
     private SyncTimeFactory() {
@@ -18,10 +18,12 @@ public class SyncTimeFactory {
 
     private static volatile MQSyncTimeListener mqSyncTimeListener;
 
+    // 判断mqSyncTimeListener 是否已经实例化了 2017/4/25 Add by yintongqiang
     public static boolean isRegister() {
         return null != mqSyncTimeListener;
     }
 
+    // 线程安全创建mqSyncTimeListener实例 2017/5/4 Add by yintongqiang
     public static MQSyncTimeListener getSyncTimeListenerSingleton() {
         if (null == mqSyncTimeListener) {
             synchronized (SyncTimeFactory.class) {

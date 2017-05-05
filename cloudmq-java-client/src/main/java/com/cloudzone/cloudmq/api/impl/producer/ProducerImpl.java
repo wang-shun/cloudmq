@@ -14,7 +14,6 @@ import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.common.CloudmqFAQ;
 import com.cloudzone.cloudmq.common.PropertiesConst;
 import com.cloudzone.cloudmq.log.GClientLogger;
-import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
 
 import java.util.Properties;
@@ -90,7 +89,8 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
         //this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProduceImpl());
 
         try {
-            this.checkTopic(this.properties, msg.getTopic(),msg);
+            // 发送消息时候对topic进行校验和统计限流 2017/3/29 Add by yintongqiang
+            this.checkTopic(this.properties, msg.getTopic(), msg);
             com.alibaba.rocketmq.client.producer.SendResult sendResultRMQ = this.defaultMQProducer.send(msg);
             SendResult sendResult = new SendResult();
             sendResult.setMsgId(sendResultRMQ.getMsgId());
@@ -178,7 +178,8 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
         this.checkONSProducerServiceState(this.defaultMQProducer.getDefaultMQProducerImpl());
 
         try {
-            this.checkTopic(this.properties,msg.getTopic(),msg);
+            // 发送消息时候对topic进行校验和统计限流 2017/3/29 Add by yintongqiang
+            this.checkTopic(this.properties, msg.getTopic(), msg);
             this.defaultMQProducer.sendOneway(msg);
         } catch (Exception e) {
             log.error(String.format("Send msg oneway Exception, %s", new Object[]{msg}), e);
