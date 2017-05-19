@@ -261,17 +261,18 @@ public abstract class MQClientAbstract {
         }
         String authKey = topicAndAuthKey.getTopicAuthKeyMap().get(topic);
         // 限制tps
-        if (topicLimiterMap.containsKey(topic)) {
+        if (null != msg && topicLimiterMap.containsKey(topic)) {
             topicLimiterMap.get(topic).acquire();
         }
         // 限制流量
         if (null != msg && topicFlowLimiterMap.containsKey(topic)) {
             topicFlowLimiterMap.get(topic).acquire(msg.getBody().length, FlowUnit.BYTE);
         }
-        // 统计tps
-        cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.TPS, topicAndAuthKey.getProcessMsgType()));
-        // 统计流量
+
         if (null != msg) {
+            // 统计tps
+            cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.TPS, topicAndAuthKey.getProcessMsgType()));
+            // 统计流量
             cloudMeter.request(new MeterTopicExt(topic, authKey, StatDataType.FLOW, topicAndAuthKey.getProcessMsgType()), msg.getBody().length);
         }
     }
