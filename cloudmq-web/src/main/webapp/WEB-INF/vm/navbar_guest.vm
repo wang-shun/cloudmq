@@ -55,7 +55,7 @@
                 <i class="fa fa-fw fa-legal"></i> Message<i class="fa fa-collapse"></i>
             </a>
             <ul class="message-menu nav nav-list collapse">
-                <li><a href="$root/msg/queryMsgById.do"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
+                <li><a href="$root/msg/queryMsgDetail.do"><span class="fa fa-caret-right"></span> QueryMsgById</a></li>
             </ul>
         </li>
 

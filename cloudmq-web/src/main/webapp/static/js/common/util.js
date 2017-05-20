@@ -108,6 +108,18 @@ function alertMsg(msg, fn) {
     layer.alert(msg, {icon: 6, time: 0}, fn);
 }
 
+
+function tipsContent(title, content, width, height) {
+    // btn: [] 表示取消按钮，  closeBtn: 0 不显示关闭图标，  time: 0 默认不关闭浮层
+    layer.alert(content, {
+        area: [width, height],
+        time: 0,
+        title: title,
+        closeBtn: 1,
+        btn: []
+    });
+}
+
 function confirmMsg(msg, sureFn, cancelFn) {
     layer.confirm(msg, {btn: ['确定', '取消']}, sureFn, cancelFn);
 }

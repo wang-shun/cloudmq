@@ -33,3 +33,13 @@
     border: 1px solid #6192c8;
     cursor:pointer;
 }
+
+.table-text-align {
+    text-align: left !important;
+}
+
+.label-query-msg-body {
+    cursor: pointer;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}

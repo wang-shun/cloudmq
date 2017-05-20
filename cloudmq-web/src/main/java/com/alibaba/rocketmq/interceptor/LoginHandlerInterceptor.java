@@ -89,7 +89,7 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
             return true;
         }
         catch (Exception e) {
-            logger.error("handle verify token error. msg={0}", e);
+            logger.error("handle verify token error. msg=" + e.getMessage(), e);
             redirectUrl(request, response, "/index.html");
         }
         return false;

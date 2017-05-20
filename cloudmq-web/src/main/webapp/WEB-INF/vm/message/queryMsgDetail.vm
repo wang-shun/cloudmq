@@ -1,0 +1,176 @@
+<div class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default panel-info">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form" id="queryMsgForm" method="post">
+                        <div class="form-group hidden">
+                            <label for="txtConsumerGroupId" class="col-sm-2 control-label">消费者组ID&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="txtConsumerGroupId" name="consumerGroup"
+                                       placeholder="eg.   SimpleConsumerGroupId-test" value="">
+                            </div>
+                            <label class="col-md-4 text-left">consumer group id</label>
+                        </div>
+                        <div class="form-group hidden">
+                            <label for="txtClientId"
+                                   class="col-sm-2 control-label">消费者ClientId&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="txtClientId" name="clientId"
+                                       placeholder="eg.   10.128.31.134@4528#1707351225#43569864667869" value="">
+                            </div>
+                            <label class="col-md-4 text-left">The consumer's client id</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtMsgId" class="col-sm-2 control-label">消息MsgId&nbsp;&nbsp;<span
+                                    class="input-text-muted">*</span></label>
+                            <div class="col-sm-5">
+                                <input name="msgId" value="" id="hdMsgId" type="hidden">
+                                <input type="text" class="form-control" id="txtMsgId" value="$!tbodyData.get('MsgId')"
+                                       placeholder="eg.   0A801F7700002A9F0000000234FFB336" required>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="text-center">
+                                    <button id="btnQueryMsgById" class="btn btn-default btn-success" type="button">&nbsp;查&nbsp;询&nbsp;</button>
+                                </div>
+                            </div>
+                            <label class="col-md-3 text-left hidden">必填项 message Id</label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tab-content">
+                <table class="table table-bordered table-hover">
+                    <tbody>
+                        #foreach($param in $tbodyData.keySet())
+                        <tr>
+                            <td class="col-md-2 text-right"><div>$!param</div>&nbsp;&nbsp;</td>
+                            <td class="col-md-10">
+                                #if($!param == "MessaeBodyPath")
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-6 text-left">$!tbodyData.get($param)</div>
+                                            <div class="col-md-6 text-right">
+                                                <label id="queryMsgBody" class="btn btn-default label-query-msg-body"
+                                                       msgId="$!tbodyData.get('MsgId')">消息body</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                #elseif($!param == "messageTrack")
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-12 text-left">
+                                                #foreach($trackExt in $!tbodyData.get("messageTrack"))
+                                                    <form class="form-horizontal" role="form">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label table-text-align">消费组ID</label>
+                                                            <label class="col-sm-10">
+                                                                <div class="row">
+                                                                    <div class="col-md-4 table-text-align">
+                                                                        $!trackExt.consumerGroup
+                                                                    </div>
+                                                                    <div class="col-md-3 table-text-align">
+                                                                        <a href="$root/group/consumerProgress.do?consumerGroupId=$!trackExt.consumerGroup&topic=$!tbodyData.get('Topic')" target="_blank">查看Consumer消费进度</a>
+                                                                    </div>
+                                                                    <div class="col-md-3 table-text-align">
+                                                                        <a href="$root/connection/consumerConnection.do?consumerGroupId=$!trackExt.consumerGroup&topic=$!tbodyData.get('Topic')" target="_blank">查看在线Consumer进程</a>
+                                                                    </div>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label table-text-align">消费结果</label>
+                                                            <label class="col-sm-10">$!trackExt.trackDescription</label>
+                                                        </div>
+                                                        #if($!trackExt.trackCode > 0)
+                                                            ##  0 表示消费成功，对应TrackType枚举字段
+                                                            <div class="form-group">
+                                                                <label class="col-sm-2 control-label table-text-align">消费详情</label>
+                                                                <label class="col-sm-10">$!trackExt.exceptionDesc</label>
+                                                            </div>
+                                                        #end
+                                                    </form>
+                                                    <hr/>
+                                                    <br/>
+                                                #end
+                                            </div>
+                                        </div>
+                                    </div>
+                                #else
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-6 text-left">$!tbodyData.get($param)</div>
+                                        </div>
+                                    </div>
+                                #end
+                            </td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="../../../static/js/common/Base64.js"></script>
+
+<script language="javascript">
+
+    $(function () {
+        $("#btnQueryMsgById").click(function (e) {
+            submitForm();
+        });
+
+        $("#txtMsgId").keydown(function (e) {
+            if(e.keyCode == 13){
+                submitForm();
+                e.preventDefault();
+                return true;
+            }
+        });
+
+        $("#queryMsgBody").click(function () {
+            var msgId = $(this).attr("msgId") || "";
+            queryMsgBody(msgId);
+        });
+
+    });
+
+    function queryMsgBody(msgId) {
+        var queryMsgBodyApi = "$root/msg/queryMsgBody.do?msgId=" + msgId + "&r=" + Math.random();
+        ajaxDataController(queryMsgBodyApi, null, null, function (data) {
+            showMsgBody(msgId, data.msgBody);
+        }, true, "get");
+    }
+
+    function showMsgBody(msgId, msgBody) {
+        myConsoleLog("msgBody=\n" + msgBody);
+        var title = "消息ID：&nbsp;&nbsp;&nbsp;&nbsp;" + msgId;
+        var unicode= BASE64.decoder(msgBody); //返回会解码后的unicode码数组。
+        var strBody= '';
+        for(var i = 0 , len =  unicode.length ; i < len ; ++i) {
+            strBody += String.fromCharCode(unicode[i]);
+        }
+        var content = "消息内容：<br/>" + strBody;
+        myConsoleLog("strBody=\n" + strBody);
+        tipsContent(title, content, "750px", "460px");
+    }
+
+
+    function submitForm() {
+        var msgId = $.trim($("#txtMsgId").val());
+        $("#hdMsgId").attr("value", msgId);
+        $("#queryMsgForm").attr("action", "$root/msg/queryMsgDetail.do");
+        $("#queryMsgForm").submit();
+    }
+
+</script>

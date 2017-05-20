@@ -28,8 +28,8 @@ public class JsonUtil {
 
     private final static SerializerFeature[] features =
             { SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteMapNullValue,
-              SerializerFeature.WriteNullNumberAsZero, SerializerFeature.WriteNullStringAsEmpty,
-              SerializerFeature.WriteNullBooleanAsFalse, SerializerFeature.WriteNullListAsEmpty };
+                    SerializerFeature.WriteNullNumberAsZero, SerializerFeature.WriteNullStringAsEmpty,
+                    SerializerFeature.WriteNullBooleanAsFalse, SerializerFeature.WriteNullListAsEmpty };
 
 
     public static String toJson(Object obj) {
@@ -46,7 +46,7 @@ public class JsonUtil {
             result = JSON.parseObject(unifiedEmptyJSON(jsonText), clazz);
         }
         catch (JSONException e) {
-            logger.error("Parse json text to java generics object failed. data = \n {0}", jsonText, e);
+            logger.error("Parse json text to java generics object failed. data = \n" + jsonText, e);
         }
         return result;
     }
@@ -69,7 +69,7 @@ public class JsonUtil {
             result = JSON.parseObject(unifiedEmptyJSON(jsonText), type);
         }
         catch (JSONException e) {
-            logger.error("Parse json text to java generics object failed. data=\n {0}", jsonText, e);
+            logger.error("Parse json text to java generics object failed. data=\n" + jsonText, e);
         }
         return result;
     }
@@ -84,7 +84,7 @@ public class JsonUtil {
             result = JSON.parseArray(unifiedEmptyJSON(jsonText), itemClazz);
         }
         catch (JSONException e) {
-            logger.error("Parse json text to java List object failed. data = \n {0}", jsonText, e);
+            logger.error("Parse json text to java List object failed. data = \n " + jsonText, e);
         }
         return result;
     }
