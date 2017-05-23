@@ -5,12 +5,9 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.cloudzone.cloudmq.api.open.base.Msg;
-import com.cloudzone.cloudmq.api.open.exception.AuthFailedException;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.api.open.order.OrderProducer;
 import com.cloudzone.cloudmq.common.PropertiesConst;
-import com.cloudzone.cloudmq.common.TopicAndAuthKey;
-import com.cloudzone.cloudmq.util.Validators;
 import org.slf4j.Logger;
 
 import com.alibaba.rocketmq.client.producer.DefaultMQProducer;
@@ -35,8 +32,12 @@ public class OrderProducerImpl extends MQClientAbstract implements OrderProducer
     public OrderProducerImpl(Properties properties) {
         super(properties);
         this.defaultMQProducer = new DefaultMQProducer();
-        String producerGroup = properties.getProperty("ProducerGroupId", "__PRODUCER_DEFAULT_GROUP");
-        this.defaultMQProducer.setProducerGroup(producerGroup);
+        String producerGroup = properties.getProperty(PropertiesConst.Keys.ProducerGroupId);
+        if (UtilAll.isBlank(producerGroup)) {
+            throw new GomeClientException(String.format("'%s' property can't be empty", PropertiesConst.Keys.ProducerGroupId));
+        }
+
+        this.defaultMQProducer.setProducerGroup(producerGroup.trim());
         String sendMsgTimeoutMillis = properties.getProperty("SendMsgTimeoutMillis", "3000");
         this.defaultMQProducer.setSendMsgTimeout(Integer.parseInt(sendMsgTimeoutMillis));
         this.defaultMQProducer.setInstanceName(this.buildIntanceName());

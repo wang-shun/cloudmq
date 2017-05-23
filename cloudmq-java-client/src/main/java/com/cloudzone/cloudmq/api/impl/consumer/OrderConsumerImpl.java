@@ -15,6 +15,8 @@ import com.cloudzone.cloudmq.api.open.order.MsgOrderListener;
 import com.cloudzone.cloudmq.api.open.order.OrderAction;
 import com.cloudzone.cloudmq.api.open.order.OrderConsumer;
 import com.cloudzone.cloudmq.common.MyUtils;
+import com.cloudzone.cloudmq.common.PropertiesConst;
+import com.cloudzone.cloudmq.util.UtilAll;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -37,11 +39,12 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
     public OrderConsumerImpl(Properties properties) {
         super(properties);
         this.defaultMQPushConsumer = new DefaultMQPushConsumer();
-        String consumerGroup = properties.getProperty("ConsumerGroupId");
-        if (null == consumerGroup) {
-            throw new GomeClientException("\'ConsumerGroupId\' property is null");
-        } else {
-            // 下述参数暂时不支持 2016/6/28 Add by tantexixan
+        String consumerGroup = properties.getProperty(PropertiesConst.Keys.ConsumerGroupId);
+        if (UtilAll.isBlank(consumerGroup)) {
+            throw new GomeClientException(String.format("'%s' property can't be empty", PropertiesConst.Keys.ConsumerGroupId));
+        }
+
+        // 下述参数暂时不支持 2016/6/28 Add by tantexixan
             /*
              * String suspendTimeMillis =
              * properties.getProperty("suspendTimeMillis");
@@ -49,14 +52,14 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
              * this.defaultMQPushConsumer.setSuspendCurrentQueueTimeMillis(Long.
              * parseLong(suspendTimeMillis)); } catch (NumberFormatException
              * var12) { ; } }
-             * 
+             *
              * String maxReconsumeTimes =
              * properties.getProperty("maxReconsumeTimes");
              * if(!UtilAll.isBlank(maxReconsumeTimes)) { try {
              * this.defaultMQPushConsumer.setMaxReconsumeTimes(Integer.parseInt(
              * maxReconsumeTimes)); } catch (NumberFormatException var11) { ; }
              * }
-             * 
+             *
              * String consumeTimeout = properties.getProperty("consumeTimeout");
              * if(!UtilAll.isBlank(consumeTimeout)) { try {
              * this.defaultMQPushConsumer.setConsumeTimeout((long)Integer.
@@ -64,17 +67,15 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
              * { ; } }
              */
 
-            this.defaultMQPushConsumer.setConsumerGroup(consumerGroup);
-            this.defaultMQPushConsumer.setInstanceName(this.buildIntanceName());
-            this.defaultMQPushConsumer.setNamesrvAddr(this.getNameServerAddr());
-            if (properties.containsKey("ConsumeThreadNums")) {
-                this.defaultMQPushConsumer.setConsumeThreadMin(
-                        Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
-                this.defaultMQPushConsumer.setConsumeThreadMax(
-                        Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
-            }
+        this.defaultMQPushConsumer.setConsumerGroup(consumerGroup.trim());
+        this.defaultMQPushConsumer.setInstanceName(this.buildIntanceName());
+        this.defaultMQPushConsumer.setNamesrvAddr(this.getNameServerAddr());
+        if (properties.containsKey("ConsumeThreadNums")) {
+            this.defaultMQPushConsumer.setConsumeThreadMin(Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
+            this.defaultMQPushConsumer.setConsumeThreadMax(Integer.valueOf(properties.get("ConsumeThreadNums").toString()).intValue());
+        }
 
-            // 当前版本不支持 2016/6/28 Add by tantexixan
+        // 当前版本不支持 2016/6/28 Add by tantexixan
             /*
              * try { Properties e = new Properties(); e.put("AccessKey",
              * this.sessionCredentials.getAccessKey()); e.put("SecretKey",
@@ -94,8 +95,6 @@ public class OrderConsumerImpl extends MQClientAbstract implements OrderConsumer
              * "system mqtrace hook init failed ,maybe can\'t send msg trace data"
              * ); }
              */
-
-        }
     }
 
 

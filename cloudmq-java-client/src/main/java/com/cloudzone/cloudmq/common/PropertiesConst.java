@@ -50,7 +50,6 @@ public class PropertiesConst {
         private Keys() {
         }
 
-        ;
     }
 
     public class Values {
@@ -64,7 +63,6 @@ public class PropertiesConst {
         private Values() {
         }
 
-        ;
     }
 
 

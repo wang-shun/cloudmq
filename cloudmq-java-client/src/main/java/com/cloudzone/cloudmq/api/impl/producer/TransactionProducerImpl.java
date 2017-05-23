@@ -11,12 +11,14 @@ import com.alibaba.rocketmq.remoting.protocol.RemotingCommand;
 import com.cloudzone.cloudmq.api.impl.base.MQClientAbstract;
 import com.cloudzone.cloudmq.api.open.base.Msg;
 import com.cloudzone.cloudmq.api.open.base.TransactionSendResult;
+import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.api.open.transaction.LocalTransactionExecuter;
 import com.cloudzone.cloudmq.api.open.transaction.TransactionProducer;
 import com.cloudzone.cloudmq.api.open.transaction.TransactionStatus;
 import com.cloudzone.cloudmq.common.MQTraceConstants;
 import com.cloudzone.cloudmq.common.MyUtils;
-import com.cloudzone.cloudmq.util.Validators;
+import com.cloudzone.cloudmq.common.PropertiesConst;
+import com.cloudzone.cloudmq.util.UtilAll;
 import org.slf4j.Logger;
 
 import java.util.Properties;
@@ -35,7 +37,12 @@ public class TransactionProducerImpl extends MQClientAbstract implements Transac
     public TransactionProducerImpl(Properties properties, TransactionCheckListener transactionCheckListener) {
         super(properties);
         this.properties = properties;
-        this.transactionMQProducer = new TransactionMQProducer((String) properties.get("ProducerGroupId"), new RPCHook() {
+        String producerGroup = properties.getProperty(PropertiesConst.Keys.ProducerGroupId);
+        if (UtilAll.isBlank(producerGroup)) {
+            throw new GomeClientException(String.format("'%s' property can't be empty", PropertiesConst.Keys.ProducerGroupId));
+        }
+
+        this.transactionMQProducer = new TransactionMQProducer(producerGroup.trim(), new RPCHook() {
             @Override
             public void doBeforeRequest(String remoteAddr, RemotingCommand request) {
 

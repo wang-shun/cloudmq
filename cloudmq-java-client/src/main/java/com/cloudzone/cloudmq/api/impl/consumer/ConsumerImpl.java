@@ -12,8 +12,9 @@ import com.cloudzone.cloudmq.api.open.base.*;
 import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.common.MQTraceConstants;
 import com.cloudzone.cloudmq.common.MyUtils;
+import com.cloudzone.cloudmq.common.PropertiesConst;
 import com.cloudzone.cloudmq.log.GClientLogger;
-import com.cloudzone.cloudmq.util.Validators;
+import com.cloudzone.cloudmq.util.UtilAll;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -36,14 +37,14 @@ public class ConsumerImpl extends MQClientAbstract implements Consumer {
     public ConsumerImpl(Properties properties) {
         super(properties);
         this.defaultMQPushConsumer = new DefaultMQPushConsumer();
-        String consumerGroup = properties.getProperty("ConsumerGroupId");
-        if (null == consumerGroup) {
-            throw new GomeClientException("\'ConsumerGroupId\' property is null");
+        String consumerGroup = properties.getProperty(PropertiesConst.Keys.ConsumerGroupId);
+        if (UtilAll.isBlank(consumerGroup)) {
+            throw new GomeClientException(String.format("'%s' property can't be empty", PropertiesConst.Keys.ConsumerGroupId));
         }
 
         String messageModel = properties.getProperty("MessageModel", "CLUSTERING");
         this.defaultMQPushConsumer.setMessageModel(MessageModel.valueOf(messageModel));
-        this.defaultMQPushConsumer.setConsumerGroup(consumerGroup);
+        this.defaultMQPushConsumer.setConsumerGroup(consumerGroup.trim());
         this.defaultMQPushConsumer.setInstanceName(this.buildIntanceName());
         this.defaultMQPushConsumer.setNamesrvAddr(this.getNameServerAddr());
         if (properties.containsKey("ConsumeThreadNums")) {

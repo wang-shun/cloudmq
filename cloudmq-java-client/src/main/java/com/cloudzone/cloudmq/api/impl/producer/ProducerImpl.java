@@ -14,6 +14,7 @@ import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 import com.cloudzone.cloudmq.common.CloudmqFAQ;
 import com.cloudzone.cloudmq.common.PropertiesConst;
 import com.cloudzone.cloudmq.log.GClientLogger;
+import com.cloudzone.cloudmq.util.UtilAll;
 import org.slf4j.Logger;
 
 import java.util.Properties;
@@ -34,8 +35,12 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
     public ProducerImpl(Properties properties) {
         super(properties);
         this.defaultMQProducer = new DefaultMQProducer();
-        String producerGroup = properties.getProperty("ProducerGroupId", "__PRODUCER_DEFAULT_GROUP");
-        this.defaultMQProducer.setProducerGroup(producerGroup);
+        String producerGroup = properties.getProperty(PropertiesConst.Keys.ProducerGroupId);
+        if (UtilAll.isBlank(producerGroup)) {
+            throw new GomeClientException(String.format("'%s' property can't be empty", PropertiesConst.Keys.ProducerGroupId));
+        }
+
+        this.defaultMQProducer.setProducerGroup(producerGroup.trim());
         if (properties.containsKey("SendMsgTimeoutMillis")) {
             this.defaultMQProducer.setSendMsgTimeout(
                     Integer.valueOf(properties.get("SendMsgTimeoutMillis").toString()).intValue());
