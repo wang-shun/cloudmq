@@ -17,7 +17,7 @@
     </prerequisites>
 
     <modules>
-		<module>cloudmq-web</module>
+        <module>cloudmq-web</module>
         <module>cloudmq-api</module>
         <module>cloudmq-common</module>
         <module>cloudmq-broker</module>
@@ -86,9 +86,10 @@
         <!-- maven私服配置 2016/6/29 Add by tantexixan -->
         <repo-id>gome</repo-id>
         <release-repo-name>gome release repository</release-repo-name>
-        <release-repo-url>http://10.128.11.68:8081/nexus/content/repositories/releases/</release-repo-url>
+        <!--cloudzone_releases与cloudzone_snapshots 默认加入到了 gome public仓库中： http://10.128.11.68:8081/nexus/content/repositories/public/-->
+        <release-repo-url>http://10.128.11.68:8081/nexus/content/repositories/cloudzone_releases/</release-repo-url>
         <snapshot-repo-name>gome snapshot repository</snapshot-repo-name>
-        <snapshot-repo-url>http://10.128.11.68:8081/nexus/content/repositories/snapshots/</snapshot-repo-url>
+        <snapshot-repo-url>http://10.128.11.68:8081/nexus/content/repositories/cloudzone_snapshots/</snapshot-repo-url>
     </properties>
 
     <!-- maven私服配置 2016/6/29 Add by tantexixan -->
@@ -136,7 +137,7 @@
                 </executions>
                 <configuration>
                     <rules>
-                        <banCircularDependencies />
+                        <banCircularDependencies/>
                     </rules>
                     <fail>true</fail>
                 </configuration>
