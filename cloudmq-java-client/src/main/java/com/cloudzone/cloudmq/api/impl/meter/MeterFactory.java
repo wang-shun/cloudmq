@@ -26,7 +26,7 @@ public class MeterFactory {
             synchronized (MeterFactory.class) {
                 if (null == cloudMeter) {
                     cloudMeter = CloudFactory.createCloudMeter();
-                    cloudMeter.setIntervalModel(IntervalModel.ALL);
+                    cloudMeter.setIntervalModel(IntervalModel.MINUTE);
                     cloudMeter.registerListener(new MeterListenerImpl(new TransferToMQImpl()));
                 }
             }

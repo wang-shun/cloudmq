@@ -24,8 +24,8 @@ public class DilatationOldTopicProducer {
     public static void main(String[] args) throws MQClientException {
 
         final int nThreads = args.length >= 1 ? Integer.parseInt(args[0]) : 10;
-        final int topicNums = args.length >= 2 ? Integer.parseInt(args[1]) : 10000000;
-        final String topicName = args.length >= 3 ? args[2] : "CloudTopicTest-200";
+        final int topicNums = args.length >= 2 ? Integer.parseInt(args[1]) : 10;
+        final String topicName = args.length >= 3 ? args[2] : "sdk-test-200";
         final String tag = args.length >= 4 ? args[3] : "A";
         final String group = args.length >= 5 ? args[4] : "testProducer";
 
@@ -38,7 +38,7 @@ public class DilatationOldTopicProducer {
         Properties properties = new Properties();
         properties.put(PropertiesConst.Keys.ProducerGroupId, group);
         properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
-                "CloudTopicTest-200:02865ea17c4eb4186854ab95bdc07f842");
+                "sdk-test-200:023e6b3c015084795bb18b52c852790d2");
         final Producer producer = MQFactory.createProducer(properties);
 
         producer.start();
@@ -58,7 +58,7 @@ public class DilatationOldTopicProducer {
                         nThreads * topicNums, atomicSuccessNums.get(), atomicSlaveNotNums.get(), flushDiskTimeOutCount.get(),
                         flushSlaveTimeOutCount.get(), atomicFail.get(), atomicMsgIds.get(),
                         nThreads * topicNums * 1000 / escapedTimeMillis);
-//                producer.shutdown();
+                producer.shutdown();
                 exec.shutdown();
 
             }

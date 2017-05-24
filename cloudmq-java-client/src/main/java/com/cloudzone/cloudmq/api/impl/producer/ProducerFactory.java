@@ -23,7 +23,7 @@ public class ProducerFactory {
     static {
         PROPERTIES.put(PropertiesConst.Keys.ProducerGroupId, "innerMQSDKGroupId");
         PROPERTIES.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
-                "jcpt-client-to-cloudzone-800:0565ceda6619d4c59a3a2db7c3946e61c");
+                "jcpt-client-to-cloudzone-800:047561f2375564b8eb506b76e6023a8a6");
     }
 
     private static volatile Producer producer;

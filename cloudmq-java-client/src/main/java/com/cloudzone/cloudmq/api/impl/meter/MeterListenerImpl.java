@@ -31,9 +31,9 @@ public class MeterListenerImpl implements MeterListener {
                     case SECONDS:
                         break;
                     case MINUTES:
-                        if (!ProducerFactory.TOPIC.equals(info.getTag())) {
-                            log.info(info.toString());
-                        }
+//                        if (!ProducerFactory.TOPIC.equals(info.getTag())) {
+//                            log.info(info.toString());
+//                        }
                         transferAdapter.transfer(info);
                         break;
                     default:
