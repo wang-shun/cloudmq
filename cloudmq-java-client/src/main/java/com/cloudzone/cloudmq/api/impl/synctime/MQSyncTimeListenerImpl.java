@@ -30,7 +30,7 @@ public class MQSyncTimeListenerImpl implements MQSyncTimeListener {
                 ResultContent resultContent = parseObject(result.content, ResultContent.class);
                 long serverTime = Long.parseLong(resultContent.getBody());
                 if (Math.abs(serverTime - clientTime) > 1) {
-                    log.error("客户端时间和服务端时间相差{}秒，超过1秒，服务端时间：{}，客户端时间：{},请修正客户端时间！！！", Math.abs(serverTime - clientTime));
+                    log.error("客户端时间和服务端时间相差{}秒，超过1秒，服务端时间：{}，客户端时间：{},请修正客户端时间！！！", Math.abs(serverTime - clientTime), serverTime, clientTime);
                 }
             }
         } catch (Exception e) {
