@@ -32,6 +32,10 @@ public class MQSyncTimeListenerImpl implements MQSyncTimeListener {
                 if (Math.abs(serverTime - clientTime) > 1) {
                     log.error("客户端时间和服务端时间相差{}秒，超过1秒，服务端时间：{}，客户端时间：{},请修正客户端时间！！！", Math.abs(serverTime - clientTime), serverTime, clientTime);
                 }
+            } else if (null != result) {
+                log.error("###请求同步时间接口异常！error={}###", result.content);
+            } else {
+                log.error("###请求同步时间接口异常！error=response is null ###");
             }
         } catch (Exception e) {
             log.error("###请求同步时间接口异常！error={}###", e.getMessage());

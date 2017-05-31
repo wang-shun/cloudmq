@@ -42,6 +42,10 @@ public class MQHeartbeatListenerImpl implements MQHeartbeatListener {
                 } else {
                     log.error("###请求心跳接口异常！error={}###", resultContent.getMsg());
                 }
+            } else if (null != result) {
+                log.error("###请求心跳接口异常！error={}###", result.content);
+            } else {
+                log.error("###请求心跳接口异常！error=response is null ###");
             }
         } catch (Exception e) {
             log.error("###请求心跳接口异常！error={}###", e.getMessage());
