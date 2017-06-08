@@ -11,7 +11,7 @@ import com.alibaba.rocketmq.domain.sso.gmq.TokenInfo;
 import com.alibaba.rocketmq.service.AbstractService;
 import com.alibaba.rocketmq.util.base.HttpUtil;
 import com.alibaba.rocketmq.util.base.JsonUtil;
-import com.gome.sso.domain.response.VerifyRespData;
+import com.cloudzone.cloudsso.domain.response.VerifyRespData;
 import com.google.common.collect.Maps;
 
 

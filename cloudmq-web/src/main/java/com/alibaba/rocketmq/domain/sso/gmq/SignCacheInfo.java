@@ -1,6 +1,6 @@
 package com.alibaba.rocketmq.domain.sso.gmq;
 
-import com.gome.sso.domain.response.VerifyRespData;
+import com.cloudzone.cloudsso.domain.response.VerifyRespData;
 
 import java.io.Serializable;
 

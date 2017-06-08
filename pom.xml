@@ -83,26 +83,60 @@
         <java_target_version>1.7</java_target_version>
         <file_encoding>UTF-8</file_encoding>
 
-        <!-- maven私服配置 2016/6/29 Add by tantexixan -->
-        <repo-id>gome</repo-id>
-        <release-repo-name>gome release repository</release-repo-name>
-        <!--cloudzone_releases与cloudzone_snapshots 默认加入到了 gome public仓库中： http://10.128.11.68:8081/nexus/content/repositories/public/-->
-        <release-repo-url>http://10.128.11.68:8081/nexus/content/repositories/cloudzone_releases/</release-repo-url>
-        <snapshot-repo-name>gome snapshot repository</snapshot-repo-name>
-        <snapshot-repo-url>http://10.128.11.68:8081/nexus/content/repositories/cloudzone_snapshots/</snapshot-repo-url>
+
+        <!-- maven私服配置 用于本地maven包下载 2017年06月08日 Add by tantexixan -->
+        <repo-id>repo-gome</repo-id>
+        <repo-name>gome public repository</repo-name>
+        <!--cloudzone_releases与cloudzone_snapshots maven仓库
+        默认已经加入到了gome public仓库中： http://10.128.11.68:8081/nexus/content/repositories/public/-->
+        <repo-url>http://10.128.11.68:8081/nexus/content/repositories/public/</repo-url>
+
+        <!-- maven私服配置 使用阿里maven仓库加速包下载 2017年06月08日 Add by tantexixan -->
+        <repo-ali-id>repo-ali</repo-ali-id>
+        <repo-ali-name>ali public repository</repo-ali-name>
+        <repo-ali-url>http://maven.aliyun.com/nexus/content/groups/public/</repo-ali-url>
+
+
+        <!-- maven私服配置 仅仅用于Deploy包到私服maven cloudzone仓库  2016/6/29 Add by tantexixan -->
+        <repo-release-deploy-id>cloudzone-release</repo-release-deploy-id>
+        <repo-release-deploy-name>gome release repository</repo-release-deploy-name>
+        <repo-release-deploy-url>http://10.128.11.68:8081/nexus/content/repositories/cloudzone_releases/
+        </repo-release-deploy-url>
+
+        <repo-snapshot-deploy-id>cloudzone-snapshot</repo-snapshot-deploy-id>
+        <repo-snapshot-deploy-name>gome snapshot repository</repo-snapshot-deploy-name>
+        <repo-snapshot-deploy-url>http://10.128.11.68:8081/nexus/content/repositories/cloudzone_snapshots/
+        </repo-snapshot-deploy-url>
     </properties>
 
-    <!-- maven私服配置 2016/6/29 Add by tantexixan -->
-    <distributionManagement>
+
+    <repositories>
+        <!-- maven私服配置 用于本地maven包下载 2017年06月08日 Add by tantexixan -->
         <repository>
             <id>${repo-id}</id>
-            <name>${release-repo-name}</name>
-            <url>${release-repo-url}</url>
+            <name>${repo-name}</name>
+            <url>${repo-url}</url>
+        </repository>
+
+        <!-- maven私服配置 使用阿里maven仓库加速包下载 2017年06月08日 Add by tantexixan -->
+        <repository>
+            <id>${repo-ali-id}</id>
+            <name>${repo-ali-name}</name>
+            <url>${repo-ali-url}</url>
+        </repository>
+    </repositories>
+
+    <!-- maven私服配置 仅仅用于Deploy包到私服maven cloudzone仓库  2016/6/29 Add by tantexixan -->
+    <distributionManagement>
+        <repository>
+            <id>${repo-release-deploy-id}</id>
+            <name>${repo-release-deploy-name}</name>
+            <url>${repo-release-deploy-url}</url>
         </repository>
         <snapshotRepository>
-            <id>${repo-id}</id>
-            <name>${snapshot-repo-name}</name>
-            <url>${snapshot-repo-url}</url>
+            <id>${repo-snapshot-deploy-id}</id>
+            <name>${repo-snapshot-deploy-name}</name>
+            <url>${repo-snapshot-deploy-url}</url>
         </snapshotRepository>
     </distributionManagement>
 

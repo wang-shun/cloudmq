@@ -1,14 +1,11 @@
 package com.alibaba.rocketmq.action;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.MessageFormat;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.rocketmq.service.gmq.GMQLoginConfigService;
-import com.gome.sso.common.util.CookieUtil;
+import com.cloudzone.cloudsso.common.util.CookieUtil;
+import com.cloudzone.cloudsso.client.service.GomeSSOService;
+import com.cloudzone.cloudsso.domain.constant.RespCode;
+import com.cloudzone.cloudsso.domain.response.RespData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.alibaba.fastjson.JSON;
-import com.gome.sso.client.service.GomeSSOService;
-import com.gome.sso.domain.constant.RespCode;
-import com.gome.sso.domain.response.RespData;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.MessageFormat;
 
 
 /**

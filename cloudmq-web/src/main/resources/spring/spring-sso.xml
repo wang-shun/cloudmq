@@ -22,11 +22,11 @@
     </bean>
 
 
-    <context:component-scan base-package="com.gome.sso">
+    <context:component-scan base-package="com.cloudzone.cloudsso">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
-    <bean id="gomeSSOServerConfig" class="com.gome.sso.client.config.GomeSSOServerConfig">
+    <bean id="gomeSSOServerConfig" class="com.cloudzone.cloudsso.client.config.GomeSSOServerConfig">
         <property name="tokenUrl" value="${sso.tokenUrl}"/>
         <property name="loginUrl" value="${sso.loginUrl}"/>
         <property name="logoutUrl" value="${sso.logoutUrl}"/>
@@ -35,7 +35,7 @@
         <property name="excludeUrl" value="${sso.app.excludeUrl}"/>
     </bean>
 
-    <bean id="gomeSSOService" class="com.gome.sso.client.service.impl.GomeSSOServiceImpl" init-method="init"/>
+    <bean id="gomeSSOService" class="com.cloudzone.cloudsso.client.service.impl.GomeSSOServiceImpl" init-method="init"/>
 
 
     <bean id="gmqLoginConfigService" class="com.alibaba.rocketmq.service.gmq.GMQLoginConfigService">

@@ -43,7 +43,7 @@
         <netty-all.version>4.0.27.Final</netty-all.version>
         <fastjson.version>1.1.37</fastjson.version>
         <servlet-api.version>2.5</servlet-api.version>
-        <gome-inc-sso-client.version>0.0.1-SNAPSHOT</gome-inc-sso-client.version>
+        <gome-inc-sso-client.version>1.0.0-SNAPSHOT</gome-inc-sso-client.version>
     </properties>
 
     <dependencies>
@@ -258,10 +258,10 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.gome.inc</groupId>
-            <artifactId>sso-client</artifactId>
+            <groupId>com.cloudzone.cloudsso</groupId>
+            <artifactId>cloudsso-java-client</artifactId>
             <version>${gome-inc-sso-client.version}</version>
-        </dependency>
+            </dependency>
     </dependencies>
     <build>
         <plugins>
