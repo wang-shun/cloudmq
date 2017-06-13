@@ -149,8 +149,8 @@ public class Msg extends com.alibaba.rocketmq.common.message.Message implements 
 
     public void setDelayTimeLevel(int level) {
         //level 必须为DelayLevelConst中的值
-        if (level < DelayLevelConst.OneSecond.val() || level > DelayLevelConst.TwoHour.val()) {
-            throw new GomeClientException("消息延迟Level值设置错误，请重新设置!!!");
+        if (level < 0 || level > DelayLevelConst.TwoHour.val()) {
+            throw new GomeClientException("[ERROR]: Current Level == " + level + " 消息延迟Level值设置错误，请重新设置111!!!");
         }
         super.setDelayTimeLevel(level);
     }

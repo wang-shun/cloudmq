@@ -14,7 +14,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>3.1.0.RELEASE</spring.version>
+        <spring.version>3.2.2.RELEASE</spring.version>
         <!-- 添加 quartz依赖 2016/8/1 Add by tianyuliang
             注意: Spring 3.0版本中内置的Quartz版本是<2.0的，在使用最新的Quartz包(>2.0)之后，接口不兼容,所以降低Quartz版本到1.x
             修复异常：Found interface org.quartz.JobExecutionContext, but class was expected
@@ -261,7 +261,7 @@
             <groupId>com.cloudzone.cloudsso</groupId>
             <artifactId>cloudsso-java-client</artifactId>
             <version>${gome-inc-sso-client.version}</version>
-            </dependency>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

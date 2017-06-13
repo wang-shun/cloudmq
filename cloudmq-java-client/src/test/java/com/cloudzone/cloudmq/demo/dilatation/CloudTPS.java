@@ -21,7 +21,7 @@ public class CloudTPS {
         HttpResult result =
                 null;
         try {
-            result = httpPost("http://10.128.31.109:8800/openapi/license", null, "{\n" +
+            result = httpPost("http://10.128.31.109:8800/httpMQ/license", null, "{\n" +
                     "    \"authKey\": \"0565ceda6619d4c59a3a2db7c3946e61c\",\n" +
                     "    \"appMetaName\": \"jcpt-client-to-cloudzone-800\",\n" +
                     "    \"appType\": 1\n" +

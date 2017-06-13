@@ -29,6 +29,7 @@
         <module>cloudmq-filtersrv</module>
         <module>cloudmq-srvutil</module>
         <module>cloudmq-java-client</module>
+        <module>cloudmq-rest-server</module>
     </modules>
 
     <developers>

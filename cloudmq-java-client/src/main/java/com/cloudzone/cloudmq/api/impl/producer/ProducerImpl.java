@@ -20,8 +20,6 @@ import org.slf4j.Logger;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-;
-
 
 /**
  * @author tantexian
@@ -104,7 +102,7 @@ public class ProducerImpl extends MQClientAbstract implements Producer {
             sendResult.setQueueOffset(sendResultRMQ.getQueueOffset());
             return sendResult;
         } catch (Exception e) {
-//            log.error(String.format("Send msg Exception, %s", new Object[] {msg}), e);
+            //            log.error(String.format("Send msg Exception, %s", new Object[] {msg}), e);
             this.checkProducerException(e, msg);
             return null;
         }
