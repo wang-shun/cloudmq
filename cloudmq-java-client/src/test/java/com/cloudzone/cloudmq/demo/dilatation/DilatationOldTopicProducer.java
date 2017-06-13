@@ -25,7 +25,7 @@ public class DilatationOldTopicProducer {
 
         final int nThreads = args.length >= 1 ? Integer.parseInt(args[0]) : 10;
         final int topicNums = args.length >= 2 ? Integer.parseInt(args[1]) : 10;
-        final String topicName = args.length >= 3 ? args[2] : "sdk-test-200";
+        final String topicName = args.length >= 3 ? args[2] : "cloudmq-java-client-demo-200";
         final String tag = args.length >= 4 ? args[3] : "A";
         final String group = args.length >= 5 ? args[4] : "testProducer";
 
@@ -38,7 +38,7 @@ public class DilatationOldTopicProducer {
         Properties properties = new Properties();
         properties.put(PropertiesConst.Keys.ProducerGroupId, group);
         properties.put(PropertiesConst.Keys.TOPIC_NAME_AND_AUTH_KEY,
-                "sdk-test-200:023e6b3c015084795bb18b52c852790d2");
+                "cloudmq-java-client-demo-200:0535858042e1145be9c436872938d8937");
         final Producer producer = MQFactory.createProducer(properties);
 
         producer.start();
