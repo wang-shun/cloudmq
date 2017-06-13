@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false">
 
-    <property name="JETTY_LOG_HOME" value="/home/jetty/logs/gmq"/>
+    <property name="JETTY_LOG_HOME" value="/home/jetty/logs/cloudmq"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder charset="UTF-8" class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -12,7 +12,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${JETTY_LOG_HOME}/gmq-web-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${JETTY_LOG_HOME}/cloudmq-web-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>104857600</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
