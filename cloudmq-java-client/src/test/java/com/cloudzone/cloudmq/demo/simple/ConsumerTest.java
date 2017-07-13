@@ -1,10 +1,10 @@
 package com.cloudzone.cloudmq.demo.simple;
 
-import java.util.Properties;
-
 import com.cloudzone.cloudmq.api.open.base.*;
 import com.cloudzone.cloudmq.api.open.factory.MQFactory;
 import com.cloudzone.cloudmq.common.PropertiesConst;
+
+import java.util.Properties;
 
 /**
  * 集群方式订阅消息(所有消费订阅者共同消费消息(分摊)，消息队列默认为集群消费)
@@ -30,6 +30,7 @@ public class ConsumerTest {
         Consumer consumer = MQFactory.createConsumer(properties);
         // 消费者订阅消费，建议业务程序自行记录生产及消费log日志，
         // 以方便您在无法正常收到消息情况下，可通过MQ控制台或者MQ日志查询消息并补发。
+        // subscribe方法第二个参数为*，表示订阅所有tag，tagA|| tagB 表示仅仅订阅tagA与tag
         consumer.subscribe("CloudTopicTest-200", "*", new MsgListener() {
             public Action consume(Msg msg, ConsumeContext context) {
                 //TODO: 此处为线程池调用，使用过程中请注意线程安全问题！！！
