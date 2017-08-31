@@ -72,7 +72,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
     // 处理Callback应答器
     private final ExecutorService publicExecutor;
     private final ChannelEventListener channelEventListener;
-    // 定时器
+    // 定时器，处理守护线程
     private final Timer timer = new Timer("ServerHouseKeepingService", true);
     private DefaultEventExecutorGroup defaultEventExecutorGroup;
 
@@ -116,8 +116,8 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
 
             @Override
             public Thread newThread(Runnable r) {
-                return new Thread(r,
-                    String.format("NettyBossSelector_%d", this.threadIndex.incrementAndGet()));
+                // Netty的boss线程(Accept线程),这里只有一个线程
+                return new Thread(r, String.format("NettyBossSelector_%d", this.threadIndex.incrementAndGet()));
             }
         });
 
@@ -129,8 +129,8 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
 
                     @Override
                     public Thread newThread(Runnable r) {
-                        return new Thread(r, String.format("NettyServerSelector_%d_%d", threadTotal,
-                            this.threadIndex.incrementAndGet()));
+                        // Netty组件的工作线程(IO线程),线程数很多
+                        return new Thread(r, String.format("NettyServerSelector_%d_%d", threadTotal, this.threadIndex.incrementAndGet()));
                     }
                 });
     }
@@ -147,6 +147,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
 
                 @Override
                 public Thread newThread(Runnable r) {
+                    // 执行ChannelHandler方法的线程，ChannelHandler运行在该线程上
                     return new Thread(r, "NettyServerWorkerThread_" + this.threadIndex.incrementAndGet());
                 }
             });
@@ -202,6 +203,7 @@ public class NettyRemotingServer extends NettyRemotingAbstract implements Remoti
         }
 
         // 每隔1秒扫描下异步调用超时情况
+        // （1）守护线程，本质是ChannelEventListener，监听broker的channel变化来更新本地的RouteInfo
         this.timer.scheduleAtFixedRate(new TimerTask() {
 
             @Override

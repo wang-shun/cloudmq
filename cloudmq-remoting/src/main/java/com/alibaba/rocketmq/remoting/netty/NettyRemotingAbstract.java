@@ -70,9 +70,9 @@ public abstract class NettyRemotingAbstract {
     protected Pair<NettyRequestProcessor, ExecutorService> defaultRequestProcessor;
 
     // 注册的各个RPC处理器
-    protected final HashMap<Integer/* request code */, Pair<NettyRequestProcessor, ExecutorService>> processorTable =
-            new HashMap<Integer, Pair<NettyRequestProcessor, ExecutorService>>(64);
+    protected final HashMap<Integer/* request code */, Pair<NettyRequestProcessor, ExecutorService>> processorTable = new HashMap<Integer, Pair<NettyRequestProcessor, ExecutorService>>(64);
 
+    // NettyEventExecuter 一个单独的线程，监听NettyChannel状态变化来通知ChannelEventListener做响应的动作
     protected final NettyEventExecuter nettyEventExecuter = new NettyEventExecuter();
 
 
