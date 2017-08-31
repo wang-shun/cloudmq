@@ -55,6 +55,21 @@ import com.alibaba.rocketmq.remoting.netty.NettyServerConfig;
  * 7.NettyServerWorkerThread_x:执行ChannelHandler方法的线程，ChannelHandler运行在该线程上，这里可能有多根线程。
  * 8.RemotingExecutorThread_x:服务端逻辑线程，这里可能有多根线程。
  *
+ *
+ *
+ *
+ * Name Server是RocketMQ的寻址服务，用于把Broker的路由信息做聚合；客户端依靠NameServer决定去获取对应topic的路由信息，从而决定对哪些Broker做连接
+ * （1）Name Server是一个几乎无状态的结点，Name Server之间采取share-nothing的设计，互不通信
+ * （2）对于一个Name Server集群列表，客户端连接Name Server的时候，只会选择随机连接一个结点，以做到负载均衡
+ * （3）Name Server所有状态都从Broker上报而来，本身不存储任何状态，所有数据均在内存
+ * （4）如果中途所有Name Server全都挂了，影响到路由信息的更新，不会影响和Broker的通信
+ *
+ *
+ * Broker向所有的NameServer结点建立长连接，注册Topic信息。
+ *
+ *
+ *
+ *
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-5
  */
@@ -72,8 +87,7 @@ public class NamesrvController {
     private ExecutorService remotingExecutor;
 
     // 定时线程，定时跑2个任务
-    private final ScheduledExecutorService scheduledExecutorService = Executors
-        .newSingleThreadScheduledExecutor(new ThreadFactoryImpl("NSScheduledThread"));
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl("NSScheduledThread"));
 
     /**
      * 核心数据结构
