@@ -65,7 +65,7 @@ public class RequestCode {
     public static final int PUT_KV_CONFIG = 100;
     // Namesrv 从Namesrv获取KV配置
     public static final int GET_KV_CONFIG = 101;
-    // Namesrv 从Namesrv获取KV配置
+    // Namesrv 从Namesrv删除KV配置
     public static final int DELETE_KV_CONFIG = 102;
     // Namesrv 注册一个Broker，数据都是持久化的，如果存在则覆盖配置
     public static final int REGISTER_BROKER = 103;
@@ -139,25 +139,18 @@ public class RequestCode {
     public static final int QUERY_CONSUME_TIME_SPAN = 303;
     // 获取所有系统内置 Topic 列表
     public static final int GET_SYSTEM_TOPIC_LIST_FROM_NS = 304;
+    // 从Broker中获取所有系统内置 Topic 列表
     public static final int GET_SYSTEM_TOPIC_LIST_FROM_BROKER = 305;
-
     // 清理失效队列
     public static final int CLEAN_EXPIRED_CONSUMEQUEUE = 306;
-
-    // 通过Broker查询Consumer内存数据
-    // 2014-07-19 Add By shijia
+    // 通过Broker查询Consumer内存数据 2014-07-19 Add By shijia
     public static final int GET_CONSUMER_RUNNING_INFO = 307;
-
     // 查找被修正 offset (转发组件）
     public static final int QUERY_CORRECTION_OFFSET = 308;
-
-    // 通过Broker直接向某个Consumer发送一条消息，并立刻消费，返回结果给broker，再返回给调用方
-    // 2014-08-11 Add By shijia
+    // 通过Broker直接向某个Consumer发送一条消息，并立刻消费，返回结果给broker，再返回给调用方，2014-08-11 Add By shijia
     public static final int CONSUME_MESSAGE_DIRECTLY = 309;
-
     // Broker 发送消息，优化网络数据包
     public static final int SEND_MESSAGE_V2 = 310;
-
     // 单元化相关 topic
     public static final int GET_UNIT_TOPIC_LIST = 311;
     // 获取含有单元化订阅组的 Topic 列表
@@ -166,7 +159,6 @@ public class RequestCode {
     public static final int GET_HAS_UNIT_SUB_UNUNIT_TOPIC_LIST = 313;
     // 克隆某一个组的消费进度到新的组
     public static final int CLONE_GROUP_OFFSET = 314;
-
     // 查看Broker上的各种统计信息
     public static final int VIEW_BROKER_STATS_DATA = 315;
 }

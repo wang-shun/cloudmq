@@ -22,6 +22,7 @@ import com.alibaba.rocketmq.remoting.protocol.RemotingSerializable;
 
 /**
  * 用来标识数据的版本号
+ *  采用 时间戳+AtomicLong counter自增 做版本控制
  * 
  * @author shijia.wxr<vintage.wang@gmail.com>
  */

@@ -26,6 +26,8 @@ import com.alibaba.rocketmq.remoting.ChannelEventListener;
 
 
 /**
+ * Broker活动检测服务
+ * 
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-15
  */
@@ -44,20 +46,39 @@ public class BrokerHousekeepingService implements ChannelEventListener {
     }
 
 
+    /**
+     * Channel被关闭,通知Topic路由管理器，清除无效Broker
+     * 
+     * @param remoteAddr
+     * @param channel
+     */
     @Override
     public void onChannelClose(String remoteAddr, Channel channel) {
         this.namesrvController.getRouteInfoManager().onChannelDestroy(remoteAddr, channel);
     }
 
 
+    /**
+     * Channel出现异常,通知Topic路由管理器，清除无效Broker
+     * 
+     * @param remoteAddr
+     * @param channel
+     */
     @Override
     public void onChannelException(String remoteAddr, Channel channel) {
         this.namesrvController.getRouteInfoManager().onChannelDestroy(remoteAddr, channel);
     }
 
 
+    /**
+     * Channe的Idle时间超时,通知Topic路由管理器，清除无效Broker
+     * 
+     * @param remoteAddr
+     * @param channel
+     */
     @Override
     public void onChannelIdle(String remoteAddr, Channel channel) {
         this.namesrvController.getRouteInfoManager().onChannelDestroy(remoteAddr, channel);
     }
+
 }

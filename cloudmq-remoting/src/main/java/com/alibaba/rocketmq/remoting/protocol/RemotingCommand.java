@@ -498,9 +498,11 @@ public class RemotingCommand {
 
     @Override
     public String toString() {
-        return "RemotingCommand [code=" + code + ", language=" + language + ", version=" + version
+        String info = "RemotingCommand [code=%d, language=%s, version=%d, opaque=%d, flag(B)=%s, remark=%s, extFields=%s]";
+        return String.format(info, code, language.toString(), version, opaque, Integer.toBinaryString(flag), remark, extFields);
+      /*  return "RemotingCommand [code=" + code + ", language=" + language + ", version=" + version
                 + ", opaque=" + opaque + ", flag(B)=" + Integer.toBinaryString(flag) + ", remark=" + remark
-                + ", extFields=" + extFields + "]";
+                + ", extFields=" + extFields + "]";*/
     }
 
 }

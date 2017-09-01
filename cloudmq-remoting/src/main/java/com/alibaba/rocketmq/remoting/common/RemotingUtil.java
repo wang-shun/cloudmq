@@ -157,6 +157,11 @@ public class RemotingUtil {
     }
 
 
+    /**
+     * 标准化IPv4、IPv6地址
+     * @param localHost
+     * @return
+     */
     public static String normalizeHostAddress(final InetAddress localHost) {
         if (localHost instanceof Inet6Address) {
             return "[" + localHost.getHostAddress() + "]";
@@ -219,14 +224,17 @@ public class RemotingUtil {
         return null;
     }
 
-
+    /**
+     * 关闭指定的Channel通道，关闭完成后打印日志
+     * @param channel
+     */
     public static void closeChannel(Channel channel) {
         final String addrRemote = RemotingHelper.parseChannelRemoteAddr(channel);
         channel.close().addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture future) throws Exception {
-                log.info("closeChannel: close the connection to remote address[{}] result: {}", addrRemote,
-                    future.isSuccess());
+                String cloueMsg = "closeChannel: close the connection to remote address[{}] result: {}";
+                log.info(cloueMsg, addrRemote, future.isSuccess());
             }
         });
     }

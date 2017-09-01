@@ -149,8 +149,7 @@ public class FiltersrvController {
 
 
     private void registerProcessor() {
-        this.remotingServer
-            .registerDefaultProcessor(new DefaultRequestProcessor(this), this.remotingExecutor);
+        this.remotingServer.registerDefaultProcessor(new DefaultRequestProcessor(this), this.remotingExecutor);
     }
 
 

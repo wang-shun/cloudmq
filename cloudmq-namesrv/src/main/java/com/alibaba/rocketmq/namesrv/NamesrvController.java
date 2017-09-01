@@ -36,7 +36,8 @@ import com.alibaba.rocketmq.remoting.netty.NettyServerConfig;
 
 
 /**
- * Name Server服务控制
+ * Name Server真正的启动控制器
+ *
  * (1)rocketmq-namesrv扮演着nameNode角色，
  * (2)记录运行时消息相关的meta信息以及broker和filtersrv运行时信息
  * (3)支持部署集群
@@ -46,8 +47,8 @@ import com.alibaba.rocketmq.remoting.netty.NettyServerConfig;
  * 当broker，producer，consumer都运行后，namesrv一共有8类线程：
  * 1.ServerHouseKeepingService：守护线程，本质是ChannelEventListener，监听broker的channel变化来更新本地的RouteInfo。
  * 2.NSScheduledThread1：定时任务线程，定时跑2个任务，
- *      第一个是，每隔10分钟扫描出不活动的broker，然后从routeInfo中删除，
- *      第二个是，每个10分钟定时打印configTable的信息。
+ *      第一个是任务，每隔10秒扫描出不活动的broker，然后从routeInfo中删除，
+ *      第二个是任务，每隔10分钟定时打印configTable的信息。
  * 3.NettyBossSelector_1:Netty的boss线程（Accept线程），这里只有一根线程。
  * 4.NettyEventExecuter:一个单独的线程，监听NettyChannel状态变化来通知ChannelEventListener做响应的动作。
  * 5.DestroyJavaVM:java虚拟机析构钩子，一般是当虚拟机关闭时用来清理或者释放资源。
@@ -75,27 +76,52 @@ import com.alibaba.rocketmq.remoting.netty.NettyServerConfig;
  */
 public class NamesrvController {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
-    // Name Server配置
-    private final NamesrvConfig namesrvConfig;
-    // 通信层配置
-    private final NettyServerConfig nettyServerConfig;
-    // 服务端通信层对象
-    private RemotingServer remotingServer;
-    // 接收Broker连接事件
-    private BrokerHousekeepingService brokerHousekeepingService;
-    // 服务端网络请求处理线程池
-    private ExecutorService remotingExecutor;
-
-    // 定时线程，定时跑2个任务
-    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl("NSScheduledThread"));
-
     /**
-     * 核心数据结构
+     * NameServer配置信息
+     */
+    private final NamesrvConfig namesrvConfig;
+    /**
+     * NettyServer通信层配置信息
+     */
+    private final NettyServerConfig nettyServerConfig;
+    /**
+     * remotingServer服务启动接口
+     * (1)用于服务端通信
+     * (2)包含启动、关闭、注册默认请求处理器、注册RPC钩子等方法,几种数据传输方式invokeSync、invokeAsync、invokeOneway
+     * (3)这里传入的是NettyRemotingServer
+     */
+    private RemotingServer remotingServer;
+    /**
+     * Broker事件监听器
+     * (1)属于netty概念
+     * (2)监听Chanel(Connect、Close、Exception、Idle) 等四个动作事件
+     * (3)提供相应的处理方法
+     */
+    private BrokerHousekeepingService brokerHousekeepingService;
+    /**
+     * 服务端网络请求处理线程池
+     * (1)remotingServer的并发处理器，处理各种类型请求
+     * (2)包含服务端逻辑线程，线程名称是 RemotingExecutorThread_xxx
+     */
+    private ExecutorService remotingExecutor;
+    /**
+     * 定时线程池，运行两个任务：(1)清理不生效broker (2)打印每个namesrv的配置表
+     */
+    private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryImpl("NSScheduledThread"));
+    /**
+     * 核心数据结构：namesrv配置管理器 容器为HashMap，其中包含的ReadWriteLock保证读写安全
      */
     private final KVConfigManager kvConfigManager;
+    /**
+         * 核心数据结构：所有运行数据管理器，topicQueueTable、brokerAddrTable等，信息量很多，其中包含的ReadWriteLock保证读写安全
+     */
     private final RouteInfoManager routeInfoManager;
 
-
+    /**
+     * NamesrvStartup.main()主入口调用,传入namesrvConfig、nettyServerConfig配置项
+     * @param namesrvConfig
+     * @param nettyServerConfig
+     */
     public NamesrvController(NamesrvConfig namesrvConfig, NettyServerConfig nettyServerConfig) {
         this.namesrvConfig = namesrvConfig;
         this.nettyServerConfig = nettyServerConfig;
@@ -104,22 +130,30 @@ public class NamesrvController {
         this.brokerHousekeepingService = new BrokerHousekeepingService(this);
     }
 
-
+    /**
+     * 初始化，在NamesrvStartup.main0()被调用
+     * (1)加载kvConfig.json至KVConfigManager的configTable，即持久化转移到内存
+     * (2)初始化通信层，将namesrv作为一个netty server启动
+     * (3)启动请求处理线程池(RemotingExecutorThread 服务端逻辑线程)\
+     * (4)注册默认DefaultRequestProcessor和remotingExecutor，只要start启动，即可处理netty请求
+     * (5)启动(延迟5秒执行)第一个定时任务：每隔10秒扫描出(2分钟扫描间隔)不活动的broker，然后从routeInfo中删除
+     * (6)启动(延迟1分钟执行)第二个定时任务：每隔10分钟定时打印namesrv全局配置信息
+     * @return 返回true表示以上6个任务都初始化完毕、启动完毕
+     */
     public boolean initialize() {
-        // 加载KV配置
+        // (1)加载kvConfig.json至KVConfigManager的configTable，即持久化转移到内存
         this.kvConfigManager.load();
 
-        // 初始化通信层
+        // (2)初始化通信层，将namesrv作为一个netty server启动
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig, this.brokerHousekeepingService);
 
-        // 初始化线程池(RemotingExecutorThread 服务端逻辑线程)
-        this.remotingExecutor =
-                Executors.newFixedThreadPool(nettyServerConfig.getServerWorkerThreads(),
-                        new ThreadFactoryImpl("RemotingExecutorThread_"));
+        // (3)启动请求处理线程池(RemotingExecutorThread 服务端逻辑线程)
+        this.remotingExecutor = Executors.newFixedThreadPool(nettyServerConfig.getServerWorkerThreads(), new ThreadFactoryImpl("RemotingExecutorThread_"));
 
+        // (4)注册默认DefaultRequestProcessor和remotingExecutor，只要start启动，即可处理netty请求
         this.registerProcessor();
 
-        // 增加定时任务，第一个任务：每隔10分钟扫描出不活动的broker，然后从routeInfo中删除
+        // (5)启动(延迟5秒执行)第一个定时任务：每隔10秒扫描出(2分钟扫描间隔)不活动的broker，然后从routeInfo中删除
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -127,9 +161,8 @@ public class NamesrvController {
             }
         }, 5, 10, TimeUnit.SECONDS);
 
-        // 增加定时任务，第二个任务：每个10分钟定时打印configTable的信息
+        // (6)启动(延迟1分钟执行)第二个定时任务：每隔10分钟定时打印namesrv全局配置信息
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
-
             @Override
             public void run() {
                 NamesrvController.this.kvConfigManager.printAllPeriodically();
@@ -147,18 +180,28 @@ public class NamesrvController {
         return true;
     }
 
-
+    /**
+     * 注册默认DefaultRequestProcessor和remotingExecutor，只要start启动，即可处理netty请求
+     */
     private void registerProcessor() {
-        this.remotingServer
-            .registerDefaultProcessor(new DefaultRequestProcessor(this), this.remotingExecutor);
+        this.remotingServer.registerDefaultProcessor(new DefaultRequestProcessor(this), this.remotingExecutor);
     }
 
-
+    /**
+     * Name server启动
+     * @throws Exception
+     */
     public void start() throws Exception {
         this.remotingServer.start();
     }
 
-
+    /**
+     * Name server关闭
+     * (1)关闭remotingServer服务端通信层对象
+     * (2)关闭remotingExecutor服务端网络请求处理线程池
+     * (3)关闭scheduledExecutorService定时任务的线程池
+     * @throws Exception
+     */
     public void shutdown() {
         this.remotingServer.shutdown();
         this.remotingExecutor.shutdown();

@@ -59,10 +59,8 @@ public class MixAll {
     public static final String NAMESRV_ADDR_ENV = "NAMESRV_ADDR";
     public static final String NAMESRV_ADDR_PROPERTY = "cloudmq.namesrv.addr";
     public static final String MESSAGE_COMPRESS_LEVEL = "cloudmq.message.compressLevel";
-    public static final String WS_DOMAIN_NAME = System.getProperty("cloudmq.namesrv.domain",
-        "jmenv.tbsite.net");
-    public static final String WS_DOMAIN_SUBGROUP = System.getProperty("cloudmq.namesrv.domain.subgroup",
-        "nsaddr");
+    public static final String WS_DOMAIN_NAME = System.getProperty("cloudmq.namesrv.domain", "jmenv.tbsite.net");
+    public static final String WS_DOMAIN_SUBGROUP = System.getProperty("cloudmq.namesrv.domain.subgroup", "nsaddr");
     // http://jmenv.tbsite.net:8080/rocketmq/nsaddr
     public static final String WS_ADDR = "http://" + WS_DOMAIN_NAME + ":8080/cloudmq/" + WS_DOMAIN_SUBGROUP;
     public static final String DEFAULT_TOPIC = "MY_DEFAULT_TOPIC";

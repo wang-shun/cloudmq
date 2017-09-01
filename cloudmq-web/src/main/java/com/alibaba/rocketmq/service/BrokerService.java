@@ -82,8 +82,7 @@ public class BrokerService extends AbstractService {
             }
             else if (StringUtils.isNotBlank(clusterName)) {
                 defaultMQAdminExt.start();
-                Set<String> masterSet =
-                        CommandUtil.fetchMasterAddrByClusterName(defaultMQAdminExt, clusterName);
+                Set<String> masterSet = CommandUtil.fetchMasterAddrByClusterName(defaultMQAdminExt, clusterName);
                 for (String tempBrokerAddr : masterSet) {
                     defaultMQAdminExt.updateBrokerConfig(tempBrokerAddr, properties);
                 }

@@ -7,8 +7,8 @@ package com.alibaba.rocketmq.common.conflict;
  * @author von gosling<fengjia10@gmail.com>
  */
 public class PackageConflictDetect {
-    private static boolean detectEnable = Boolean.parseBoolean(System.getProperty(
-            "com.alibaba.rocketmq.packageConflictDetect.enable", "true"));
+    private static String conflictKey = "com.alibaba.rocketmq.packageConflictDetect.enable";
+    private static boolean detectEnable = Boolean.parseBoolean(System.getProperty(conflictKey, "true"));
 
     public static void detectFastjson() {
         if (detectEnable) {
@@ -21,16 +21,14 @@ public class PackageConflictDetect {
                 if (code < 0) {
                     conflict = true;
                 }
-            } catch (Throwable e) {
+            }
+            catch (Throwable e) {
                 conflict = true;
             }
 
             if (conflict) {
-                throw new RuntimeException(
-                        String
-                                .format(
-                                        "Your fastjson version is %s, or no fastjson, RocketMQ minimum version required: %s",//
-                                        version, fastjsonVersion));
+                String msg = "Your fastjson version is %s, or no fastjson, RocketMQ minimum version required: %s";
+                throw new RuntimeException(String.format(msg, version, fastjsonVersion));
             }
         }
     }
