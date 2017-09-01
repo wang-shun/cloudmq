@@ -222,6 +222,7 @@ public class MQClientInstance {
             @Override
             public void run() {
                 try {
+                    // 2017/9/1 当某个Broker死亡之后，NameSrv并不会主动通知Producer和Consumer,而是Producer/Consumer周期性的去NameSrv获取 Add by tianyuliang
                     MQClientInstance.this.updateTopicRouteInfoFromNameServer();
                 } catch (Exception e) {
                     log.error("ScheduledTask updateTopicRouteInfoFromNameServer exception", e);
@@ -557,21 +558,17 @@ public class MQClientInstance {
                 try {
                     TopicRouteData topicRouteData;
                     if (isDefault && defaultMQProducer != null) {
-                        topicRouteData =
-                                this.mQClientAPIImpl.getDefaultTopicRouteInfoFromNameServer(
-                                        defaultMQProducer.getCreateTopicKey(), 1000 * 3);
+                        //从NameSrv拿到topicRoute信息，也就是上面NameSrv里面那个RouteInfoManager里面的topicQueueTable
+                        topicRouteData = this.mQClientAPIImpl.getDefaultTopicRouteInfoFromNameServer(defaultMQProducer.getCreateTopicKey(), 1000 * 3);
                         if (topicRouteData != null) {
                             for (QueueData data : topicRouteData.getQueueDatas()) {
-                                int queueNums =
-                                        Math.min(defaultMQProducer.getDefaultTopicQueueNums(),
-                                                data.getReadQueueNums());
+                                int queueNums = Math.min(defaultMQProducer.getDefaultTopicQueueNums(), data.getReadQueueNums());
                                 data.setReadQueueNums(queueNums);
                                 data.setWriteQueueNums(queueNums);
                             }
                         }
                     } else {
-                        topicRouteData =
-                                this.mQClientAPIImpl.getTopicRouteInfoFromNameServer(topic, 1000 * 3);
+                        topicRouteData = this.mQClientAPIImpl.getTopicRouteInfoFromNameServer(topic, 1000 * 3);
                     }
                     if (topicRouteData != null) {
                         TopicRouteData old = this.topicRouteTable.get(topic);
@@ -579,24 +576,20 @@ public class MQClientInstance {
                         if (!changed) {
                             changed = this.isNeedUpdateTopicRouteInfo(topic);
                         } else {
-                            log.info("the topic[{}] route info changed, odl[{}] ,new[{}]", topic, old,
-                                    topicRouteData);
+                            log.info("the topic[{}] route info changed, odl[{}] ,new[{}]", topic, old, topicRouteData);
                         }
 
                         if (changed) {
                             TopicRouteData cloneTopicRouteData = topicRouteData.cloneTopicRouteData();
-
                             for (BrokerData bd : topicRouteData.getBrokerDatas()) {
                                 this.brokerAddrTable.put(bd.getBrokerName(), bd.getBrokerAddrs());
                             }
 
                             // Update Pub info
                             {
-                                TopicPublishInfo publishInfo =
-                                        topicRouteData2TopicPublishInfo(topic, topicRouteData);
+                                TopicPublishInfo publishInfo = topicRouteData2TopicPublishInfo(topic, topicRouteData);
                                 publishInfo.setHaveTopicRouterInfo(true);
-                                Iterator<Entry<String, MQProducerInner>> it =
-                                        this.producerTable.entrySet().iterator();
+                                Iterator<Entry<String, MQProducerInner>> it = this.producerTable.entrySet().iterator();
                                 while (it.hasNext()) {
                                     Entry<String, MQProducerInner> entry = it.next();
                                     MQProducerInner impl = entry.getValue();
@@ -608,10 +601,8 @@ public class MQClientInstance {
 
                             //Update sub info
                             {
-                                Set<MessageQueue> subscribeInfo =
-                                        topicRouteData2TopicSubscribeInfo(topic, topicRouteData);
-                                Iterator<Entry<String, MQConsumerInner>> it =
-                                        this.consumerTable.entrySet().iterator();
+                                Set<MessageQueue> subscribeInfo = topicRouteData2TopicSubscribeInfo(topic, topicRouteData);
+                                Iterator<Entry<String, MQConsumerInner>> it = this.consumerTable.entrySet().iterator();
                                 while (it.hasNext()) {
                                     Entry<String, MQConsumerInner> entry = it.next();
                                     MQConsumerInner impl = entry.getValue();
@@ -625,13 +616,10 @@ public class MQClientInstance {
                             return true;
                         }
                     } else {
-                        log.warn(
-                                "updateTopicRouteInfoFromNameServer, getTopicRouteInfoFromNameServer return null, Topic: {}",
-                                topic);
+                        log.warn("updateTopicRouteInfoFromNameServer, getTopicRouteInfoFromNameServer return null, Topic: {}", topic);
                     }
                 } catch (Exception e) {
-                    if (!topic.startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX)
-                            && !topic.equals(MixAll.DEFAULT_TOPIC)) {
+                    if (!topic.startsWith(MixAll.RETRY_GROUP_TOPIC_PREFIX) && !topic.equals(MixAll.DEFAULT_TOPIC)) {
                         log.warn("updateTopicRouteInfoFromNameServer Exception", e);
                     }
                 } finally {
@@ -662,8 +650,7 @@ public class MQClientInstance {
     }
 
 
-    public static TopicPublishInfo topicRouteData2TopicPublishInfo(final String topic,
-                                                                   final TopicRouteData route) {
+    public static TopicPublishInfo topicRouteData2TopicPublishInfo(final String topic, final TopicRouteData route) {
         TopicPublishInfo info = new TopicPublishInfo();
         if (route.getOrderTopicConf() != null && route.getOrderTopicConf().length() > 0) {
             String[] brokers = route.getOrderTopicConf().split(";");
@@ -681,10 +668,12 @@ public class MQClientInstance {
         else {
             List<QueueData> qds = route.getQueueDatas();
             Collections.sort(qds);
+            // 遍历该topic的所有QueueData
             for (QueueData qd : qds) {
                 if (PermName.isWriteable(qd.getPerm())) {
                     BrokerData brokerData = null;
                     for (BrokerData bd : route.getBrokerDatas()) {
+                        // 找到对应的Master
                         if (bd.getBrokerName().equals(qd.getBrokerName())) {
                             brokerData = bd;
                             break;
@@ -699,7 +688,17 @@ public class MQClientInstance {
                         continue;
                     }
 
+                    // (1)遍历所有的writeQueueNums
+                    // (2)每次遍历的index序号，就对应每个Topic结构的MessageQueue对象的queueId
+                    // (3)缺省，所有broker都在同1个cluster，DefaultCluster
+                    // (4)结论：
+                    //      queueId其实是局部的，对于同1个topic，每个Master上面的queueId编号都是从0开始的
+                    //      假设一个topic有3个Master，writeQueueNums = 8。那也就意味着：每个Master上面都有8个queue，queueId为0 – 7。
+
                     for (int i = 0; i < qd.getWriteQueueNums(); i++) {
+                        // 创建每1个MessageQueue
+                        //TODO: topic的MessageQueue数目 = topic的QueueData数目 * writeQueueNums
+                        //      topic的MessageQueue数目 = topic所在的cluster的Master个数 * writeQueueNums
                         MessageQueue mq = new MessageQueue(topic, qd.getBrokerName(), i);
                         info.getMessageQueueList().add(mq);
                     }

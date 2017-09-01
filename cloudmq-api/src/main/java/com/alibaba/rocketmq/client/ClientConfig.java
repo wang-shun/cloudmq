@@ -34,6 +34,7 @@ public class ClientConfig {
     private int clientCallbackExecutorThreads = Runtime.getRuntime().availableProcessors();
     /**
      * Pulling topic information interval from the named server
+     * 2017/9/1 默认情况下，当某个Broker挂了之后，Client需要30s的延迟才会得知此消息。 Add by tianyuliang
      */
     private int pollNameServerInteval = 1000 * 30;
     /**

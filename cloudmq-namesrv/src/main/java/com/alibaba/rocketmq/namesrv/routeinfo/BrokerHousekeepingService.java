@@ -26,13 +26,18 @@ import com.alibaba.rocketmq.remoting.ChannelEventListener;
 
 
 /**
- * Broker活动检测服务
+ * Broker活动检测服务,其中ChannelEventListener是RocketMQ封装Netty向外暴露的一个接口层
+ *
+ * NameSrv监测Broker的死亡：
+ * 当Broker和NameSrv之间的长连接断掉之后，下面的ChannelEventListener里面的函数就会被回调，从而触发NameServer的路由信息更新
  * 
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-15
  */
 public class BrokerHousekeepingService implements ChannelEventListener {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
+
+
     private final NamesrvController namesrvController;
 
 

@@ -33,7 +33,7 @@ import com.alibaba.rocketmq.namesrv.NamesrvController;
 
 
 /**
- * KV配置管理
+ * KV配置管理：加载NameServer的配置参数，将配置参数加载保存到一个HashMap中
  * 
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-1
@@ -52,9 +52,9 @@ public class KVConfigManager {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
-     * kv配置表
+     * kv配置表，存储NameServer的配置参数到HashMap
      */
-    private final HashMap<String/* Namespace */, HashMap<String/* Key */, String/* Value */>> configTable = new HashMap<String, HashMap<String, String>>();
+    private final HashMap<String/* Namespace */, HashMap<String/* Key */, String/* Value */>> configTable = new HashMap<>();
 
     /**
      * 待参构造方法

@@ -194,6 +194,7 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
             registerBrokerBody.getTopicConfigSerializeWrapper().getDataVersion().setTimestatmp(0);
         }
 
+        // 完成topic路由结构的创建
         RegisterBrokerResult result = this.namesrvController.getRouteInfoManager().registerBroker(//
             requestHeader.getClusterName(), // 1
             requestHeader.getBrokerAddr(), // 2
@@ -209,9 +210,7 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
         responseHeader.setMasterAddr(result.getMasterAddr());
 
         // 获取顺序消息 topic 列表
-        byte[] jsonValue =
-                this.namesrvController.getKvConfigManager().getKVListByNamespace(
-                    NamesrvUtil.NAMESPACE_ORDER_TOPIC_CONFIG);
+        byte[] jsonValue = this.namesrvController.getKvConfigManager().getKVListByNamespace(NamesrvUtil.NAMESPACE_ORDER_TOPIC_CONFIG);
         response.setBody(jsonValue);
 
         response.setCode(ResponseCode.SUCCESS);
@@ -332,7 +331,8 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
     }
 
     /**
-     * 根据Topic获取BrokerName、队列数(包含读队列、写队列)
+     * 根据Topic获取BrokerName、队列数(包含读队列、写队列)，间接调用了RouteInfoManager.pickupTopicRouteData()方法来获取Broker和topic信息
+     *
      * @param ctx
      * @param request
      * @return
@@ -343,10 +343,14 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
         final GetRouteInfoRequestHeader requestHeader =
                 (GetRouteInfoRequestHeader) request.decodeCommandCustomHeader(GetRouteInfoRequestHeader.class);
 
+        // (1)获取Topic配置信息: 根据topic从RouteInfoManager.topicQueueTable变量中获取List队列,表示该topic对应的所有topic配置信息以及每个配置所属的BrokerName
         TopicRouteData topicRouteData = this.namesrvController.getRouteInfoManager().pickupTopicRouteData(requestHeader.getTopic());
 
         if (topicRouteData != null) {
+            //(2)获取去重后BrokerName集合, 并根据BrokerName从RouteInfoManager.brokerAddrTable变量中获取BrokerData对象
             String orderTopicConf = this.namesrvController.getKvConfigManager().getKVConfig(NamesrvUtil.NAMESPACE_ORDER_TOPIC_CONFIG, requestHeader.getTopic());
+
+            // 表示该topic是由哪些Broker提供的服务，以及每个BrokerName、BrokerId、BrokerAddr
             topicRouteData.setOrderTopicConf(orderTopicConf);
 
             byte[] content = topicRouteData.encode();

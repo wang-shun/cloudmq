@@ -541,6 +541,7 @@ public class BrokerController {
             @Override
             public void run() {
                 try {
+                    // 2017/9/1 每个Broker会每隔30s向NameSrv更新自身topic信息 Add by tianyuliang
                     BrokerController.this.registerBrokerAll(true, false);
                 }
                 catch (Exception e) {

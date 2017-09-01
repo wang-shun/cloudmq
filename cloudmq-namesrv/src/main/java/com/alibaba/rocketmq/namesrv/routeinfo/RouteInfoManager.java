@@ -48,18 +48,61 @@ import com.alibaba.rocketmq.remoting.common.RemotingUtil;
 
 
 /**
- * 运行过程中的路由信息，数据只在内存，宕机后数据消失，但是Broker会定期推送最新数据
+ * 一、运行过程中的路由信息，数据只在内存，宕机后数据消失，但是Broker会定期推送最新数据
+ * (1)维护了所有topic和所有机器的映射信息
+ * (2)是topic的路由结构,也是整个RocketMQ最核心的结构
+ *
+ *
+ * 二、topic/queue和Broker的映射关系
+ * (1)1个topic多个broker（1个Master + 多个slave)，每个broker上面都有writeQueueNums个queue
+ *      // http://img.blog.csdn.net/20170112140729110?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY2h1bmxvbmd5dQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast
+ * (2)topic的queue个数，加总就是writeQueueNums * master个数
+ * (3)queueId其实是局部的，对于同1个topic，每个Master上面的queueId编号都是从0开始的
+ * (4)一个topic有多个QueueData，每个QueueData有一个brokerName变量, 也就是每1个QueueData对象，对应1个Master机器
+ *
  * 
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-2
  */
 public class RouteInfoManager {
     private static final Logger log = LoggerFactory.getLogger(LoggerName.NamesrvLoggerName);
+
+    /**
+     * 读写锁
+     */
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    /**
+     *  核心Map之1: topic到QueueData,维护topic.json文件的topicConfigTable的数据
+     * (1)一个topic有多个QueueData，每个QueueData有一个brokerName变量, 也就是每1个QueueData对象，对应1个Master机器
+     * (2)topicQueueTable、brokerAddrTable 两种数据结构通过brokerName关联
+     * (3)静态参数，是在配置整个集群的时候，从配置文件中读取并确定的
+     */
     private final HashMap<String/* topic */, List<QueueData>> topicQueueTable;
+
+    /**
+     * 核心Map之2: broker名称、broker属性 对应关系hash表(物理机器信息，brokerName到Master/Slave机器列表)
+     * (1)一组borker = 1个Master + 多个Slave
+     * (2)静态参数，是在配置整个集群的时候，从配置文件中读取并确定的
+     */
     private final HashMap<String/* brokerName */, BrokerData> brokerAddrTable;
+
+    /**
+     * 核心Map之3: cluster集群、broker集合 对应关系hash表
+     * (1)一个cluster = 多组broker。其中cluster缺省就1个，defaultCluster
+     * (2)动态参数，调用CreateTopic()的时候，创建的clusterAddrTable
+     */
     private final HashMap<String/* clusterName */, Set<String/* brokerName */>> clusterAddrTable;
+
+    /**
+     * 核心Map之4: 活动broker基础信息 对应关系hash表
+     * (1)NameServer收到RegisterBroker信息，更新自己的brokerLiveTable结构
+     */
     private final HashMap<String/* brokerAddr */, BrokerLiveInfo> brokerLiveTable;
+
+    /**
+     * 核心Map之5: Broker地址、过滤器 对应关系hash表
+     */
     private final HashMap<String/* brokerAddr */, List<String>/* Filter Server */> filterServerTable;
 
 
@@ -79,7 +122,10 @@ public class RouteInfoManager {
         return clusterInfoSerializeWrapper.encode();
     }
 
-
+    /**
+     * 删除Topic
+     * @param topic
+     */
     public void deleteTopic(final String topic) {
         try {
             try {
@@ -95,7 +141,10 @@ public class RouteInfoManager {
         }
     }
 
-
+    /**
+     * 获取所有Topic列表
+     * @return
+     */
     public byte[] getAllTopicList() {
         TopicList topicList = new TopicList();
         try {
@@ -116,6 +165,9 @@ public class RouteInfoManager {
 
 
     /**
+     * 如果收到REGISTER_BROKER请求，那么最终会调用到RouteInfoManager.registerBroker()
+     * 注册完成后，返回给Broker端主用Broker的地址和主用Broker的HA服务地址
+     *
      * @return 如果是slave，则返回master的ha地址
      */
     public RegisterBrokerResult registerBroker(//
@@ -133,7 +185,11 @@ public class RouteInfoManager {
             try {
                 this.lock.writeLock().lockInterruptibly();
 
-                // 更新集群信息
+                /**
+                 * 更新集群信息，维护RouteInfoManager.clusterAddrTable变量
+                 * (1)若Broker集群名字不在该Map变量中，则初始化一个Set集合,并将brokerName存入该Set集合中
+                 * (2)然后以clusterName为key 值，该Set集合为values值存入此Map变量中
+                 */
                 Set<String> brokerNames = this.clusterAddrTable.get(clusterName);
                 if (null == brokerNames) {
                     brokerNames = new HashSet<String>();
@@ -143,7 +199,12 @@ public class RouteInfoManager {
 
                 boolean registerFirst = false;
 
-                // 更新主备信息
+                /**
+                 *  更新主备信息, 维护RouteInfoManager.brokerAddrTable变量,该变量是维护BrokerAddr、BrokerId、BrokerName等信息
+                 * (1)若该brokerName不在该Map变量中，则创建BrokerData对象，该对象包含了brokerName，以及brokerId和brokerAddr为K-V的brokerAddrs变量
+                 * (2)然后以 brokerName 为key值将BrokerData对象存入该brokerAddrTable变量中
+                 * (3)说明同一个BrokerName下面可以有多个不同BrokerId 的Broker存在，表示一个BrokerName有多个Broker存在，通过BrokerId来区分主备
+                 */
                 BrokerData brokerData = this.brokerAddrTable.get(brokerName);
                 if (null == brokerData) {
                     registerFirst = true;
@@ -157,13 +218,12 @@ public class RouteInfoManager {
                 String oldAddr = brokerData.getBrokerAddrs().put(brokerId, brokerAddr);
                 registerFirst = registerFirst || (null == oldAddr);
 
-                // 更新Topic信息
-                if (null != topicConfigWrapper //
-                        && MixAll.MASTER_ID == brokerId) {
-                    if (this.isBrokerTopicConfigChanged(brokerAddr, topicConfigWrapper.getDataVersion())//
-                            || registerFirst) {
-                        ConcurrentHashMap<String, TopicConfig> tcTable =
-                                topicConfigWrapper.getTopicConfigTable();
+                // 更新Topic信息: 若Broker的注册请求消息中topic的配置不为空，并且该Broker是主(即brokerId=0)
+                if (null != topicConfigWrapper && MixAll.MASTER_ID == brokerId) {
+
+                    // 则根据NameServer存储的Broker版本信息来判断是否需要更新NameServer端的topic配置信息
+                    if (this.isBrokerTopicConfigChanged(brokerAddr, topicConfigWrapper.getDataVersion()) || registerFirst) {
+                        ConcurrentHashMap<String, TopicConfig> tcTable = topicConfigWrapper.getTopicConfigTable();
                         if (tcTable != null) {
                             for (String topic : tcTable.keySet()) {
                                 TopicConfig topicConfig = tcTable.get(topic);
@@ -173,7 +233,7 @@ public class RouteInfoManager {
                     }
                 }
 
-                // 更新最后变更时间
+                // 更新最后变更时间: 初始化BrokerLiveInfo对象并以broker地址为key值存入brokerLiveTable变量中
                 BrokerLiveInfo prevBrokerLiveInfo = this.brokerLiveTable.put(brokerAddr, //
                     new BrokerLiveInfo(//
                         System.currentTimeMillis(), //
@@ -184,7 +244,7 @@ public class RouteInfoManager {
                     log.info("new broker registerd, {} HAServer: {}", brokerAddr, haServerAddr);
                 }
 
-                // 更新Filter Server列表
+                // 更新Filter Server列表: 对于filterServerList不为空的,以broker地址为key值存入
                 if (filterServerList != null) {
                     if (filterServerList.isEmpty()) {
                         this.filterServerTable.remove(brokerAddr);
@@ -194,10 +254,11 @@ public class RouteInfoManager {
                     }
                 }
 
-                // 返回值
+                // 返回值：找到该BrokerName下面的主节点
                 if (MixAll.MASTER_ID != brokerId) {
                     String masterAddr = brokerData.getBrokerAddrs().get(MixAll.MASTER_ID);
                     if (masterAddr != null) {
+                        //Broker主节点地址: 从brokerLiveTable中获取BrokerLiveInfo对象，取该对象的HaServerAddr值
                         BrokerLiveInfo brokerLiveInfo = this.brokerLiveTable.get(masterAddr);
                         if (brokerLiveInfo != null) {
                             result.setHaServerAddr(brokerLiveInfo.getHaServerAddr());
@@ -230,7 +291,11 @@ public class RouteInfoManager {
         return false;
     }
 
-
+    /**
+     * 加锁处理：优雅更新Broker写操作
+     * @param brokerName
+     * @return
+     */
     public int wipeWritePermOfBrokerByLock(final String brokerName) {
         try {
             try {
@@ -248,7 +313,11 @@ public class RouteInfoManager {
         return 0;
     }
 
-
+    /**
+     * 优雅更新Broker写操作
+     * @param brokerName broker名称
+     * @return 对应Broker上待处理的Topic个数
+     */
     private int wipeWritePermOfBroker(final String brokerName) {
         int wipeTopicCnt = 0;
         Iterator<Entry<String, List<QueueData>>> itTopic = this.topicQueueTable.entrySet().iterator();
@@ -272,6 +341,19 @@ public class RouteInfoManager {
     }
 
 
+    /**
+     * (1)每来一个Master，创建一个QueueData对象
+     * (2)如果是新建topic，就是添加QueueData对象
+     * (3)如果是修改topic，就是把旧的QueueData删除，加入新的
+     *
+     * 例如：
+     * A. 假设对于1个topic，有3个Master
+     * B. NameSrv也就收到3个RegisterBroker请求
+     * C. 相应的该topic对应的QueueDataList里面，也就3个QueueData对象
+     *
+     * @param brokerName
+     * @param topicConfig
+     */
     private void createAndUpdateQueueData(final String brokerName, final TopicConfig topicConfig) {
         QueueData queueData = new QueueData();
         queueData.setBrokerName(brokerName);
@@ -484,6 +566,8 @@ public class RouteInfoManager {
 
     /**
      * 清除掉2分钟接受不到心跳的broker列表
+     * (1)NameServer会每10s，扫描一次这个brokerLiveTable变量，
+     * (2)如果发现上次更新时间距离当前时间超过了2分钟，则认为此broker死亡
      */
     public void scanNotActiveBroker() {
         Iterator<Entry<String, BrokerLiveInfo>> it = this.brokerLiveTable.entrySet().iterator();

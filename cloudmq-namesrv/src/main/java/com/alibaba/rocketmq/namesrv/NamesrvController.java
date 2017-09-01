@@ -66,10 +66,21 @@ import com.alibaba.rocketmq.remoting.netty.NettyServerConfig;
  * （4）如果中途所有Name Server全都挂了，影响到路由信息的更新，不会影响和Broker的通信
  *
  *
- * Broker向所有的NameServer结点建立长连接，注册Topic信息。
+ * Broker向所有的NameServer结点建立长连接，注册Topic信息
+ * （1）主要是用于管理所有的broker信息，让producer和consumer都能获取到正确的broker信息，进行业务处理
+ * （2）这是一个类似于zookeeper的服务治理中心
  *
  *
+ * Namesrv主要功能
+ * (1)Broker启动时候会向Namesrv发送注册请求，Namesrv接收broker的请求注册路由信息和保存活跃的broker列表，包括Master和Slave
+ * (2)用来保存所有topic和该topic所有队列的列表
+ * (3)NameServer用来保存所有broker的Filter列表
+ * (4)接收Producer和Consumer的请求，根据某个topic获取到broker的路由信息
  *
+ *
+ * 为什么放弃zookeeper
+ * (1)在RocketMQ中，topic在每个master的数据是对等的，没有哪个master有全部的topic数据，所以选举是没有意义的
+ * (2)NameServer与NameServer直接完全没有信息同步，所以与其依赖重量级的zookeeper，不如开发轻量级的NameServer
  *
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-5
@@ -96,6 +107,7 @@ public class NamesrvController {
      * (1)属于netty概念
      * (2)监听Chanel(Connect、Close、Exception、Idle) 等四个动作事件
      * (3)提供相应的处理方法
+     * (4)Broker启动时候会向Namesrv发送注册请求，Namesrv接收broker的请求注册路由信息和保存活跃的broker列表，包括Master和Slave
      */
     private BrokerHousekeepingService brokerHousekeepingService;
     /**
@@ -146,6 +158,10 @@ public class NamesrvController {
         this.kvConfigManager.load();
 
         // (2)将namesrv作为一个netty server启动，即初始化通信层
+        // NettyRemotingServer对象，BrokerHousekeepingService对象作为该Netty连接中Socket链接的监听器(ChannelEventListener)
+        // 监听与Broker建立的Channel的状态(空闲、关闭、异常三个状态)，并调用BrokerHousekeepingService的相应onChannel****方法。
+        // 其中Channel的空闲、关闭、异常状态均调用RouteInfoManager.onChannelDestory方法处理。
+        // 清理RouteInfoManager类的几个成员变量数据
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig, this.brokerHousekeepingService);
 
         // (3)启动服务端请求的handle处理线程池，名称为“RemotingExecutorThread_xxx”的子线程用于服务端处理请求的子线程
@@ -155,6 +171,9 @@ public class NamesrvController {
         this.registerProcessor();
 
         // (5)启动(延迟5秒执行)第一个定时任务：每隔10秒扫描出(2分钟扫描间隔)不活动的broker，然后从routeInfo中删除
+        //      每隔十秒钟遍历brokerLiveTable集合，
+        //      查看每个broker的最后更新时间是否超过了两分钟，
+        //      超过则关闭broker的Channel并清理RouteInfoManager类的topicQueueTable、brokerAddrTable、clusterAddrTable、filterServerTable成员变量
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -162,7 +181,7 @@ public class NamesrvController {
             }
         }, 5, 10, TimeUnit.SECONDS);
 
-        // (6)启动(延迟1分钟执行)第二个定时任务：每隔10分钟定时打印namesrv全局配置信息
+        // (6)启动(延迟1分钟执行)第二个定时任务：每隔10分钟打印NameServer的配置参数,即KVConfigManager.configTable变量的内容
         this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -183,6 +202,9 @@ public class NamesrvController {
 
     /**
      * 注册默认DefaultRequestProcessor和remotingExecutor，只要start启动，即可处理netty请求
+     * (1)启动NameServer的Netty服务端(NettyRemotingServer),监听Channel的请求信息
+     * (2)当收到客户端的请求信息之后会初始化一个线程，并放入线程池中进行处理
+     * (3)该线程调用DefaultRequestProcessor.processRequest()方法来处理请求
      */
     private void registerProcessor() {
         this.remotingServer.registerDefaultProcessor(new DefaultRequestProcessor(this), this.remotingExecutor);

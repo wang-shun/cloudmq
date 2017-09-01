@@ -14,6 +14,11 @@ import com.alibaba.rocketmq.common.MixAll;
  */
 public class BrokerData implements Comparable<BrokerData> {
     private String brokerName;
+
+    /**
+     * (1)brokerId与brokerAddress映射表
+     * (2)一组broker = 1个master + 多个slave，其中master的brokerId = 0, slave的brokerId > 0
+     */
     private HashMap<Long/* brokerId */, String/* broker address */> brokerAddrs;
 
 

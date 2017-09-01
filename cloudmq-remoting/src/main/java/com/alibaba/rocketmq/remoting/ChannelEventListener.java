@@ -19,6 +19,8 @@ import io.netty.channel.Channel;
 
 
 /**
+ * ChannelEventListener是RocketMQ封装Netty向外暴露的一个接口层
+ *
  * @author shijia.wxr<vintage.wang@gmail.com>
  * @since 2013-7-13
  */
