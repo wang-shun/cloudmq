@@ -133,24 +133,25 @@ public class NamesrvController {
     /**
      * 初始化，在NamesrvStartup.main0()被调用
      * (1)加载kvConfig.json至KVConfigManager的configTable，即持久化转移到内存
-     * (2)初始化通信层，将namesrv作为一个netty server启动
-     * (3)启动请求处理线程池(RemotingExecutorThread 服务端逻辑线程)\
-     * (4)注册默认DefaultRequestProcessor和remotingExecutor，只要start启动，即可处理netty请求
+     * (2)将namesrv作为一个netty server启动，即初始化通信层
+     * (3)启动服务端请求的handle处理线程池，名称为“RemotingExecutorThread_xxx”的子线程用于服务端处理请求的子线程
+     * (4)注册默认DefaultRequestProcessor和remotingExecutor，只要start启动，就开始处理netty请求
      * (5)启动(延迟5秒执行)第一个定时任务：每隔10秒扫描出(2分钟扫描间隔)不活动的broker，然后从routeInfo中删除
      * (6)启动(延迟1分钟执行)第二个定时任务：每隔10分钟定时打印namesrv全局配置信息
-     * @return 返回true表示以上6个任务都初始化完毕、启动完毕
+     *
+     * @return 以上6个步骤执行完毕，返回true
      */
     public boolean initialize() {
         // (1)加载kvConfig.json至KVConfigManager的configTable，即持久化转移到内存
         this.kvConfigManager.load();
 
-        // (2)初始化通信层，将namesrv作为一个netty server启动
+        // (2)将namesrv作为一个netty server启动，即初始化通信层
         this.remotingServer = new NettyRemotingServer(this.nettyServerConfig, this.brokerHousekeepingService);
 
-        // (3)启动请求处理线程池(RemotingExecutorThread 服务端逻辑线程)
+        // (3)启动服务端请求的handle处理线程池，名称为“RemotingExecutorThread_xxx”的子线程用于服务端处理请求的子线程
         this.remotingExecutor = Executors.newFixedThreadPool(nettyServerConfig.getServerWorkerThreads(), new ThreadFactoryImpl("RemotingExecutorThread_"));
 
-        // (4)注册默认DefaultRequestProcessor和remotingExecutor，只要start启动，即可处理netty请求
+        // (4)注册默认DefaultRequestProcessor和remotingExecutor，只要start启动，就开始处理netty请求
         this.registerProcessor();
 
         // (5)启动(延迟5秒执行)第一个定时任务：每隔10秒扫描出(2分钟扫描间隔)不活动的broker，然后从routeInfo中删除
@@ -188,7 +189,7 @@ public class NamesrvController {
     }
 
     /**
-     * Name server启动
+     * 将namesrv作为一个netty server启动的入口
      * @throws Exception
      */
     public void start() throws Exception {

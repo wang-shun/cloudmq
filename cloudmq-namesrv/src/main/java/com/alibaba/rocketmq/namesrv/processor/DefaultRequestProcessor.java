@@ -80,8 +80,15 @@ public class DefaultRequestProcessor implements NettyRequestProcessor {
 
     /**
      * 所有远程请求处理器主入口
+     *
+     * 设计思想是:
+     * (1)把request和response封装在统一对象RemotingCommand里,并通过REQUEST_COMMAND和RESPONSE_COMMAND来区分
+     * (2)RemotingCommand还有很多解析处理内容，包括反射解析CommandCustomHeader等
+     * (3)这里只是通过RequestCode解析出对应RemotingCommand
+     * (4)真正执行服务网络请求的过程，在rocketmq-remoting模块，这个是典型的netty程序
+     *
      * @param ctx 请求处理上下文
-     * @param request 请求Command
+     * @param request 请求RemotingCommand
      * @return
      * @throws RemotingCommandException
      */
