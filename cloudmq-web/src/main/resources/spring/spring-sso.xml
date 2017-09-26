@@ -52,8 +52,10 @@
         <property name="guestApi" value="${app.guest.api}"/>
     </bean>
 
+    <!--
     <mvc:interceptors>
         <bean class="com.alibaba.rocketmq.interceptor.LoginHandlerInterceptor" init-method="init"/>
     </mvc:interceptors>
+    -->
 
 </beans>

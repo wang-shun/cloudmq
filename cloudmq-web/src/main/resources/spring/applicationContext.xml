@@ -10,12 +10,18 @@
 
     <mvc:annotation-driven/>
 
+    <context:component-scan base-package="com.alibaba.rocketmq.service.*"/>
+
+    <!--<context:component-scan base-package="com.alibaba.rocketmq.dao.*"/>-->
+
     <context:property-placeholder location="classpath:conf/config.properties" ignore-unresolvable="true"/>
 
     <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
                 <value>classpath:conf/urlConfig.properties</value>
+                <value>classpath:conf/sso.properties</value>
+                <value>classpath:conf/config.properties</value>
             </list>
         </property>
     </bean>

@@ -16,6 +16,18 @@ public class GMQLoginConfigService {
 
     private String guestApi;
 
+    private String appLoginUrl;
+
+    private String appRedirectUrl;
+
+    private String ssoLoginUrl;
+
+    private String appKey;
+
+    private String tokenVerifyUrl;
+
+    private Integer maxInactiveInterval;
+
     public String getAdminApi() {
         return adminApi;
     }
@@ -31,19 +43,6 @@ public class GMQLoginConfigService {
     public void setGuestApi(String guestApi) {
         this.guestApi = guestApi;
     }
-
-    private String appLoginUrl;
-
-    private String appRedirectUrl;
-
-    private String ssoLoginUrl;
-
-    private String appKey;
-
-    private String tokenVerifyUrl;
-
-    private Integer maxInactiveInterval;
-
 
     public String getIndexApi() {
         return indexApi;

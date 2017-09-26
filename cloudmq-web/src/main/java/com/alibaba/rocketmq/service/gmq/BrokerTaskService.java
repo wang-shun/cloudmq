@@ -1,16 +1,15 @@
 package com.alibaba.rocketmq.service.gmq;
 
-import com.alibaba.rocketmq.dao.BrokerDao;
-import com.alibaba.rocketmq.domain.gmq.BrokerExt;
-import com.alibaba.rocketmq.service.AbstractService;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.alibaba.rocketmq.domain.gmq.BrokerExt;
+import com.alibaba.rocketmq.service.AbstractService;
 
 /**
  * 定时任务： 处理Broker TPS等参数入库
@@ -28,14 +27,13 @@ public class BrokerTaskService extends AbstractService {
      */
     private Boolean brokerScheduleEnable;
 
-    @Autowired
-    private BrokerDao brokerDao;
 
     @Autowired
     private GMQSysResourceService gmqSysResourceService;
 
     private Integer saveBroker(BrokerExt broker) throws Exception {
-        return brokerDao.insertEntry(broker);
+       // return brokerDao.insertEntry(broker);
+        return 0;
     }
 
     private List<BrokerExt> getBatchBrokers() throws RuntimeException {

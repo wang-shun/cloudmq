@@ -10,9 +10,8 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:spring/applicationContext.xml,
-            classpath:spring/spring-sso.xml,
-            classpath:mybatis/spring-quartz.xml,
-            classpath:mybatis/spring-config-dao.xml
+            classpath:spring/spring-sso.xml
+            <!--  classpath:mybatis/spring-config-dao.xml, -->
         </param-value>
     </context-param>
 
@@ -41,7 +40,7 @@
 
     <context-param>
         <param-name>indexApi</param-name>
-        <param-value>/gmq/index.do</param-value>
+        <param-value>/guest/broker.do</param-value>
     </context-param>
 
     <filter>

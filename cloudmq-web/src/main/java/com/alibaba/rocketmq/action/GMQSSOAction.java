@@ -31,7 +31,7 @@ import java.text.MessageFormat;
 @RequestMapping("/sso")
 public class GMQSSOAction extends AbstractAction {
 
-    static final Logger logger = LoggerFactory.getLogger(GMQSSOAction.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(GMQSSOAction.class);
 
     @Autowired
     private GomeSSOService gomeSSOService;
@@ -51,11 +51,11 @@ public class GMQSSOAction extends AbstractAction {
         String token = JSON.parseObject(param).getString("token");
         try {
             gomeSSOService.removeToken(token);
-            logger.info("sso exit success. token={}", token);
+            LOGGER.info("sso exit success. token={}", token);
             return new RespData(RespCode.RESP_SUCCESS.getCode(), RespCode.RESP_SUCCESS.getMsg());
         }
         catch (Exception e) {
-            logger.error("sso exit error. token={}", token, e);
+            LOGGER.error("sso exit error. token={}", token, e);
             return new RespData(RespCode.SYSERROR.getCode(), RespCode.SYSERROR.getMsg());
         }
     }
@@ -67,16 +67,18 @@ public class GMQSSOAction extends AbstractAction {
     @RequestMapping("/logout.do")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         try {
-            String appKey = gomeSSOService.getAppKey();
-            String ssoLogOutUrl = gomeSSOService.getSsoLogOutUrl();
-            String redirectUrl = URLEncoder.encode(gomeSSOService.getAppHomeUrl(), "UTF-8");
-            String logoutUrl = MessageFormat.format("{0}?redirectUrl={1}&appKey={2}", ssoLogOutUrl, redirectUrl, appKey);
-            System.out.println("logoutUrl=" + logoutUrl);
+//            String appKey = gomeSSOService.getAppKey();
+//            String ssoLogOutUrl = gomeSSOService.getSsoLogOutUrl();
+//            String redirectUrl = URLEncoder.encode(gomeSSOService.getAppHomeUrl(), "UTF-8");
+//            String logoutUrl = MessageFormat.format("{0}?redirectUrl={1}&appKey={2}", ssoLogOutUrl, redirectUrl, appKey);
+//            System.out.println("logoutUrl=" + logoutUrl);
+//
+//            response.sendRedirect(logoutUrl);
 
-            response.sendRedirect(logoutUrl);
+            response.sendRedirect("/index.html");
         }
         catch (IOException e) {
-            logger.error("sso logout error.", e);
+            LOGGER.error("sso logout error.", e);
             // TODO:跳转到失败页？提示用户？
         } finally {
             CookieUtil.removeCookie(response, "token");
@@ -88,15 +90,20 @@ public class GMQSSOAction extends AbstractAction {
 
     @RequestMapping(value = "/index.do")
     public void index(HttpServletRequest request, HttpServletResponse response, ModelMap map) {
-        String param = null;
-        try {
-            param = buildUrlParam();
-        } catch (Exception e) {
-            logger.error("build index url param error.", e);
-            param = "/index.html";
-        }
-        response.addHeader("location", param);
-        response.setStatus(302);
+//        String param = null;
+//        try {
+//            param = buildUrlParam();
+//        } catch (Exception e) {
+//            logger.error("build index url param error.", e);
+//            param = "/index.html";
+//        }
+//        response.addHeader("location", param);
+//        response.setStatus(302);
+
+        boolean isAdmin = this.handleUserType(request, response);
+        String param = isAdmin ? gmqLoginConfigService.getAdminApi() : gmqLoginConfigService.getGuestApi();
+        LOGGER.info("redirectUrl = {}", param);
+        redirectUrl(request, response, param);
     }
 
 
@@ -105,12 +112,6 @@ public class GMQSSOAction extends AbstractAction {
         boolean isAdmin = this.handleUserType(request, response);
         String param = isAdmin ? gmqLoginConfigService.getAdminApi() : gmqLoginConfigService.getGuestApi();
         redirectUrl(request, response, param);
-    }
-
-
-    private void redirectUrl(HttpServletRequest request, HttpServletResponse response, String redirectUrl) {
-        response.addHeader("location", redirectUrl);
-        response.setStatus(302);
     }
 
     private String buildUrlParam() throws UnsupportedEncodingException {

@@ -1,11 +1,8 @@
 package com.alibaba.rocketmq.interceptor;
 
-
-import com.alibaba.rocketmq.domain.sso.gmq.SignCacheInfo;
 import com.alibaba.rocketmq.domain.sso.gmq.TokenInfo;
 import com.alibaba.rocketmq.service.gmq.GMQLoginConfigService;
-import com.alibaba.rocketmq.service.sso.GMQTokenService;
-import com.alibaba.rocketmq.util.base.CacheUtil;
+import com.alibaba.rocketmq.util.base.BaseUtil;
 import com.cloudzone.cloudsso.common.util.CookieUtil;
 import com.cloudzone.cloudsso.domain.response.VerifyRespData;
 import org.apache.commons.lang.StringUtils;
@@ -21,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.MessageFormat;
+import java.util.Calendar;
+
 
 /**
  * @author: tianyuliang
@@ -29,85 +28,93 @@ import java.text.MessageFormat;
 @Component("loginHandlerInterceptor")
 public class LoginHandlerInterceptor implements HandlerInterceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(LoginHandlerInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginHandlerInterceptor.class);
 
     private final static Integer redirectCode = 302;
 
     @Autowired
     private GMQLoginConfigService gmqLoginConfigService;
 
-    @Autowired
-    private GMQTokenService gmqTokenService;
+//    @Autowired
+//    private GMQTokenService gmqTokenService;
 
 
     public LoginHandlerInterceptor() {
     }
 
+
     public void init() {
-        logger.info("init gmq login interceptor.");
+        LOGGER.info("init gmq login interceptor.");
     }
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
-        if (excludeIndexApi(request)) {
-            redirectUrl(request, response, buildUrlParam());
-            return true;
+//        if (excludeIndexApi(request)) {
+//            redirectUrl(request, response, buildUrlParam());
+//            return true;
+//        }
+        String userName = BaseUtil.getDefaultValue(request.getParameter("userName"), "");
+        if (BaseUtil.isBlank(userName)){
+            LOGGER.warn("userName is empty. login failed.");
+            redirectUrl(request, response, "/sso-fail.html");
+            return false;
         }
-        String sign = request.getParameter("sign");
-        String timesmap = request.getParameter("timesmap");
-        try {
-            if (StringUtils.isNotEmpty(sign)) {
-                TokenInfo ssoToken = new TokenInfo();
-                ssoToken.setToken(sign.trim());
-                ssoToken.setAppKey(gmqLoginConfigService.getAppKey());
-                logger.info("timesmap={}, token={}", timesmap, ssoToken.getToken());
-                VerifyRespData userData = gmqTokenService.verifyToken(gmqLoginConfigService.getTokenVerifyUrl(), ssoToken);
-                if(userData == null){
-                    logger.info("token verify end, but verifyRespData is empty.");
-                    redirectUrl(request, response, buildUrlParam());
-                    return false;
-                }
-                Long cookieExpireTime = userData.getExpireTime() - userData.getCreateTime();
-                CookieUtil.setCookie(response, "token", sign, cookieExpireTime.intValue());
-                CacheUtil.setTokenData(sign, new SignCacheInfo(sign, userData));
-                request.getSession().setAttribute("userName", userData.getUserName());
-                request.getSession().setAttribute("userId", userData.getUserId());
-                request.getSession().setMaxInactiveInterval(gmqLoginConfigService.getMaxInactiveInterval());
-                return true;
-            }
 
-            String cookie_token = CookieUtil.getCookieValue(request, "token");
-            boolean expired = StringUtils.isNotEmpty(cookie_token) && CacheUtil.getTokenData(cookie_token) != null;
-            if (!expired) {
-                logger.info("cookie.token is expired. token={}", cookie_token);
+        String sign = BaseUtil.getDefaultValue(request.getParameter("sign"), "");
+        String timesmap = BaseUtil.getDefaultValue(request.getParameter("timesmap"), "");
+        try {
+            TokenInfo ssoToken = new TokenInfo();
+            ssoToken.setToken(sign);
+            ssoToken.setAppKey(gmqLoginConfigService.getAppKey());
+            LOGGER.info("timesmap={}, token={}", timesmap, ssoToken.getToken());
+
+            // gmqTokenService.verifyToken(gmqLoginConfigService.getTokenVerifyUrl(),ssoToken);
+            VerifyRespData userData = new VerifyRespData();
+            userData.setUserName(userName.trim());
+            userData.setUserId("1");
+            Long timestamp = Calendar.getInstance().getTime().getTime();
+            userData.setCreateTime(timestamp - 2 * 60 * 60);
+            userData.setExpireTime(timestamp);
+
+            if (userData == null) {
+                LOGGER.info("token verify end, but verifyRespData is empty.");
                 redirectUrl(request, response, buildUrlParam());
                 return false;
             }
-
-            VerifyRespData userData = CacheUtil.getTokenData(cookie_token).getSignInfo();
-            logger.info("cookie.token is valid. token={}, userName={}", cookie_token, userData.getUserName());
+            Long cookieExpireTime = userData.getExpireTime() - userData.getCreateTime();
+            CookieUtil.setCookie(response, "token", sign, cookieExpireTime.intValue());
+            //CacheUtil.setTokenData(sign, new SignCacheInfo(sign, userData));
+            request.getSession().setAttribute("userName", userData.getUserName());
+            request.getSession().setAttribute("userId", userData.getUserId());
+            request.getSession().setMaxInactiveInterval(gmqLoginConfigService.getMaxInactiveInterval());
             return true;
         }
         catch (Exception e) {
-            logger.error("handle verify token error. msg=" + e.getMessage(), e);
-            redirectUrl(request, response, "/index.html");
+            LOGGER.error("handle verify token error. msg=" + e.getMessage(), e);
+            redirectUrl(request, response, "/sso-fail.html");
         }
         return false;
     }
 
+
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o, ModelAndView mv) throws Exception {
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object o,
+            ModelAndView mv) throws Exception {
 
     }
 
 
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object o, Exception e) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object o,
+            Exception e) throws Exception {
 
     }
+
 
     /***
      * 使用此方逻辑会导致/token.do等类型的接口无法被拦截器处理，暂不使用
+     * 
      * @param request
      * @return
      */
@@ -116,10 +123,12 @@ public class LoginHandlerInterceptor implements HandlerInterceptor {
         return matchResource(currentURL);
     }
 
+
     private boolean excludeIndexApi(HttpServletRequest request) {
         String currentURL = request.getRequestURI();
         return currentURL.trim().equals(gmqLoginConfigService.getIndexApi());
     }
+
 
     private boolean matchResource(String currentURL) {
         if (StringUtils.isNotBlank(gmqLoginConfigService.getStaticResouce())) {

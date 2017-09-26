@@ -26,10 +26,10 @@ abstract class MyBatisSupport {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(MyBatisSupport.class);
 
-    @Resource
+    //@Resource
     private SqlSessionTemplate sqlTemplate;
 
-    @Resource
+    //@Resource
     private SqlSessionTemplate batchSqlTemplate;
 
     /**

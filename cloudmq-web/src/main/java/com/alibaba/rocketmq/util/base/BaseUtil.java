@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+
 /**
  * @author: tianyuliang
  * @since: 2016/7/22
@@ -14,6 +15,7 @@ public class BaseUtil {
 
     static final Logger LOGGER = LoggerFactory.getLogger(BaseUtil.class);
 
+
     public static String readMemoryForJVM() {
         Integer one = 1024 * 1024; // 1M=1024*1024 byte
         Long max = Runtime.getRuntime().maxMemory() / one;
@@ -21,6 +23,7 @@ public class BaseUtil {
         Long total = Runtime.getRuntime().totalMemory() / one;
         return String.format("max:%sm,total:%sm,free:%sm,used:%sm", max.toString(), total.toString(), free.toString(), (total - free));
     }
+
 
     public static Map<String, Long> getMemory() {
         Map<String, Long> params = Maps.newHashMap();
@@ -35,13 +38,24 @@ public class BaseUtil {
         return params;
     }
 
+
     public static void threadSleep(long sleepTime) {
         try {
             Thread.sleep(sleepTime);
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
             LOGGER.error("thread sleep error. sleepTime={}ms", sleepTime, e);
         }
     }
+
+
+    public static String getDefaultValue(String source, String defaultValue) {
+        if (isBlank(source)) {
+            return defaultValue;
+        }
+        return source.trim();
+    }
+
 
     public static boolean isBlank(String str) {
         int strLen;
@@ -55,6 +69,7 @@ public class BaseUtil {
         }
         return true;
     }
+
 
     public static int asInt(String str, int defaultValue) {
         try {

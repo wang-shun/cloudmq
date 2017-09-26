@@ -16,7 +16,6 @@ import com.alibaba.rocketmq.common.BrokerConst;
 import com.alibaba.rocketmq.common.protocol.body.ClusterInfo;
 import com.alibaba.rocketmq.common.protocol.body.KVTable;
 import com.alibaba.rocketmq.common.protocol.route.BrokerData;
-import com.alibaba.rocketmq.dao.BrokerDao;
 import com.alibaba.rocketmq.domain.base.BaseTypeEnum;
 import com.alibaba.rocketmq.domain.gmq.Broker;
 import com.alibaba.rocketmq.domain.gmq.BrokerExt;
@@ -68,9 +67,6 @@ public class GMQSysResourceService extends AbstractService {
     @Autowired
     TenantIdRestOperations restOperations;
 
-    @Autowired
-    private BrokerDao brokerDao;
-
 
     public MemoryInfo memory(String brokerAddr) throws RuntimeException {
         String url = httpPrefix + brokerAddr.trim() + sigarPort + memoryUrl;
@@ -113,7 +109,7 @@ public class GMQSysResourceService extends AbstractService {
     public Map<String, Object> queryBrokers(String brokerIp) throws RuntimeException {
         Map<String, Object> tpsParam = Maps.newHashMap();
         BrokerExt brokerExt = buildBrokerWhereClause(brokerIp);
-        List<BrokerExt> brokerExts = brokerDao.selectEntryList(brokerExt);
+        List<BrokerExt> brokerExts = new ArrayList<>(); //brokerDao.selectEntryList(brokerExt);
 
         List<Map<String, Object>> inTpsList = brokerInTps(brokerExts);
         tpsParam.put("inTps", inTpsList);

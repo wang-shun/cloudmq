@@ -1,22 +1,25 @@
 package com.alibaba.rocketmq.action;
 
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.rocketmq.domain.sso.gmq.GmqUser;
-import com.alibaba.rocketmq.service.gmq.GMQUserService;
 import org.apache.commons.cli.Option;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 
 import com.alibaba.rocketmq.common.Table;
+import com.alibaba.rocketmq.domain.sso.gmq.GmqUser;
+import com.alibaba.rocketmq.domain.sso.gmq.TokenInfo;
+import com.alibaba.rocketmq.service.gmq.GMQLoginConfigService;
+import com.alibaba.rocketmq.service.gmq.GMQUserService;
+import com.alibaba.rocketmq.util.base.BaseUtil;
+import com.cloudzone.cloudsso.common.util.CookieUtil;
+import com.cloudzone.cloudsso.domain.response.VerifyRespData;
 
 
 /**
@@ -55,23 +58,31 @@ public abstract class AbstractAction {
     public static final String OPTIONS = "options";
 
 
+    private final static Integer redirectCode = 302;
+
     @Autowired
     private GMQUserService gmqUserService;
 
+    @Autowired
+    protected GMQLoginConfigService gmqLoginConfigService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractAction.class);
+
+
     protected GmqUser handleSessionUser(HttpServletRequest request, HttpServletResponse response) {
         GmqUser gmqUser = null;
+        Boolean handleResult = handleDefaultRequest(request, response);
+        if (!handleResult) {
+            return null;
+        }
+
         String userName = (String)request.getSession().getAttribute("userName");
-        if(StringUtils.isEmpty(userName)){
+        if (BaseUtil.isBlank(userName)){
             return gmqUser;
         }
 
-        String userType = "0";
-        try{
-            gmqUser = gmqUserService.queryAdminUser(userName);
-            userType = gmqUser != null ? gmqUser.getUserType() : "0";
-        } catch(SQLException e){
-           // ingore e
-        }
+        gmqUser = gmqUserService.queryAdminUser(userName);
+        String userType = gmqUser != null ? gmqUser.getUserType() : "0";
         request.getSession().setAttribute("userType", userType);
         return gmqUser;
     }
@@ -79,7 +90,54 @@ public abstract class AbstractAction {
     protected boolean handleUserType(HttpServletRequest request, HttpServletResponse response) {
         GmqUser gmqUser = this.handleSessionUser(request, response);
         boolean isAdmin = gmqUser != null && gmqUser.getUserType().equals("1"); // 1:管理员  0:普通用户
+
         return isAdmin;
+    }
+
+    private boolean handleDefaultRequest(HttpServletRequest request, HttpServletResponse response){
+        String userName = BaseUtil.getDefaultValue(request.getParameter("userName"), "");
+        if (BaseUtil.isBlank(userName)){
+            LOGGER.warn("userName is empty, self is guest.");
+            //TODO: redirectUrl(request, response, "/sso-fail.html");
+            return false;
+        }
+
+        String sign = BaseUtil.getDefaultValue(request.getParameter("sign"), "");
+        String timesmap = BaseUtil.getDefaultValue(request.getParameter("timesmap"), "");
+        try {
+            TokenInfo ssoToken = new TokenInfo();
+            ssoToken.setToken(sign);
+            ssoToken.setAppKey(gmqLoginConfigService.getAppKey());
+            if (!BaseUtil.isBlank(sign)){
+                LOGGER.info("login timesmap={}, token={}", timesmap, ssoToken.getToken());
+            }
+
+            //TODO: gmqTokenService.verifyToken(gmqLoginConfigService.getTokenVerifyUrl(),ssoToken);
+            VerifyRespData userData = new VerifyRespData();
+            userData.setUserName(userName.trim());
+            userData.setUserId("1");
+            Long timestamp = Calendar.getInstance().getTime().getTime();
+            userData.setCreateTime(timestamp - 2 * 60 * 60);
+            userData.setExpireTime(timestamp);
+
+            Long cookieExpireTime = userData.getExpireTime() - userData.getCreateTime();
+            CookieUtil.setCookie(response, "token", sign, cookieExpireTime.intValue());
+            //TODO: CacheUtil.setTokenData(sign, new SignCacheInfo(sign, userData));
+            request.getSession().setAttribute("userName", userData.getUserName());
+            request.getSession().setAttribute("userId", userData.getUserId());
+            request.getSession().setMaxInactiveInterval(gmqLoginConfigService.getMaxInactiveInterval());
+            return true;
+        }
+        catch (Exception e) {
+            LOGGER.error("handle verify token error. msg={}", e.getMessage(), e);
+            //TODO: redirectUrl(request, response, "/sso-fail.html");
+        }
+        return false;
+    }
+
+    public void redirectUrl(HttpServletRequest request, HttpServletResponse response, String redirectUrl) {
+        response.addHeader("location", redirectUrl);
+        response.setStatus(redirectCode);
     }
 
 
