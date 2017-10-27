@@ -34,8 +34,11 @@ import java.util.zip.InflaterInputStream;
  * @since 2017/1/9
  */
 public class UtilAll {
+
     public static final String yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
+
     public static final String yyyy_MM_dd_HH_mm_ss_SSS = "yyyy-MM-dd#HH:mm:ss:SSS";
+
     public static final String yyyyMMddHHmmss = "yyyyMMddHHmmss";
 
 
@@ -44,18 +47,22 @@ public class UtilAll {
         String name = runtime.getName(); // format: "pid@hostname"
         try {
             return Integer.parseInt(name.substring(0, name.indexOf('@')));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return -1;
         }
     }
 
+
     public static String getIp() {
         try {
             return InetAddress.getLocalHost().getHostAddress();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return "127.0.0.1";
         }
     }
+
 
     public static String currentStackTrace() {
         StringBuilder sb = new StringBuilder();
@@ -114,9 +121,10 @@ public class UtilAll {
     public static String timeMillisToHumanString(final long t) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(t);
-        return String.format("%04d%02d%02d%02d%02d%02d%03d", cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY),
-                cal.get(Calendar.MINUTE), cal.get(Calendar.SECOND), cal.get(Calendar.MILLISECOND));
+        String format = "%04d%02d%02d%02d%02d%02d%03d";
+        return String.format(format, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1,
+            cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
+            cal.get(Calendar.SECOND), cal.get(Calendar.MILLISECOND));
     }
 
 
@@ -175,14 +183,10 @@ public class UtilAll {
     public static String timeMillisToHumanString2(final long t) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(t);
-        return String.format("%04d-%02d-%02d %02d:%02d:%02d,%03d", //
-                cal.get(Calendar.YEAR), //
-                cal.get(Calendar.MONTH) + 1, //
-                cal.get(Calendar.DAY_OF_MONTH), //
-                cal.get(Calendar.HOUR_OF_DAY), //
-                cal.get(Calendar.MINUTE), //
-                cal.get(Calendar.SECOND), //
-                cal.get(Calendar.MILLISECOND));
+        String format = "%04d-%02d-%02d %02d:%02d:%02d,%03d";
+        return String.format(format, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1,
+            cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
+            cal.get(Calendar.SECOND), cal.get(Calendar.MILLISECOND));
     }
 
 
@@ -196,13 +200,10 @@ public class UtilAll {
     public static String timeMillisToHumanString3(final long t) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(t);
-        return String.format("%04d%02d%02d%02d%02d%02d", //
-                cal.get(Calendar.YEAR), //
-                cal.get(Calendar.MONTH) + 1, //
-                cal.get(Calendar.DAY_OF_MONTH), //
-                cal.get(Calendar.HOUR_OF_DAY), //
-                cal.get(Calendar.MINUTE), //
-                cal.get(Calendar.SECOND));
+        String format = "%04d%02d%02d%02d%02d%02d";
+        return String.format(format, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1,
+            cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
+            cal.get(Calendar.SECOND));
     }
 
 
@@ -228,7 +229,8 @@ public class UtilAll {
             if (totalSpace > 0) {
                 return usedSpace / (double) totalSpace;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return -1;
         }
 
@@ -297,20 +299,25 @@ public class UtilAll {
             }
             byteArrayOutputStream.flush();
             result = byteArrayOutputStream.toByteArray();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw e;
-        } finally {
+        }
+        finally {
             try {
                 byteArrayInputStream.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
             }
             try {
                 inflaterInputStream.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
             }
             try {
                 byteArrayOutputStream.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
             }
         }
 
@@ -328,13 +335,16 @@ public class UtilAll {
             deflaterOutputStream.finish();
             deflaterOutputStream.close();
             result = byteArrayOutputStream.toByteArray();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             deflater.end();
             throw e;
-        } finally {
+        }
+        finally {
             try {
                 byteArrayOutputStream.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
             }
 
             deflater.end();
@@ -347,7 +357,8 @@ public class UtilAll {
     public static int asInt(String str, int defaultValue) {
         try {
             return Integer.parseInt(str);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return defaultValue;
         }
     }
@@ -356,7 +367,8 @@ public class UtilAll {
     public static long asLong(String str, long defaultValue) {
         try {
             return Long.parseLong(str);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return defaultValue;
         }
     }
@@ -372,7 +384,8 @@ public class UtilAll {
         SimpleDateFormat df = new SimpleDateFormat(pattern);
         try {
             return df.parse(date);
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             return null;
         }
     }
@@ -427,28 +440,20 @@ public class UtilAll {
     public static String[] split(final String str, String regex) {
         String newString = str.trim();
         String[] s = newString.split(regex);
-        if (s.length > 0) {
-            return s;
-        } else {
-            return null;
-        }
+        return s.length > 0 ? s : null;
     }
 
 
     public static boolean isBlank(Object object) {
-
-        if (object instanceof String)
-            if (object == null || (((String) object).length()) == 0) {
-                return true;
-            }
-        if (object instanceof Collection)
-            if (null == object || ((Collection) object).isEmpty()) {
-                return true;
-            }
-        if (object instanceof String[])
-            if (null == object || ((String[]) object).length <= 0) {
-                return true;
-            }
+        if (object instanceof String && (object == null || (((String) object).length()) == 0)) {
+            return true;
+        }
+        if (object instanceof Collection && (null == object || ((Collection) object).isEmpty())) {
+            return true;
+        }
+        if (object instanceof String[] && (null == object || ((String[]) object).length <= 0)) {
+            return true;
+        }
         return false;
     }
 
@@ -465,10 +470,13 @@ public class UtilAll {
 
 
     public static String getValue4Properties(String propertiesName, String key) throws IOException {
-        final String clientResourceFile = System.getProperty("cloudmq.config.resource.fileName", "mq_sdk_inner_config.properties");
+        String fileNameKey = "cloudmq.config.resource.fileName";
+        String fileNameValue = "mq_sdk_inner_config.properties";
+        final String clientResourceFile = System.getProperty(fileNameKey, fileNameValue);
         InputStream inputStream = UtilAll.class.getClassLoader().getResourceAsStream(clientResourceFile);
         Properties properties = new Properties();
         properties.load(inputStream);
+        IOUtils.closeInputStrerm(inputStream);
         return properties.getProperty(key);
     }
 

@@ -16,15 +16,31 @@ public class IOUtils {
                 sock.close();
             }
             catch (IOException e) {
+                e.printStackTrace();
                 // ignored
             }
         }
     }
 
 
+    public static void closeInputStrerm(InputStream inputStream) {
+        // It's same thing as Apache Commons - IOUtils.closeQuietly()
+        if (inputStream != null) {
+            try {
+                inputStream.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     static public String toString(InputStream input, String encoding) throws IOException {
-        return (null == encoding) ? toString(new InputStreamReader(input))
-                : toString(new InputStreamReader(input, encoding));
+        if (null == encoding) {
+            return toString(new InputStreamReader(input));
+        }
+        return toString(new InputStreamReader(input, encoding));
     }
 
 

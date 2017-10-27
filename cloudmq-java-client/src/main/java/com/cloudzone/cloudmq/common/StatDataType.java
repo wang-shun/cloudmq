@@ -6,9 +6,13 @@ package com.cloudzone.cloudmq.common;
  * @since 2017/3/30
  */
 public enum StatDataType {
-    TPS(0, "tps"),
-    FLOW(1, "flow");
+
+    TPS(0, "tps"), // 次数
+
+    FLOW(1, "flow"); // 流量
+
     private int code;
+
     private String des;
 
 
@@ -17,17 +21,21 @@ public enum StatDataType {
         this.des = des;
     }
 
+
     public int getCode() {
         return code;
     }
+
 
     public void setCode(int code) {
         this.code = code;
     }
 
+
     public String getDes() {
         return des;
     }
+
 
     public void setDes(String des) {
         this.des = des;

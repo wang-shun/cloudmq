@@ -32,8 +32,7 @@ public class MQFactory {
     }
 
 
-    public static TransactionProducer createTransactionProducer(Properties properties,
-                                                                LocalTransactionChecker checker) {
+    public static TransactionProducer createTransactionProducer(Properties properties, LocalTransactionChecker checker) {
         return mqFactoryInstance.createTransactionProducer(properties, checker);
     }
 
@@ -50,6 +49,7 @@ public class MQFactory {
         return mqFactoryInstance.createConsumer(properties);
     }
 
+
     /**
      * 顺序消息（建议尽量使用常规模式，顺序类型会降低性能及可靠性）
      * 注意：为了保证消息队列性能，消息队列自身并不保证消息不会重复消费(在某些异常情况下偶尔会出现极少数重复消息)，
@@ -64,7 +64,8 @@ public class MQFactory {
 
     static {
         try {
-            Class clazz = MQFactory.class.getClassLoader().loadClass("com.cloudzone.cloudmq.api.impl.base.MQFactoryImpl");
+            String mqFactoryImplClazz = "com.cloudzone.cloudmq.api.impl.base.MQFactoryImpl";
+            Class clazz = MQFactory.class.getClassLoader().loadClass(mqFactoryImplClazz);
             mqFactoryInstance = (MQFactoryAPI) clazz.newInstance();
         }
         catch (Throwable throwable) {

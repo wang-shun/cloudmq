@@ -7,8 +7,11 @@ package com.cloudzone.cloudmq.common;
  * @since 2017/2/23
  */
 public class ResultContent {
+
     public int code;
+
     public String body;
+
     public String msg;
 
 
@@ -41,12 +44,10 @@ public class ResultContent {
         this.msg = msg;
     }
 
+
     @Override
     public String toString() {
-        return "ResultContent{" +
-                "code=" + code +
-                ", body='" + body + '\'' +
-                ", msg='" + msg + '\'' +
-                '}';
+        String format = "ResultContent {code=%d, body='%s', msg='%s' }";
+        return String.format(format, code, body, msg);
     }
 }

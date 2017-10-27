@@ -2,12 +2,13 @@ package com.cloudzone.cloudmq.api.open.order;
 
 import com.cloudzone.cloudmq.api.open.base.Admin;
 
+
 /**
  * @author tantexian
  * @since 2016/6/27
  */
 public interface OrderConsumer extends Admin {
-    
+
     /**
      * 启动订阅消息
      *
@@ -17,6 +18,7 @@ public interface OrderConsumer extends Admin {
      */
     void start();
 
+
     /**
      * 停止订阅消息
      *
@@ -25,6 +27,7 @@ public interface OrderConsumer extends Admin {
      * @params
      */
     void shutdown();
+
 
     /**
      * @author tantexian

@@ -28,49 +28,48 @@ public class OrderConsumerBean implements OrderConsumer {
         if (null == this.properties) {
             throw new GomeClientException("properties not set");
         }
-        else if (null == this.subscriptionTable) {
+        if (null == this.subscriptionTable) {
             throw new GomeClientException("subscriptionTable not set");
         }
-        else {
-            this.orderConsumer = MQFactory.createOrderedConsumer(this.properties);
-            Iterator it = this.subscriptionTable.entrySet().iterator();
 
-            while (true) {
-                while (it.hasNext()) {
-                    Map.Entry next = (Map.Entry) it.next();
-                    if (this.orderConsumer.getClass().getCanonicalName()
-                            .equals("ConsumerImpl.ConsumerImpl")
-                            && next.getKey() instanceof SubscriptionExt) {
-                        SubscriptionExt subscription = (SubscriptionExt) next.getKey();
-                        Method[] methods = this.orderConsumer.getClass().getMethods();
-                        int len = methods.length;
+        this.orderConsumer = MQFactory.createOrderedConsumer(this.properties);
+        Iterator it = this.subscriptionTable.entrySet().iterator();
 
-                        for (int i = 0; i < len; ++i) {
-                            Method method = methods[i];
-                            if ("subscribeNotify".equals(method.getName())) {
-                                try {
-                                    method.invoke(this.orderConsumer,
-                                            new Object[] { subscription.getTopic(), subscription.getExpression(),
-                                                    Boolean.valueOf(subscription.isPersistence()),
-                                                    next.getValue() });
-                                    break;
-                                }
-                                catch (Exception e) {
-                                    throw new GomeClientException("subscribeNotify invoke exception", e);
-                                }
+        while (true) {
+            while (it.hasNext()) {
+                Map.Entry next = (Map.Entry) it.next();
+                if (this.orderConsumer.getClass().getCanonicalName()
+                        .equals("ConsumerImpl.ConsumerImpl")
+                        && next.getKey() instanceof SubscriptionExt) {
+                    SubscriptionExt subscription = (SubscriptionExt) next.getKey();
+                    Method[] methods = this.orderConsumer.getClass().getMethods();
+                    int len = methods.length;
+
+                    for (int i = 0; i < len; ++i) {
+                        Method method = methods[i];
+                        if ("subscribeNotify".equals(method.getName())) {
+                            try {
+                                method.invoke(this.orderConsumer,
+                                        new Object[] { subscription.getTopic(), subscription.getExpression(),
+                                                Boolean.valueOf(subscription.isPersistence()),
+                                                next.getValue() });
+                                break;
+                            }
+                            catch (Exception e) {
+                                throw new GomeClientException("subscribeNotify invoke exception", e);
                             }
                         }
                     }
-                    else {
-                        this.subscribe(((Subscription) next.getKey()).getTopic(),
-                                ((Subscription) next.getKey()).getExpression(),
-                                (MsgOrderListener) next.getValue());
-                    }
                 }
-
-                this.orderConsumer.start();
-                return;
+                else {
+                    this.subscribe(((Subscription) next.getKey()).getTopic(),
+                            ((Subscription) next.getKey()).getExpression(),
+                            (MsgOrderListener) next.getValue());
+                }
             }
+
+            this.orderConsumer.start();
+            return;
         }
     }
 
@@ -79,7 +78,6 @@ public class OrderConsumerBean implements OrderConsumer {
         if (this.orderConsumer != null) {
             this.orderConsumer.shutdown();
         }
-
     }
 
 
@@ -87,9 +85,8 @@ public class OrderConsumerBean implements OrderConsumer {
         if (null == this.orderConsumer) {
             throw new GomeClientException("subscribe must be called after consumerBean started");
         }
-        else {
-            this.orderConsumer.subscribe(topic, subExpression, listener);
-        }
+
+        this.orderConsumer.subscribe(topic, subExpression, listener);
     }
 
 

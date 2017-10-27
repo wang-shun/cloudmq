@@ -1,6 +1,5 @@
 package com.cloudzone.cloudmq.common;
 
-
 /**
  * Properties常量表
  *
@@ -14,6 +13,7 @@ public class PropertiesConst {
         public static final String ConsumerGroupId = "ConsumerGroupId";
         public static final String NAMESRV_ADDR = "NAMESRV_ADDR";
         public static final String MessageModel = "MessageModel";
+
         // 下述值，当前版本还不支持使用 2016/6/28 Add by tantexixan
         public static final String AccessKey = "AccessKey";
         public static final String SecretKey = "SecretKey";
@@ -33,7 +33,8 @@ public class PropertiesConst {
         public static final String MqttSecondTopic = "mqttSecondTopic";
         public static final String MqttClientId = "mqttClientId";
         public static final String MqttQOS = "qoslevel";
-        //客户端加topic认证功能
+
+        // 客户端加topic认证功能
         public static final String TOPIC_NAME = "appMetaName";
         public static final String AUTH_KEY = "authKey";
         public static final String TYPE = "appType";
@@ -41,9 +42,11 @@ public class PropertiesConst {
         public static final String WSADDR_AUTH = "wsaddrAuth";
         public static final String HEARTBEAT_URL = "heartbeatUrl";
         public static final String SYNCTIME_URL = "syncTimeUrl";
-        //解决客户端多个订阅的问题
+
+        // 解决客户端多个订阅的问题
         public static final String TOPIC_NAME_AND_AUTH_KEY = "TOPIC_NAME_AND_AUTH_KEY";
-        //内部用
+
+        // 内部用
         public static final String InnerTopicAndAuthKey = "InnerTopicAndAuthKey";
 
 
@@ -53,12 +56,22 @@ public class PropertiesConst {
     }
 
     public class Values {
-        // 广播订阅模式
+
+        /**
+         * 广播订阅模式
+         */
         public static final String BROADCASTING = "BROADCASTING";
-        // 集群订阅模式（默认为该模式）
+
+        /**
+         * 集群订阅模式（默认为该模式）
+         */
         public static final String CLUSTERING = "CLUSTERING";
 
+        /**
+         * MQ类型
+         */
         public static final int CLOUDMQ = 1;
+
 
         private Values() {
         }
@@ -69,5 +82,4 @@ public class PropertiesConst {
     private PropertiesConst() {
     }
 
-    ;
 }

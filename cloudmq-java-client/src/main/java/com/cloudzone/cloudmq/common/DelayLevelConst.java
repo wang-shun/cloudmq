@@ -3,13 +3,15 @@ package com.cloudzone.cloudmq.common;
 /**
  * 延时间隔等级（目前不支持任意时间设置，只支持以下等级内的时间间隔）
  *
- * 以下为与之相对应的存储配置文件值messageDelayLevelprivate
- * String messageDelayLevel = "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h";
+ * 以下为与之相对应的存储配置文件值messageDelayLevelprivate <br/>
+ * <code>
+ *  String messageDelayLevel = "1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h";
+ * </code>
  *
  * @author tantexian
  * @since 2016/6/28
  */
-public enum  DelayLevelConst {
+public enum DelayLevelConst {
     OneSecond("1s", 1),
     FiveSecond("5s", 2),
     TenSecond("10s", 3),
@@ -32,12 +34,14 @@ public enum  DelayLevelConst {
     private String delayTime;
     private int delayLevel;
 
-    DelayLevelConst(String delayTime, int delayLevel){
+
+    DelayLevelConst(String delayTime, int delayLevel) {
         this.delayTime = delayTime;
         this.delayLevel = delayLevel;
     }
 
-    public int val(){
+
+    public int val() {
         return this.delayLevel;
     }
 }

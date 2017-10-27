@@ -8,6 +8,7 @@ import com.cloudzone.cloudmq.api.open.exception.GomeClientException;
 
 import java.util.*;
 
+
 /**
  * @author tantexian
  * @since 2016/6/27
@@ -15,6 +16,7 @@ import java.util.*;
 public class MyUtils {
     private static Set<String> ReservedKeySetRMQ = new HashSet();
     private static Set<String> ReservedKeySetGome = new HashSet();
+
 
     /**
      * 获取getNamesrvAddr地址
@@ -27,6 +29,7 @@ public class MyUtils {
         return System.getProperty("cloudmq.namesrv.addr", System.getenv("NAMESRV_ADDR"));
     }
 
+
     /**
      * 将cloudmq-client的message转换为原生RMQ格式message
      *
@@ -38,7 +41,8 @@ public class MyUtils {
         Message msgRMQ = new Message();
         if (msg == null) {
             throw new GomeClientException("\'msg\' is null");
-        } else {
+        }
+        else {
             if (msg.getTopic() != null) {
                 msgRMQ.setTopic(msg.getTopic());
             }
@@ -51,9 +55,11 @@ public class MyUtils {
                 msgRMQ.setTags(msg.getTags());
             }
 
-            /*if(msg.getStartDeliverTime() > 0L) {
-                msgRMQ.putUserProperty("__STARTDELIVERTIME", String.valueOf(msg.getStartDeliverTime()));
-            }*/
+            /*
+             * if(msg.getStartDeliverTime() > 0L) {
+             * msgRMQ.putUserProperty("__STARTDELIVERTIME",
+             * String.valueOf(msg.getStartDeliverTime())); }
+             */
 
             if (msg.getBody() != null) {
                 msgRMQ.setBody(msg.getBody());
@@ -66,7 +72,8 @@ public class MyUtils {
                 while (userProperties.hasNext()) {
                     Map.Entry it = (Map.Entry) userProperties.next();
                     if (!ReservedKeySetGome.contains(it.getKey().toString())) {
-                        com.alibaba.rocketmq.common.message.MessageAccessor.putProperty(msgRMQ, it.getKey().toString(), it.getValue().toString());
+                        com.alibaba.rocketmq.common.message.MessageAccessor.putProperty(msgRMQ,
+                            it.getKey().toString(), it.getValue().toString());
                     }
                 }
             }
@@ -78,7 +85,8 @@ public class MyUtils {
                 while (it1.hasNext()) {
                     Map.Entry next = (Map.Entry) it1.next();
                     if (!ReservedKeySetRMQ.contains(next.getKey().toString())) {
-                        com.alibaba.rocketmq.common.message.MessageAccessor.putProperty(msgRMQ, next.getKey().toString(), next.getValue().toString());
+                        com.alibaba.rocketmq.common.message.MessageAccessor.putProperty(msgRMQ,
+                            next.getKey().toString(), next.getValue().toString());
                     }
                 }
             }
@@ -87,11 +95,14 @@ public class MyUtils {
         }
     }
 
+
     /**
      * 将RMQ格式message转换为cloudmq-client的message
      *
-     * @param msgRMQ RMQ格式message
-     * @param msgId  消息ID
+     * @param msgRMQ
+     *            RMQ格式message
+     * @param msgId
+     *            消息ID
      * @return
      * @author tantexian
      * @since 2016/6/27
@@ -122,13 +133,15 @@ public class MyUtils {
         Map properties = msgRMQ.getProperties();
         if (properties != null) {
             Iterator it = properties.entrySet().iterator();
-
             while (it.hasNext()) {
                 Map.Entry next = (Map.Entry) it.next();
-                if (ReservedKeySetRMQ.contains(((String) next.getKey()).toString())) {
-                    MessageAccessor.putSystemProperties(msg, ((String) next.getKey()).toString(), ((String) next.getValue()).toString());
-                } else {
-                    msg.putUserProperties(((String) next.getKey()).toString(), ((String) next.getValue()).toString());
+                String key = (String) next.getKey();
+                String value = (String) next.getValue();
+                if (ReservedKeySetRMQ.contains(key)) {
+                    MessageAccessor.putSystemProperties(msg, key, value);
+                }
+                else {
+                    msg.putUserProperties(key, value);
                 }
             }
         }

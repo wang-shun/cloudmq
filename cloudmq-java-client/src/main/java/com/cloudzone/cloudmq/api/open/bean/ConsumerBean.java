@@ -16,8 +16,11 @@ import java.util.Properties;
  * @since 2016/6/27
  */
 public class ConsumerBean implements Consumer {
+
     private Properties properties;
+
     private Map<Subscription, MsgListener> subscriptionTable;
+
     private Consumer consumer;
 
 
@@ -29,49 +32,59 @@ public class ConsumerBean implements Consumer {
         if (null == this.properties) {
             throw new GomeClientException("properties not set");
         }
-        else if (null == this.subscriptionTable) {
+        if (null == this.subscriptionTable) {
             throw new GomeClientException("subscriptionTable not set");
         }
-        else {
-            this.consumer = MQFactory.createConsumer(this.properties);
-            Iterator it = this.subscriptionTable.entrySet().iterator();
 
-            while (true) {
-                while (it.hasNext()) {
-                    Map.Entry next = (Map.Entry) it.next();
-                    if (this.consumer.getClass().getCanonicalName()
-                        .equals("ConsumerImpl.ConsumerImpl")
-                            && next.getKey() instanceof SubscriptionExt) {
-                        SubscriptionExt subscription = (SubscriptionExt) next.getKey();
-                        Method[] methods = this.consumer.getClass().getMethods();
-                        int len = methods.length;
+        this.consumer = MQFactory.createConsumer(this.properties);
+        Iterator it = this.subscriptionTable.entrySet().iterator();
 
-                        for (int i = 0; i < len; ++i) {
-                            Method method = methods[i];
-                            if ("subscribeNotify".equals(method.getName())) {
-                                try {
-                                    method.invoke(this.consumer,
-                                        new Object[] { subscription.getTopic(), subscription.getExpression(),
-                                                       Boolean.valueOf(subscription.isPersistence()),
-                                                       next.getValue() });
-                                    break;
-                                }
-                                catch (Exception e) {
-                                    throw new GomeClientException("subscribeNotify invoke exception", e);
-                                }
-                            }
+        while (true) {
+            while (it.hasNext()) {
+                Map.Entry next = (Map.Entry) it.next();
+                Class clazz = this.consumer.getClass();
+                boolean isConsumerImpl = clazz.getCanonicalName().equals("ConsumerImpl.ConsumerImpl");
+                boolean isSubscriptionExt = next.getKey() instanceof SubscriptionExt;
+
+                MsgListener msgListener = (MsgListener) next.getValue();
+                SubscriptionExt subscription = (SubscriptionExt) next.getKey();
+                String topic = subscription.getTopic();
+                String expression = subscription.getExpression();
+
+                if (isConsumerImpl && isSubscriptionExt) {
+                    Method[] methods = clazz.getMethods();
+                    int len = methods.length;
+                    for (int i = 0; i < len; ++i) {
+                        Method method = methods[i];
+                        boolean subscribeNotify = method.getName().equals("subscribeNotify");
+                        if (subscribeNotify) {
+                            invokeSubscribeNotify(method, subscription, msgListener);
+                            break;
                         }
                     }
-                    else {
-                        this.subscribe(((Subscription) next.getKey()).getTopic(),
-                            ((Subscription) next.getKey()).getExpression(),
-                            (MsgListener) next.getValue());
-                    }
                 }
-
-                this.consumer.start();
-                return;
+                else {
+                    this.subscribe(topic, expression, msgListener);
+                }
             }
+
+            this.consumer.start();
+            return;
+        }
+    }
+
+
+    private void invokeSubscribeNotify(Method method, SubscriptionExt subscription, MsgListener msgListener) {
+        String topic = subscription.getTopic();
+        String expression = subscription.getExpression();
+        boolean isPersistence = Boolean.valueOf(subscription.isPersistence());
+
+        try {
+            Object obj = new Object[] { topic, expression, isPersistence, msgListener };
+            method.invoke(this.consumer, obj);
+        }
+        catch (Exception e) {
+            throw new GomeClientException("subscribeNotify invoke exception", e);
         }
     }
 
@@ -80,27 +93,26 @@ public class ConsumerBean implements Consumer {
         if (this.consumer != null) {
             this.consumer.shutdown();
         }
-
     }
 
 
     public void subscribe(String topic, String subExpression, MsgListener listener) {
         if (null == this.consumer) {
-            throw new GomeClientException("subscribe must be called after consumerBean started");
+            String errMsg = "unsubscribe must be called after consumerBean started";
+            throw new GomeClientException(errMsg);
         }
-        else {
-            this.consumer.subscribe(topic, subExpression, listener);
-        }
+
+        this.consumer.subscribe(topic, subExpression, listener);
     }
 
 
     public void unsubscribe(String topic) {
         if (null == this.consumer) {
-            throw new GomeClientException("unsubscribe must be called after consumerBean started");
+            String errMsg = "unsubscribe must be called after consumerBean started";
+            throw new GomeClientException(errMsg);
         }
-        else {
-            this.consumer.unsubscribe(topic);
-        }
+
+        this.consumer.unsubscribe(topic);
     }
 
 

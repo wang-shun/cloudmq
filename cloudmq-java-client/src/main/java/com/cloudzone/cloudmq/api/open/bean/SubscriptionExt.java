@@ -7,26 +7,33 @@ package com.cloudzone.cloudmq.api.open.bean;
 public class SubscriptionExt extends Subscription {
     private boolean persistence = true;
 
+
     public SubscriptionExt() {
     }
+
 
     public boolean isPersistence() {
         return this.persistence;
     }
 
+
     public void setPersistence(boolean persistence) {
         this.persistence = persistence;
     }
+
 
     public int hashCode() {
         return super.hashCode();
     }
 
+
     public boolean equals(Object obj) {
         return super.equals(obj);
     }
 
+
     public String toString() {
-        return "Subscription [topic=" + super.getTopic() + ", expression=" + super.getExpression() + ", persistence=" + this.persistence + "]";
+        String format = "SubscriptionExt [topic=%s, expression=%s, persistence=%s]";
+        return String.format(format, super.getTopic(), super.getExpression(), this.persistence);
     }
 }

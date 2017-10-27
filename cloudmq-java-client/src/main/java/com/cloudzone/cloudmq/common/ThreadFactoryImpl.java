@@ -4,8 +4,15 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
 
+/**
+ * @author yintongjiang
+ * @params 统计单位
+ * @since 2017/3/30
+ */
 public class ThreadFactoryImpl implements ThreadFactory {
+
     private final AtomicLong threadIndex = new AtomicLong(0);
+
     private final String threadNamePrefix;
 
 
@@ -16,8 +23,9 @@ public class ThreadFactoryImpl implements ThreadFactory {
 
     @Override
     public Thread newThread(Runnable r) {
-        Thread thread = new Thread(r, threadNamePrefix + this.threadIndex.incrementAndGet());
-//        thread.setDaemon(true);
+        String threadName = threadNamePrefix + this.threadIndex.incrementAndGet();
+        Thread thread = new Thread(r, threadName);
+        // thread.setDaemon(true);
         return thread;
     }
 }

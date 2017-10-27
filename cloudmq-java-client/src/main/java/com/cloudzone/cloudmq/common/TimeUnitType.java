@@ -17,17 +17,21 @@ public enum TimeUnitType {
         this.des = des;
     }
 
+
     public int getCode() {
         return code;
     }
+
 
     public void setCode(int code) {
         this.code = code;
     }
 
+
     public String getDes() {
         return des;
     }
+
 
     public void setDes(String des) {
         this.des = des;
