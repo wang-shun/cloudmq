@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- Listener配置，此处监听器的class路径由使用者自行配置, cloudmq所提供的jar包并不包含此路径 -->
+    <bean id="orderMsgListener" class="com.cloudzone.cloudmq.demo.springwithbean.OrderConsumerMsgListener"></bean>
+
+    <!-- Consumer配置 -->
+    <bean id="consumerOrder" class="com.cloudzone.cloudmq.api.open.bean.OrderConsumerBean" init-method="start" destroy-method="shutdown">
+        <property name="properties">
+            <props>
+                <prop key="ConsumerGroupId">ConsumerGroupId-test</prop>
+                <prop key="TOPIC_NAME_AND_AUTH_KEY">jcpt-order-test-500:1722298dc2e8f4156983f21ddf8bb6393</prop>
+            </props>
+        </property>
+
+        <property name="subscriptionTable">
+            <map>
+                <entry value-ref="orderMsgListener">
+                    <key>
+                        <bean class="com.cloudzone.cloudmq.api.open.bean.Subscription">
+                            <property name="topic" value="jcpt-order-test-500"/>
+                            <property name="expression" value="*"/>
+                        </bean>
+                    </key>
+                </entry>
+                <!--更多的订阅添加entry节点即可-->
+            </map>
+        </property>
+    </bean>
+    <!-- Listener配置，此处监听器的class路径由使用者自行配置, cloudmq所提供的jar包并不包含此路径 -->
+    <bean id="msgListener" class="com.cloudzone.cloudmq.demo.springwithbean.ConsumerMessageListener"></bean>
+
+    <!-- Consumer配置 -->
+    <bean id="consumer" class="com.cloudzone.cloudmq.api.open.bean.ConsumerBean" init-method="start" destroy-method="shutdown">
+        <property name="properties">
+            <props>
+                <prop key="ConsumerGroupId">ConsumerGroupId-test11</prop>
+                <!--设置NAMESRV_ADDR，不设置默认为127.0.0.1:9876-->
+                <prop key="TOPIC_NAME_AND_AUTH_KEY">jcpt-ytj-500:0b5da42054bd54b32a432394099658c6e</prop>
+                <!--设置消息队列为广播消费模型（不设置则默认为集群消费）-->
+                <!--<prop key="MessageModel">BROADCASTING</prop>-->
+            </props>
+        </property>
+
+        <property name="subscriptionTable">
+            <map>
+                <entry value-ref="msgListener">
+                    <key>
+                        <bean class="com.cloudzone.cloudmq.api.open.bean.Subscription">
+                            <property name="topic" value="jcpt-ytj-500"/>
+                            <property name="expression" value="*"/>
+                        </bean>
+                    </key>
+                </entry>
+                <!--更多的订阅添加entry节点即可-->
+            </map>
+        </property>
+    </bean>
+</beans>

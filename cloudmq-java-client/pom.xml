@@ -11,7 +11,9 @@
     <groupId>com.cloudzone.cloudmq</groupId>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-    <artifactId>cloudmq-java-client</artifactId>
+    <artifactId>cloudmq-java-client-dev</artifactId>
+    <!--<artifactId>cloudmq-java-client-qa</artifactId>-->
+    <!--<artifactId>cloudmq-java-client</artifactId>-->
     <version>1.1.0-SNAPSHOT</version>
     <name>cloudmq-java-client ${project.version}</name>
 
